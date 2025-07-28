@@ -1,0 +1,30 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true                    # 表示是最顶层的配置文件，停止向上查找
+
+# All files - 所有文件的默认配置
+[*]
+charset = utf-8                # 字符编码：UTF-8（支持中文、emoji等）
+end_of_line = lf              # 换行符：LF（Unix风格）
+insert_final_newline = true   # 文件末尾添加空行
+trim_trailing_whitespace = true # 删除行尾空格
+indent_style = space          # 缩进风格：空格
+indent_size = 2               # 缩进大小：2个空格
+
+# Markdown files - Markdown 特殊配置
+[*.md]
+trim_trailing_whitespace = false  # 保留行尾空格（Markdown中两个空格表示换行）
+
+# Package files - 配置文件
+[*.{json,yml,yaml}]
+indent_size = 2               # JSON/YAML 使用 2 空格
+
+# TypeScript/JavaScript files
+[*.{ts,tsx,js,jsx}]
+indent_size = 2               # JS/TS 使用 2 空格
+quote_type = single           # 使用单引号（部分编辑器支持）
+
+# Makefile - 特殊文件
+[Makefile]
+indent_style = tab            # Makefile 必须使用 Tab

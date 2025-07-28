@@ -1,0 +1,38 @@
+# Source code
+src/
+examples/
+test/
+docs/
+
+# Configuration
+.github/
+.vscode/
+.idea/
+.editorconfig
+.eslintrc.js
+.prettierrc
+tsconfig.json
+vitest.config.ts
+tsup.config.ts
+
+# Development
+coverage/
+*.log
+.env
+.env.*
+*.map
+
+# Git
+.git/
+.gitignore
+
+# CI
+.travis.yml
+.gitlab-ci.yml
+.circleci/
+
+# Others
+.DS_Store
+*.swp
+*.swo
+CONTRIBUTING.md

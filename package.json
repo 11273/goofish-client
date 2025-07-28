@@ -1,0 +1,80 @@
+{
+  "name": "goofish-sdk",
+  "version": "1.0.0",
+  "description": "A powerful SDK for Goofish platform",
+  "keywords": [
+    "goofish",
+    "sdk",
+    "api",
+    "typescript"
+  ],
+  "author": "github.com/11273",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/11273/goofish-sdk"
+  },
+  "homepage": "https://github.com/11273/goofish-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/11273/goofish-sdk/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "example": "tsx examples/index.ts",
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "build:prod": "NODE_ENV=production tsup",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run typecheck && npm run lint && npm run build:prod"
+  },
+  "dependencies": {
+    "axios": "^1.10.0",
+    "tslib": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.15",
+    "@typescript-eslint/eslint-plugin": "^8.37.0",
+    "@typescript-eslint/parser": "^8.37.0",
+    "eslint": "^9.31.0",
+    "globals": "^16.3.0",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "typescript": ">=4.5.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

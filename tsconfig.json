@@ -1,0 +1,61 @@
+{
+  "compilerOptions": {
+    // 🎯 目标环境 - ES2018 是最佳平衡点
+    "target": "ES2018", // Node 10+ 和现代浏览器都支持
+    "module": "ESNext", // 保持最新模块语法，让 tsup 处理
+    "lib": ["ES2018"], // 按需添加新特性
+
+    // 📦 模块解析
+    "moduleResolution": "node", // Node.js 风格解析
+    "esModuleInterop": true, // 兼容 CommonJS 默认导出
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true, // 支持导入 JSON
+    "forceConsistentCasingInFileNames": true,
+
+    // 💎 类型检查 - 最严格但合理
+    "strict": true, // 开启所有严格检查
+    "noUnusedLocals": true, // 未使用的变量
+    "noUnusedParameters": true, // 未使用的参数
+    "noImplicitReturns": true, // 函数必须有返回值
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true, // 数组/对象访问安全
+    "exactOptionalPropertyTypes": true, // 精确可选属性
+
+    // 📁 输出配置
+    "declaration": true, // 生成 .d.ts
+    "declarationMap": true, // 生成 .d.ts.map
+    "sourceMap": true, // 生成 .js.map
+    "outDir": "./dist", // 输出目录
+    "rootDir": "./src", // 源码根目录
+
+    // ⚡ 性能优化
+    "incremental": true, // 增量编译
+    "skipLibCheck": true, // 跳过 .d.ts 检查
+    "isolatedModules": true, // 确保每个文件可独立编译
+
+    // 🛠️ 其他配置
+    "removeComments": false, // 保留注释（用于 JSDoc）
+    "allowJs": false, // 纯 TypeScript 项目
+    "importHelpers": true, // 使用 tslib 优化
+
+    // 📍 路径别名（可选）
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@utils": ["src/utils/index"],
+      "@types": ["src/types/index"]
+    }
+  },
+
+  // 📂 文件配置
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "coverage",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/__tests__/**",
+    "**/__mocks__/**"
+  ]
+}
