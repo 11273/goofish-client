@@ -1,16 +1,25 @@
 // API 基础配置
 export const API_CONFIG = {
+  // 请求配置
   BASE_URL: 'https://h5api.m.goofish.com',
   API_PREFIX: '/h5',
   APP_KEY: '34839810',
   JSV: '2.7.2',
   TIMEOUT: 20000,
-  DATA_TYPE: 'application/json',
+  DATA_TYPE: 'json',
   TYPE: 'originaljson',
-  USER_AGENT:
-    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
   VERSION: '1.0',
   SESSION_OPTION: 'AutoLoginOnly',
+  V: '1.0',
+  ACCOUNT_SITE: 'xianyu',
+  SPM_CNT: 'a21ybx.undefined.0.0',
+
+  // 请求头
+  HEADERS_ORIGIN: 'https://www.goofish.com',
+  HEADERS_REFERER: 'https://www.goofish.com',
+  HEADERS_CONTENT_TYPE: 'application/x-www-form-urlencoded',
+  HEADERS_USER_AGENT:
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
 } as const;
 
 // API 端点映射
@@ -24,7 +33,7 @@ export const API_ENDPOINTS = {
   // 搜索相关
   SEARCH: {
     // 搜索商品
-    ITEMS: 'mtop.taobao.idlemtopsearch.pc.search',
+    SEARCH: 'mtop.taobao.idlemtopsearch.pc.search',
   },
 
   // 订单相关

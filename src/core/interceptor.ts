@@ -3,7 +3,7 @@ import type {
   AxiosError,
   InternalAxiosRequestConfig,
 } from 'axios';
-import type { Logger } from '@/utils/logger';
+import type { Logger } from '../utils/logger';
 
 // ===== 类型定义 =====
 interface RequestConfigWithMetadata extends InternalAxiosRequestConfig {
@@ -50,6 +50,7 @@ export function createLogInterceptor(logger: Logger): LogInterceptor {
         url: config.url || '',
         data: config.data,
         headers: config.headers as Record<string, unknown>,
+        params: config.params as Record<string, unknown>,
       });
 
       return config;

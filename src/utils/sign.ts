@@ -1,5 +1,4 @@
-import { createHash } from 'crypto';
-
+import md5 from 'crypto-js/md5';
 interface SignParams {
   appKey: string;
   t: string;
@@ -14,8 +13,7 @@ export function generateSign(params: SignParams): string {
   const { appKey, t, data, token } = params;
   const signStr = `${token || ''}&${t}&${appKey}&${data}`;
 
-  // 使用 Node.js 内置 crypto
-  return createHash('md5').update(signStr).digest('hex');
+  return md5(signStr).toString();
 }
 
 /**

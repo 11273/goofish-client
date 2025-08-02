@@ -1,30 +1,33 @@
-import { BaseService } from '@/services/base.service';
-import { API_ENDPOINTS } from '@/constants';
-import type { SearchParams, SearchResponse } from '@/types/api/search';
+import { BaseService } from './base.service';
+import { API_ENDPOINTS } from '../constants';
+import type { SearchParams, SearchResponse } from '../types/api/search';
 
+/**
+ * 搜索服务实现
+ */
 export class SearchService extends BaseService {
   /**
    * 搜索商品
    */
-  async search(params: SearchParams): Promise<SearchResponse> {
-    const requestData = {
+  public async search(params: SearchParams): Promise<SearchResponse> {
+    const requestData: SearchParams = {
       pageNumber: params.pageNumber || 1,
-      keyword: params.keyword,
-      fromFilter: params.fromFilter || true,
-      rowsPerPage: params.rowsPerPage || 20,
-      sortValue: params.sortValue || 'desc',
-      sortField: params.sortField || 'create',
-      customDistance: params.customDistance || '',
-      gps: params.gps || '',
-      propValueStr: params.propValueStr || { searchFilter: '' },
-      customGps: params.customGps || '',
-      searchReqFromPage: params.searchReqFromPage || 'pcSearch',
-      extraFilterValue: params.extraFilterValue || '{}',
-      userPositionJson: params.userPositionJson || '{}',
+      keyword: 'chuu上衣',
+      fromFilter: false,
+      rowsPerPage: 30,
+      sortValue: 'desc',
+      sortField: 'create',
+      customDistance: '',
+      gps: '',
+      propValueStr: {},
+      customGps: '',
+      searchReqFromPage: 'pcSearch',
+      extraFilterValue: '{}',
+      userPositionJson: '{}',
     };
 
-    return this.request<SearchResponse>({
-      api: API_ENDPOINTS.SEARCH.ITEMS,
+    return this.request<SearchParams, SearchResponse>({
+      api: API_ENDPOINTS.SEARCH.SEARCH,
       data: requestData,
     });
   }

@@ -36,15 +36,7 @@
     // 🛠️ 其他配置
     "removeComments": false, // 保留注释（用于 JSDoc）
     "allowJs": false, // 纯 TypeScript 项目
-    "importHelpers": true, // 使用 tslib 优化
-
-    // 📍 路径别名（可选）
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "@utils": ["src/utils/index"],
-      "@types": ["src/types/index"]
-    }
+    "importHelpers": true // 使用 tslib 优化
   },
 
   // 📂 文件配置

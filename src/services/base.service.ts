@@ -1,6 +1,11 @@
-import type { HttpClient } from '@/core/http';
-import type { GooFishConfig } from '@/client/goofish.client';
-import type { GooFishResponse, RequestOptions } from '@/types';
+import type { HttpClient } from '../core/http';
+import type { GooFishConfig } from '../client/goofish.client';
+import type {
+  GooFishResponse,
+  RequestOptions,
+  BuildParamsOutput,
+} from '../types';
+import { generateSign } from '../utils';
 
 export abstract class BaseService {
   protected http: HttpClient;
@@ -19,12 +24,42 @@ export abstract class BaseService {
   }
 
   /**
+   * 构建请求参数
+   */
+  protected buildParams(api: string, data: string): BuildParamsOutput {
+    const t = Date.now();
+    return {
+      appKey: this.config.appKey,
+      jsv: this.config.jsv,
+      dataType: this.config.dataType,
+      type: this.config.type,
+      version: this.config.version,
+      sessionOption: this.config.sessionOption,
+      t,
+      v: this.config.v,
+      accountSite: this.config.accountSite,
+      timeout: this.config.timeout,
+      api,
+      sign: generateSign({
+        appKey: this.config.appKey,
+        t: t.toString(),
+        data: data.toString(),
+        // TODO
+        token: '',
+      }),
+      spm_cnt: this.config.spmCnt,
+    };
+  }
+
+  /**
    * 发送请求
    */
-  protected async request<TResponse, TData = unknown>(
+  protected async request<TData, TResponse>(
     options: RequestOptions<TData>
   ): Promise<TResponse> {
     const url = this.buildUrl(options.api);
+    const data = JSON.stringify(options.data || {});
+    const params = this.buildParams(options.api, data);
     const method = options.method || 'POST';
 
     try {
@@ -32,7 +67,15 @@ export abstract class BaseService {
       const response = await this.http.request<GooFishResponse<TResponse>>({
         url,
         method,
-        data: options.data,
+        data: { data },
+        params,
+        headers: {
+          Origin: this.config.origin,
+          Referer: this.config.referer,
+          'Content-Type': this.config.contentType,
+          'User-Agent': this.config.userAgent,
+        },
+        timeout: this.config.timeout,
         ...options.config,
       });
 

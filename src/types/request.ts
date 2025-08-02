@@ -2,7 +2,7 @@ import type { AxiosRequestConfig, Method } from 'axios';
 /**
  * 基础请求选项
  */
-export interface RequestOptions<TData = unknown> {
+export interface RequestOptions<TData> {
   /** API 接口名称 */
   api: string;
 
@@ -33,7 +33,7 @@ export interface RequestOptions<TData = unknown> {
 /**
  * 内部请求选项（合并了默认值）
  */
-export interface InternalRequestOptions<TData = unknown>
+export interface InternalRequestOptions<TData>
   extends Required<Omit<RequestOptions<TData>, 'data' | 'config' | 'extra'>> {
   data?: TData;
   config?: AxiosRequestConfig;
@@ -57,4 +57,35 @@ export interface HttpClientConfig {
 export interface HttpRequestConfig extends AxiosRequestConfig {
   /** 跳过错误处理 */
   skipErrorHandler?: boolean;
+}
+/**
+ * buildParams 方法的返回值类型
+ */
+export interface BuildParamsOutput {
+  /** 应用密钥 */
+  appKey: string;
+  /** JavaScript 版本 */
+  jsv: string;
+  /** 数据类型 */
+  dataType: string;
+  /** 请求类型 */
+  type: string;
+  /** API 版本 */
+  version: string;
+  /** 会话选项 */
+  sessionOption: string;
+  /** 时间戳 */
+  t: number;
+  /** 版本号 */
+  v: string;
+  /** 账户站点 */
+  accountSite: string;
+  /** 超时时间 */
+  timeout: number;
+  /** API 接口名称 */
+  api: string;
+  /** 请求签名 */
+  sign: string;
+  /** SPM 计数 */
+  spm_cnt: string;
 }

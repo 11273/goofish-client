@@ -1,28 +1,34 @@
-import { HttpClient } from '@/core/http';
+import { HttpClient } from '../core/http';
 import {
   createErrorInterceptor,
   createLogInterceptor,
-} from '@/core/interceptor';
-import { SearchService } from '@/services/search.service';
-import { API_CONFIG } from '@/constants';
-import { Logger, LogLevel } from '@/utils/logger';
+} from '../core/interceptor';
+import { SearchService } from '../services/search.service';
+import { API_CONFIG } from '../constants';
+import { Logger, LogLevel } from '../utils/logger';
 
 export interface GooFishConfig {
   // 基本配置
-  level?: LogLevel;
-  cookie?: string;
+  level: LogLevel;
+  cookie: string;
 
   // API 配置
-  baseURL?: string;
-  apiPrefix?: string;
-  apiKey?: string;
-  jsv?: string;
-  timeout?: number;
-  dataType?: string;
-  type?: string;
-  userAgent?: string;
-  version?: string;
-  sessionOption?: string;
+  baseURL: string;
+  apiPrefix: string;
+  appKey: string;
+  jsv: string;
+  timeout: number;
+  dataType: string;
+  type: string;
+  userAgent: string;
+  version: string;
+  sessionOption: string;
+  v: string;
+  accountSite: string;
+  origin: string;
+  referer: string;
+  contentType: string;
+  spmCnt: string;
 }
 
 export class GooFish {
@@ -33,25 +39,33 @@ export class GooFish {
   private readonly logger: Logger;
 
   // 服务实例
-  public search!: SearchService;
+  public readonly api: {
+    search: SearchService;
+  };
 
   // 配置
-  public readonly config: Required<GooFishConfig>;
+  public readonly config: GooFishConfig;
 
-  constructor(config: GooFishConfig) {
+  constructor(config: Partial<GooFishConfig>) {
     this.config = {
       level: config.level || LogLevel.INFO,
       cookie: config.cookie || '',
       baseURL: config.baseURL || API_CONFIG.BASE_URL,
       apiPrefix: config.apiPrefix || API_CONFIG.API_PREFIX,
-      apiKey: config.apiKey || API_CONFIG.APP_KEY,
+      appKey: config.appKey || API_CONFIG.APP_KEY,
       jsv: config.jsv || API_CONFIG.JSV,
       timeout: config.timeout || API_CONFIG.TIMEOUT,
       dataType: config.dataType || API_CONFIG.DATA_TYPE,
       type: config.type || API_CONFIG.TYPE,
-      userAgent: config.userAgent || API_CONFIG.USER_AGENT,
       version: config.version || API_CONFIG.VERSION,
       sessionOption: config.sessionOption || API_CONFIG.SESSION_OPTION,
+      v: config.v || API_CONFIG.V,
+      accountSite: config.accountSite || API_CONFIG.ACCOUNT_SITE,
+      origin: config.origin || API_CONFIG.HEADERS_ORIGIN,
+      referer: config.referer || API_CONFIG.HEADERS_REFERER,
+      contentType: config.contentType || API_CONFIG.HEADERS_CONTENT_TYPE,
+      userAgent: config.userAgent || API_CONFIG.HEADERS_USER_AGENT,
+      spmCnt: config.spmCnt || API_CONFIG.SPM_CNT,
     };
 
     // 创建 Logger
@@ -62,21 +76,18 @@ export class GooFish {
     // 创建 HTTP 客户端
     this.http = new HttpClient({
       baseURL: this.config.baseURL,
-      timeout: this.config.timeout,
-      headers: {
-        'Content-Type': this.config.dataType,
-        'User-Agent': this.config.userAgent,
-      },
     });
-
-    // 设置拦截器
-    this.setupInterceptors();
-
-    // 初始化服务
-    this.initServices(this.config);
 
     // 设置初始 cookie
     this.http.setCookie(this.config.cookie);
+
+    // 初始化服务
+    this.api = {
+      search: new SearchService(this.http, this.config),
+    };
+
+    // 设置拦截器
+    this.setupInterceptors();
 
     // 打印日志
     this.logger.debug('GooFish 初始化完成', {
@@ -96,11 +107,6 @@ export class GooFish {
    */
   private setupInterceptors(): void {
     const axios = this.http.getAxios();
-    // 认证拦截器（如果有需要可以扩展）
-    // const authInterceptor = createAuthInterceptor({
-    //   getToken: () => this.getAuthToken(),
-    // });
-    // axios.interceptors.request.use(authInterceptor);
     // 日志拦截器
     const logInterceptor = createLogInterceptor(this.logger);
     axios.interceptors.request.use(logInterceptor.request);
@@ -121,13 +127,6 @@ export class GooFish {
       },
     });
     axios.interceptors.response.use(undefined, errorInterceptor);
-  }
-
-  /**
-   * 初始化服务
-   */
-  private initServices(config: GooFishConfig): void {
-    this.search = new SearchService(this.http, config);
   }
 
   /**

@@ -1,4 +1,4 @@
 // 导出所有常量
-export * from '@/constants/api';
-export * from '@/constants/error';
-export * from '@/constants/business';
+export * from './api';
+export * from './error';
+export * from './business';

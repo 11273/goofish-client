@@ -117,14 +117,16 @@ export class Logger {
     url?: string;
     data?: unknown;
     headers?: Record<string, unknown>;
+    params?: Record<string, unknown>;
   }): void {
-    const { method = 'GET', url = '', data, headers } = config;
+    const { method = 'GET', url = '', data, headers, params } = config;
     const message = `→ ${method.toUpperCase()} ${url}`;
 
     if (this.options.level >= LogLevel.DEBUG) {
       this.debug(message, {
         data,
         headers,
+        params,
       });
     } else {
       this.info(message);
