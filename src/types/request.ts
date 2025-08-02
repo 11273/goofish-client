@@ -44,7 +44,7 @@ export interface InternalRequestOptions<TData = unknown>
  * HTTP 客户端配置
  */
 export interface HttpClientConfig {
-  baseURL?: string;
+  baseURL: string;
   timeout?: number;
   headers?: Record<string, string>;
   /** 原生 Axios 配置 */

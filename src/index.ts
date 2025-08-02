@@ -9,6 +9,9 @@ export { SearchService } from './services/search.service';
 // ========== Types ==========
 export * as Types from './types';
 
+// ========== Logger ==========
+export { Logger, LogLevel, type LoggerOptions } from './utils/logger';
+
 // ========== Helpers ==========
 import { GooFish, type GooFishConfig } from './client';
 

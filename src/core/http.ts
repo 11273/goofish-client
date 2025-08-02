@@ -6,8 +6,7 @@ import type {
   CancelTokenSource,
 } from 'axios';
 
-import { API_CONFIG } from '../constants';
-import type { HttpClientConfig, HttpRequestConfig } from '../types/request';
+import type { HttpClientConfig, HttpRequestConfig } from '@/types/request';
 
 /**
  * HTTP 客户端
@@ -15,11 +14,11 @@ import type { HttpClientConfig, HttpRequestConfig } from '../types/request';
 export class HttpClient {
   private readonly axios: AxiosInstance;
 
-  constructor(config: HttpClientConfig = {}) {
+  constructor(config: HttpClientConfig) {
     // 创建 Axios 实例
     this.axios = axios.create({
-      baseURL: config.baseURL || API_CONFIG.BASE_URL,
-      timeout: config.timeout || API_CONFIG.TIMEOUT,
+      baseURL: config.baseURL,
+      timeout: config.timeout || 10000,
       headers: {
         'Content-Type': 'application/json',
         ...config.headers,
@@ -97,11 +96,4 @@ export class HttpClient {
       | string
       | undefined;
   }
-}
-
-/**
- * 创建 HTTP 客户端
- */
-export function createHttpClient(config?: HttpClientConfig): HttpClient {
-  return new HttpClient(config);
 }

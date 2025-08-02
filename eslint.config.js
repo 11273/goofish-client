@@ -26,6 +26,10 @@ export default [
     rules: {
       ...typescript.configs.recommended.rules,
       ...typescript.configs['recommended-requiring-type-checking'].rules,
+      
+      '@typescript-eslint/no-require-imports': 'off', // 允许 require
+      '@typescript-eslint/no-unsafe-assignment': 'off', // 允许 any 赋值
+
       '@typescript-eslint/explicit-function-return-type': 'warn',
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': [

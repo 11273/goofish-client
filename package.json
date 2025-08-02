@@ -18,7 +18,6 @@
   "bugs": {
     "url": "https://github.com/11273/goofish-sdk/issues"
   },
-  "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

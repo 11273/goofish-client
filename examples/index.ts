@@ -2,31 +2,28 @@
  * 示例：搜索商品
  */
 
-import { GooFish } from 'goofish-sdk';
+import { GooFish } from '../src';
+// 自定义日志级别示例
+import { LogLevel } from '../src/utils/logger';
 
-const client = new GooFish({ cookie: '' });
-
-async function searchExample() {
-  // 1. 基础搜索
-  console.log('🔍 搜索 iPhone...');
-  const results = await client.search.search({
-    keyword: 'iPhone',
-    pageNumber: 1,
-    rowsPerPage: 10,
-    fromFilter: true,
-    sortValue: 'desc',
-    sortField: 'create',
-    customDistance: '',
-    gps: '',
-    propValueStr: { searchFilter: '' },
-    customGps: '',
-    searchReqFromPage: 'pcSearch',
-    extraFilterValue: '{}',
-    userPositionJson: '{}',
+async function testWithLogging() {
+  // 创建客户端实例，启用调试模式
+  const client = new GooFish({
+    level: LogLevel.DEBUG,
   });
 
-  console.log(results);
+  try {
+    // 搜索商品 - 会自动记录请求响应日志
+    const result = await client.search.search({
+      keyword: '手机',
+      pageNumber: 1,
+      rowsPerPage: 10,
+    });
+
+    // console.log('搜索结果:', result);
+  } catch (error) {
+    console.error('搜索失败:', error);
+  }
 }
 
-// 运行示例
-searchExample().catch(console.error);
+testWithLogging();

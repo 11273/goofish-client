@@ -1,22 +1,21 @@
 import type { HttpClient } from '@/core/http';
-import { API_CONFIG } from '@/constants';
+import type { GooFishConfig } from '@/client/goofish.client';
 import type { GooFishResponse, RequestOptions } from '@/types';
 
 export abstract class BaseService {
   protected http: HttpClient;
+  protected config: GooFishConfig;
 
-  constructor(http: HttpClient) {
+  constructor(http: HttpClient, config: GooFishConfig) {
     this.http = http;
+    this.config = config;
   }
 
   /**
    * 构建完整的 API URL
    */
-  protected buildUrl(
-    api: string,
-    version: string = API_CONFIG.VERSION
-  ): string {
-    return `${API_CONFIG.BASE_URL}${API_CONFIG.API_PREFIX}/${api}/${version}/`;
+  protected buildUrl(api: string): string {
+    return `${this.config.baseURL}${this.config.apiPrefix}/${api}/${this.config.version}/`;
   }
 
   /**
@@ -25,13 +24,14 @@ export abstract class BaseService {
   protected async request<TResponse, TData = unknown>(
     options: RequestOptions<TData>
   ): Promise<TResponse> {
-    const url = this.buildUrl(options.api, options.version);
+    const url = this.buildUrl(options.api);
+    const method = options.method || 'POST';
 
     try {
       // 发送请求
       const response = await this.http.request<GooFishResponse<TResponse>>({
         url,
-        method: options.method || 'POST',
+        method,
         data: options.data,
         ...options.config,
       });

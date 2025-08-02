@@ -15,6 +15,13 @@ export default defineConfig({
   // 📤 输出格式 - 支持所有主流格式
   format: ['cjs', 'esm'],
 
+  // 🔧 添加输出文件扩展名配置
+  outExtension({ format }) {
+    return {
+      js: format === 'cjs' ? '.js' : '.mjs',
+    };
+  },
+
   // 🎯 目标环境 - 与 tsconfig 保持一致
   target: 'es2018',
   platform: 'neutral', // 同时支持 Node.js 和浏览器
