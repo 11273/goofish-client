@@ -1,6 +1,8 @@
 import { BaseService } from './base.service';
 import { API_ENDPOINTS } from '../constants';
-import type { SearchParams, SearchResponse } from '../types/api/search';
+import type { SearchOptions, SearchResponse } from '../types/api/search';
+import { SearchParamsBuilder } from './builders/search-params.builder';
+import type { GooFishResponse } from '../types';
 
 /**
  * 搜索服务实现
@@ -8,27 +10,17 @@ import type { SearchParams, SearchResponse } from '../types/api/search';
 export class SearchService extends BaseService {
   /**
    * 搜索商品
+   * @param params 搜索参数
+   * @returns 搜索结果
    */
-  public async search(params: SearchParams): Promise<SearchResponse> {
-    const requestData: SearchParams = {
-      pageNumber: params.pageNumber || 1,
-      keyword: 'chuu上衣',
-      fromFilter: false,
-      rowsPerPage: 30,
-      sortValue: 'desc',
-      sortField: 'create',
-      customDistance: '',
-      gps: '',
-      propValueStr: {},
-      customGps: '',
-      searchReqFromPage: 'pcSearch',
-      extraFilterValue: '{}',
-      userPositionJson: '{}',
-    };
+  public async search(
+    params: SearchOptions
+  ): Promise<GooFishResponse<SearchResponse>> {
+    const internalParams = SearchParamsBuilder.build(params);
 
-    return this.request<SearchParams, SearchResponse>({
+    return this.request<SearchResponse>({
       api: API_ENDPOINTS.SEARCH.SEARCH,
-      data: requestData,
+      data: internalParams,
     });
   }
 }

@@ -4,6 +4,7 @@ import {
   createLogInterceptor,
 } from '../core/interceptor';
 import { SearchService } from '../services/search.service';
+import { UserService } from '../services/user.service';
 import { API_CONFIG } from '../constants';
 import { Logger, LogLevel } from '../utils/logger';
 
@@ -21,7 +22,6 @@ export interface GooFishConfig {
   dataType: string;
   type: string;
   userAgent: string;
-  version: string;
   sessionOption: string;
   v: string;
   accountSite: string;
@@ -41,6 +41,7 @@ export class GooFish {
   // 服务实例
   public readonly api: {
     search: SearchService;
+    user: UserService;
   };
 
   // 配置
@@ -57,7 +58,6 @@ export class GooFish {
       timeout: config.timeout || API_CONFIG.TIMEOUT,
       dataType: config.dataType || API_CONFIG.DATA_TYPE,
       type: config.type || API_CONFIG.TYPE,
-      version: config.version || API_CONFIG.VERSION,
       sessionOption: config.sessionOption || API_CONFIG.SESSION_OPTION,
       v: config.v || API_CONFIG.V,
       accountSite: config.accountSite || API_CONFIG.ACCOUNT_SITE,
@@ -84,6 +84,7 @@ export class GooFish {
     // 初始化服务
     this.api = {
       search: new SearchService(this.http, this.config),
+      user: new UserService(this.http, this.config),
     };
 
     // 设置拦截器

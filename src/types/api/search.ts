@@ -1,34 +1,143 @@
 // ========== 搜索请求参数 ==========
-
-export interface SearchParams {
-  // 页码
-  pageNumber: number;
-  // 搜索关键词
+/**
+ * 排序方式
+ */
+export enum SortValue {
+  /** 降序 */
+  DESC = 'desc',
+  /** 升序 */
+  ASC = 'asc',
+  /** 信用降序 */
+  CREDIT_DESC = 'credit_desc',
+}
+/**
+ * 排序字段
+ */
+export enum SortField {
+  /** 价格 */
+  PRICE = 'price',
+  /** 发布时间 */
+  CREATE = 'create',
+  /** 降价幅度 */
+  REDUCE = 'reduce',
+  /** 位置距离 */
+  POSITION = 'pos',
+  /** 修改时间 */
+  MODIFY = 'modify',
+  /** 信用 */
+  CREDIT = 'credit',
+}
+/**
+ * 快速筛选类型
+ */
+export enum QuickFilter {
+  /** 个人闲置 */
+  PERSONAL = 'filterPersonal',
+  /** 验货宝 */
+  APPRAISE = 'filterAppraise',
+  /** 验号担保 */
+  GAME_ACCOUNT = 'gameAccountInsurance',
+  /** 包邮 */
+  FREE_POSTAGE = 'filterFreePostage',
+  /** 超赞鱼小铺 */
+  HIGH_LEVEL_SELLER = 'filterHighLevelYxpSeller',
+  /** 全新 */
+  NEW = 'filterNew',
+  /** 严选 */
+  INSPECTED = 'inspectedPhone',
+  /** 转卖 */
+  ONE_KEY_RESELL = 'filterOneKeyResell',
+}
+/**
+ * 发布天数筛选
+ */
+export enum PublishDays {
+  /** 1天内 */
+  ONE_DAY = '1',
+  /** 3天内 */
+  THREE_DAYS = '3',
+  /** 7天内 */
+  SEVEN_DAYS = '7',
+  /** 14天内 */
+  FOURTEEN_DAYS = '14',
+}
+// ============ 接口类型 ============
+// 这些是复合类型，作为接口内联或独立都可以，但要保持一致性
+/**
+ * GPS坐标
+ */
+export interface GPSCoordinate {
+  /** 纬度 */
+  latitude: number;
+  /** 经度 */
+  longitude: number;
+}
+/**
+ * 搜索参数
+ */
+export interface SearchOptions {
+  /** 搜索关键词 */
   keyword: string;
-  // 是否来自筛选
-  fromFilter: boolean;
-  // 每页数量
-  rowsPerPage: number;
-  // 排序值：desc（降序）| asc（升序）
-  sortValue: 'desc' | 'asc';
-  // 排序字段：create（创建时间）| price（价格）| distance（距离）
-  sortField: 'create' | 'price' | 'distance';
-  // 自定义距离
+
+  /** 页码，默认: 1 */
+  pageNumber?: number;
+
+  /** 每页数量，默认: 30 */
+  rowsPerPage?: number;
+
+  /** 排序方式 默认：综合 */
+  sortValue?: SortValue;
+
+  /** 排序字段 */
+  sortField?: SortField;
+
+  /** 自定义距离范围（单位：米） */
   customDistance?: string;
-  // GPS信息
-  gps?: string;
-  // 属性值字符串
-  propValueStr?: {
-    searchFilter?: string;
+
+  /** GPS坐标 */
+  gps?: GPSCoordinate;
+
+  /** 搜索筛选条件 */
+  filter?: {
+    /** 价格范围 */
+    priceRange?: {
+      /** 最低价格 */
+      from: number;
+      /** 最高价格，不填表示不限 */
+      to?: number;
+    };
+    /** 发布时间筛选 */
+    publishDays?: PublishDays;
+    /** 快速筛选项 */
+    quickFilters?: QuickFilter[];
   };
-  // 自定义GPS
-  customGps?: string;
-  // 搜索请求来源页面
-  searchReqFromPage?: string;
-  // 额外筛选值
-  extraFilterValue?: string;
-  // 用户位置JSON
-  userPositionJson?: string;
+
+  /** 地区筛选 */
+  locationFilter?: {
+    /** 地区列表 */
+    divisionList?: Array<{
+      /** 省份 */
+      province?: string;
+      /** 城市 */
+      city?: string;
+      /** 区域 */
+      area?: string;
+    }>;
+    /** 是否排除多地卖家，默认: false */
+    excludeMultiPlacesSellers?: boolean;
+    /** 额外地区信息，如"全国" */
+    extraDivision?: string;
+  };
+
+  /** 用户当前位置信息 */
+  userPosition?: {
+    /** 省份 */
+    province: string;
+    /** 城市 */
+    city: string;
+    /** 区/县 */
+    district?: string;
+  };
 }
 
 // ========== 搜索响应类型 ==========
@@ -423,64 +532,4 @@ export interface Template {
   name: string;
   url: string;
   version: string;
-}
-
-// ========== 搜索建议 ==========
-
-export interface SearchSuggest {
-  keywords: string[];
-}
-
-// ========== 热门搜索词 ==========
-
-export interface HotWords {
-  list: HotWord[];
-}
-
-export interface HotWord {
-  word: string;
-  heat: number;
-  trend: 'up' | 'down' | 'stable';
-}
-
-// ========== 高级搜索参数 ==========
-
-export interface AdvancedSearchParams extends SearchParams {
-  // 分类ID
-  category?: string;
-  // 价格范围
-  priceMin?: number;
-  priceMax?: number;
-  // 地区
-  location?: string;
-  // 成色
-  condition?: string;
-  // 品牌
-  brand?: string;
-  // 是否包邮
-  freeShipping?: boolean;
-  // 是否支持验货
-  supportInspection?: boolean;
-  // 发布时间（天数）
-  publishDays?: number;
-}
-
-// ========== 搜索筛选选项 ==========
-
-export interface SearchFilterOptions {
-  // 成色选项
-  conditions: FilterOption[];
-  // 品牌选项
-  brands: FilterOption[];
-  // 功能状态选项
-  functionStatus: FilterOption[];
-  // 分类选项
-  categories: FilterOption[];
-}
-
-export interface FilterOption {
-  id: string;
-  name: string;
-  value: string | number;
-  count?: number;
 }

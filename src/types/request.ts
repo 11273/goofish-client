@@ -70,8 +70,6 @@ export interface BuildParamsOutput {
   dataType: string;
   /** 请求类型 */
   type: string;
-  /** API 版本 */
-  version: string;
   /** 会话选项 */
   sessionOption: string;
   /** 时间戳 */

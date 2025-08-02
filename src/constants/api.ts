@@ -2,13 +2,12 @@
 export const API_CONFIG = {
   // 请求配置
   BASE_URL: 'https://h5api.m.goofish.com',
-  API_PREFIX: '/h5',
+  API_PREFIX: 'h5',
   APP_KEY: '34839810',
   JSV: '2.7.2',
   TIMEOUT: 20000,
   DATA_TYPE: 'json',
   TYPE: 'originaljson',
-  VERSION: '1.0',
   SESSION_OPTION: 'AutoLoginOnly',
   V: '1.0',
   ACCOUNT_SITE: 'xianyu',
@@ -25,7 +24,12 @@ export const API_CONFIG = {
 // API 端点映射
 export const API_ENDPOINTS = {
   // 用户相关
-  USER: {},
+  USER: {
+    // 用户导航（包含用户名、头像、关注、粉丝等信息）
+    NAV: 'mtop.idle.web.user.page.nav',
+    // 用户头部（包含用户ID、用户信息、宝贝发布、信用信息等更详细的数据）
+    HEAD: 'mtop.idle.web.user.page.head',
+  },
 
   // 商品相关
   ITEM: {},

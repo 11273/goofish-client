@@ -4,6 +4,7 @@ export interface GooFishResponse<T = unknown> {
   data: T;
   ret: string[];
   v: string;
+  traceId?: string;
 }
 
 // 错误响应的 data 结构
