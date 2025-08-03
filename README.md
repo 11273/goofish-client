@@ -1,4 +1,4 @@
-# GooFish SDK
+# Goofish SDK
 
 闲鱼商品搜索 SDK，支持商品搜索等功能。
 
@@ -11,10 +11,10 @@ npm install goofish-sdk
 ## 快速开始
 
 ```typescript
-import { GooFish } from "goofish-sdk";
+import { Goofish } from "goofish-sdk";
 
 // 创建客户端实例
-const client = new GooFish({
+const client = new Goofish({
   cookie: "your_cookie_here",
   debug: true, // 启用调试模式以查看详细日志
 });
@@ -37,13 +37,13 @@ SDK 内置了完整的日志系统，支持请求响应日志记录：
 
 ```typescript
 // 启用调试模式，查看详细的请求响应日志
-const client = new GooFish({
+const client = new Goofish({
   cookie: "your_cookie_here",
   debug: true, // 启用后会显示详细的HTTP请求日志
 });
 
 // 普通模式，只显示基本信息
-const client = new GooFish({
+const client = new Goofish({
   cookie: "your_cookie_here",
   debug: false, // 默认值，只显示基本日志
 });
@@ -98,10 +98,10 @@ logger.logRequest({
 
 ## API 参考
 
-### GooFish
+### Goofish
 
 ```typescript
-interface GooFishConfig {
+interface GoofishConfig {
   baseURL?: string; // API基础URL
   timeout?: number; // 请求超时时间
   cookie?: string; // 用户Cookie

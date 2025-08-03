@@ -1,10 +1,10 @@
-import { GooFish, type GooFishConfig } from './goofish.client';
+import { Goofish, type GoofishConfig } from './goofish.client';
 
 // 导出主类
-export { GooFish } from './goofish.client';
+export { Goofish } from './goofish.client';
 
 // 导出类型
-export type { GooFishConfig } from './goofish.client';
+export type { GoofishConfig } from './goofish.client';
 
 /**
  * 创建闲鱼客户端实例
@@ -25,9 +25,9 @@ export type { GooFishConfig } from './goofish.client';
  */
 export function createClient(
   cookie?: string,
-  options?: Omit<GooFishConfig, 'cookie'>
-): GooFish {
-  return new GooFish({
+  options?: Omit<GoofishConfig, 'cookie'>
+): Goofish {
+  return new Goofish({
     cookie: cookie || '',
     ...options,
   });

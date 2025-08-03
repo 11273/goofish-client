@@ -1,74 +1,28 @@
 import type { HttpClient } from '../core/http';
-import type { GooFishConfig } from '../client/goofish.client';
+import type { GoofishConfig } from '../client/goofish.client';
 import type {
   RequestOptions,
   BuildParamsOutput,
-  GooFishResponse,
+  GoofishResponse,
   HttpRequestConfig,
 } from '../types';
 import { generateSign, type Logger } from '../utils';
-
-// 常量定义
-const TOKEN_ERROR_CODES = [
-  'FAIL_SYS_TOKEN_EMPTY',
-  'FAIL_SYS_TOKEN_ILLEGAL',
-  'FAIL_SYS_SESSION_EXPIRED',
-] as const;
-const TOKEN_COOKIE_REGEX = /_m_h5_tk=([^_]+)_/;
+import { TokenManager } from '../managers';
 
 export abstract class BaseService {
   protected http: HttpClient;
-  protected config: GooFishConfig;
+  protected config: GoofishConfig;
   protected logger: Logger;
-  private token: string = '';
 
-  constructor(http: HttpClient, config: GooFishConfig, logger: Logger) {
+  constructor(http: HttpClient, config: GoofishConfig, logger: Logger) {
     this.http = http;
     this.config = config;
     this.logger = logger;
-  }
 
-  /**
-   * 从响应头中提取并更新 token
-   */
-  private updateTokenFromHeaders(headers: Record<string, unknown>): boolean {
-    const setCookieHeaders = headers['set-cookie'];
-    this.logger.debug('🔄 设置cookie响应头:', setCookieHeaders);
-    if (!setCookieHeaders) return false;
-
-    const cookies = Array.isArray(setCookieHeaders)
-      ? setCookieHeaders
-      : [setCookieHeaders];
-    const tokenCookie = cookies.find((cookie: string) =>
-      cookie.includes('_m_h5_tk=')
-    );
-
-    if (tokenCookie && typeof tokenCookie === 'string') {
-      const match = tokenCookie.match(TOKEN_COOKIE_REGEX);
-      const newToken = match?.[1];
-      if (newToken && newToken !== this.token) {
-        this.token = newToken;
-        return true;
-      }
+    // 初始化 token
+    if (config.cookie) {
+      TokenManager.updateFromCookie(config.cookie, logger);
     }
-
-    return false;
-  }
-
-  /**
-   * 检查是否为 token 错误
-   */
-  private isTokenError<TResponse>(
-    response: GooFishResponse<TResponse>
-  ): boolean {
-    if (!response.ret) return false;
-    const retString = response.ret[0];
-    if (!retString) return false;
-
-    const errorCode = retString.split(
-      '::'
-    )[0] as (typeof TOKEN_ERROR_CODES)[number];
-    return TOKEN_ERROR_CODES.includes(errorCode);
   }
 
   /**
@@ -76,7 +30,8 @@ export abstract class BaseService {
    */
   protected buildParams(api: string, data: string): BuildParamsOutput {
     const t = Date.now();
-    return {
+
+    const params = {
       appKey: this.config.appKey,
       jsv: this.config.jsv,
       dataType: this.config.dataType,
@@ -91,10 +46,13 @@ export abstract class BaseService {
         appKey: this.config.appKey,
         t: t.toString(),
         data,
-        token: this.token,
+        token: TokenManager.getToken(),
       }),
       spm_cnt: this.config.spmCnt,
+      spm_pre: this.config.spmPre,
     };
+
+    return params;
   }
 
   /**
@@ -129,7 +87,7 @@ export abstract class BaseService {
    */
   protected async request<TResponse, TData = unknown>(
     options: RequestOptions<TData>
-  ): Promise<GooFishResponse<TResponse>> {
+  ): Promise<GoofishResponse<TResponse>> {
     const url = this.buildUrl(options.api);
     const data = JSON.stringify(options.data || {});
     const method = options.method || 'POST';
@@ -143,25 +101,16 @@ export abstract class BaseService {
       params,
       options
     );
-
     // 发送请求
-    const response = await this.http.request<GooFishResponse<TResponse>>(
+    const response = await this.http.request<GoofishResponse<TResponse>>(
       requestConfig
     );
 
     // 检查是否需要刷新 token 并重试
-    if (this.isTokenError(response.data)) {
-      this.logger.info(
-        '🔄 Token 自动刷新并重试，重试原因:',
-        response.data.ret?.[0]
-      );
-      const tokenUpdated = this.updateTokenFromHeaders(response.headers);
-      this.logger.debug('🔄 Token 刷新结果:', {
-        tokenUpdated,
-        token: this.token,
-      });
+    if (TokenManager.isTokenError(response.data)) {
+      this.logger.info('🔄 Token 自动刷新并重试，重试原因:', response.data.ret);
 
-      if (tokenUpdated) {
+      if (TokenManager.updateFromHeaders(response.headers, this.logger)) {
         // 使用新 token 重新构建参数并重试
         const retryParams = this.buildParams(options.api, data);
         const retryConfig = this.buildRequestConfig(
@@ -173,7 +122,7 @@ export abstract class BaseService {
         );
 
         const retryResponse = await this.http.request<
-          GooFishResponse<TResponse>
+          GoofishResponse<TResponse>
         >(retryConfig);
 
         return retryResponse.data;
@@ -183,7 +132,7 @@ export abstract class BaseService {
     }
 
     // 正常响应，尝试更新 token（如果有新的）
-    this.updateTokenFromHeaders(response.headers);
+    TokenManager.updateFromHeaders(response.headers);
 
     return response.data;
   }

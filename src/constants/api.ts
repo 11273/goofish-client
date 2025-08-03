@@ -12,6 +12,7 @@ export const API_CONFIG = {
   V: '1.0',
   ACCOUNT_SITE: 'xianyu',
   SPM_CNT: 'a21ybx.undefined.0.0',
+  SPM_PRE: 'a21ybx.undefined.0.0',
 
   // 请求头
   HEADERS_ORIGIN: 'https://www.goofish.com',
@@ -46,3 +47,16 @@ export const API_ENDPOINTS = {
   // 消息相关
   MESSAGE: {},
 } as const;
+
+// 令牌错误代码
+export const TOKEN_ERROR_CODES = [
+  'FAIL_SYS_TOKEN_EMPTY',
+  'FAIL_SYS_TOKEN_ILLEGAL',
+  'FAIL_SYS_SESSION_EXPIRED',
+] as const;
+
+// 令牌 cookie 名称
+export const TOKEN_COOKIE_NAME = '_m_h5_tk';
+
+// 令牌 cookie 正则
+export const TOKEN_COOKIE_REGEX = /_m_h5_tk=([^_]+)_/;

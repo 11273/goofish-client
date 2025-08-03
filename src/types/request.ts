@@ -86,4 +86,6 @@ export interface BuildParamsOutput {
   sign: string;
   /** SPM 计数 */
   spm_cnt: string;
+  /** SPM 前缀 */
+  spm_pre: string;
 }

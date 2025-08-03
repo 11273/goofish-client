@@ -10,7 +10,7 @@ import { Logger, LogLevel } from '../utils/logger';
 import { CookieStore } from '../utils/cookie';
 import { CookieUtils } from '../utils/cookie';
 
-export interface GooFishConfig {
+export interface GoofishConfig {
   // 基本配置
   level: LogLevel;
   cookie: string;
@@ -31,9 +31,10 @@ export interface GooFishConfig {
   referer: string;
   contentType: string;
   spmCnt: string;
+  spmPre: string;
 }
 
-export class GooFish {
+export class Goofish {
   // HTTP
   private readonly http: HttpClient;
 
@@ -50,9 +51,9 @@ export class GooFish {
   };
 
   // 配置
-  public readonly config: GooFishConfig;
+  public readonly config: GoofishConfig;
 
-  constructor(config: Partial<GooFishConfig>) {
+  constructor(config: Partial<GoofishConfig>) {
     this.config = {
       level: config.level || LogLevel.INFO,
       cookie: config.cookie || '',
@@ -71,6 +72,7 @@ export class GooFish {
       contentType: config.contentType || API_CONFIG.HEADERS_CONTENT_TYPE,
       userAgent: config.userAgent || API_CONFIG.HEADERS_USER_AGENT,
       spmCnt: config.spmCnt || API_CONFIG.SPM_CNT,
+      spmPre: config.spmPre || API_CONFIG.SPM_PRE,
     };
 
     // 创建 Logger
@@ -102,7 +104,7 @@ export class GooFish {
     this.setupInterceptors();
 
     // 打印日志
-    this.logger.debug('GooFish 初始化完成', {
+    this.logger.debug('Goofish 初始化完成', {
       config: this.config,
     });
   }
@@ -110,7 +112,7 @@ export class GooFish {
   /**
    * 获取当前配置
    */
-  getConfig(): Readonly<GooFishConfig> {
+  getConfig(): Readonly<GoofishConfig> {
     return { ...this.config };
   }
 
@@ -139,11 +141,11 @@ export class GooFish {
    * 更新 Cookie
    */
   updateCookie(cookie: string): void {
-    const cookies = CookieUtils.parse(cookie);
-    if (cookies) {
-      this.logger.debug('🔄 更新 cookie', cookies);
-      this.cookieStore.set(cookies.name, cookies.value);
-    }
+    const cookies = CookieUtils.parseCookieHeader(cookie);
+    this.logger.debug('🔄 更新 cookie', cookies);
+    Object.entries(cookies).forEach(([name, value]) => {
+      this.cookieStore.set(name, value);
+    });
   }
 
   /**

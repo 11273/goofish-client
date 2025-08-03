@@ -1,5 +1,5 @@
 // API 响应基础结构
-export interface GooFishResponse<T = unknown> {
+export interface GoofishResponse<T = unknown> {
   api: string;
   data: T;
   ret: string[];
@@ -19,8 +19,8 @@ export interface ErrorResponseData {
 }
 
 // 错误响应类型
-export interface GooFishErrorResponse
-  extends GooFishResponse<ErrorResponseData> {
+export interface GoofishErrorResponse
+  extends GoofishResponse<ErrorResponseData> {
   dialogSize?: {
     width: string;
     height: string;
@@ -43,7 +43,7 @@ export enum ErrorCode {
 }
 
 // API 错误类型
-export interface GooFishError {
+export interface GoofishError {
   code: string;
   message: string;
   api?: string;
@@ -51,7 +51,7 @@ export interface GooFishError {
 }
 
 // 请求配置
-export interface GooFishRequestConfig {
+export interface GoofishRequestConfig {
   // 是否需要签名
   needSign?: boolean;
   // 是否自动刷新token
@@ -67,6 +67,6 @@ export interface GooFishRequestConfig {
 // 扩展 AxiosRequestConfig
 import type { AxiosRequestConfig } from 'axios';
 
-export interface GooFishAxiosRequestConfig extends AxiosRequestConfig {
-  goofish?: GooFishRequestConfig;
+export interface GoofishAxiosRequestConfig extends AxiosRequestConfig {
+  goofish?: GoofishRequestConfig;
 }

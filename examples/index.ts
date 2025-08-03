@@ -1,4 +1,4 @@
-import { GooFish } from '../src';
+import { Goofish } from '../src';
 // 自定义日志级别示例
 import { logger, LogLevel } from '../src/utils/logger';
 
@@ -13,14 +13,14 @@ async function testWithLogging() {
     logger.info('用户导航信息:', userNavResult);
 
     // 获取用户头部信息
-    // const userHeadResult = await client.api.user.getUserHead();
-    // logger.info('用户头部信息:', userHeadResult);
+    const userHeadResult = await client.api.user.getUserHead();
+    logger.info('用户头部信息:', userHeadResult);
 
     // 搜索商品
     const searchResult = await client.api.search.search({
       keyword: '手机',
       pageNumber: 1,
-      rowsPerPage: 10,
+      rowsPerPage: 1,
     });
 
     logger.info('搜索结果:', searchResult);

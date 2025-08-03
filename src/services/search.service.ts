@@ -2,7 +2,7 @@ import { BaseService } from './base.service';
 import { API_ENDPOINTS } from '../constants';
 import type { SearchOptions, SearchResponse } from '../types/api/search';
 import { SearchParamsBuilder } from './builders/search-params.builder';
-import type { GooFishResponse } from '../types';
+import type { GoofishResponse } from '../types';
 
 /**
  * 搜索服务实现
@@ -15,7 +15,7 @@ export class SearchService extends BaseService {
    */
   public async search(
     params: SearchOptions
-  ): Promise<GooFishResponse<SearchResponse>> {
+  ): Promise<GoofishResponse<SearchResponse>> {
     const internalParams = SearchParamsBuilder.build(params);
 
     return this.request<SearchResponse>({
