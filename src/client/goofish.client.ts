@@ -32,6 +32,7 @@ export interface GoofishConfig {
   contentType: string;
   spmCnt: string;
   spmPre: string;
+  logId: string;
 }
 
 export class Goofish {
@@ -73,6 +74,7 @@ export class Goofish {
       userAgent: config.userAgent || API_CONFIG.HEADERS_USER_AGENT,
       spmCnt: config.spmCnt || API_CONFIG.SPM_CNT,
       spmPre: config.spmPre || API_CONFIG.SPM_PRE,
+      logId: config.logId || API_CONFIG.LOG_ID,
     };
 
     // 创建 Logger

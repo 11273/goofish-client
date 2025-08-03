@@ -13,6 +13,7 @@ export const API_CONFIG = {
   ACCOUNT_SITE: 'xianyu',
   SPM_CNT: 'a21ybx.undefined.0.0',
   SPM_PRE: 'a21ybx.undefined.0.0',
+  LOG_ID: '',
 
   // 请求头
   HEADERS_ORIGIN: 'https://www.goofish.com',

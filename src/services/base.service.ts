@@ -50,6 +50,7 @@ export abstract class BaseService {
       }),
       spm_cnt: this.config.spmCnt,
       spm_pre: this.config.spmPre,
+      log_id: this.config.logId,
     };
 
     return params;
