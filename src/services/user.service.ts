@@ -24,6 +24,9 @@ export class UserService extends BaseService {
   public async getUserHead(): Promise<GooFishResponse<UserHeadResponse>> {
     return this.request<UserHeadResponse>({
       api: API_ENDPOINTS.USER.HEAD,
+      data: {
+        self: true,
+      },
     });
   }
 }

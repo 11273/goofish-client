@@ -1,12 +1,14 @@
 import { HttpClient } from '../core/http';
 import {
-  createErrorInterceptor,
+  createCookieInterceptor,
   createLogInterceptor,
 } from '../core/interceptor';
 import { SearchService } from '../services/search.service';
 import { UserService } from '../services/user.service';
 import { API_CONFIG } from '../constants';
 import { Logger, LogLevel } from '../utils/logger';
+import { CookieStore } from '../utils/cookie';
+import { CookieUtils } from '../utils/cookie';
 
 export interface GooFishConfig {
   // 基本配置
@@ -37,6 +39,9 @@ export class GooFish {
 
   // 日志器
   private readonly logger: Logger;
+
+  // Cookie 存储
+  private readonly cookieStore: CookieStore;
 
   // 服务实例
   public readonly api: {
@@ -76,15 +81,21 @@ export class GooFish {
     // 创建 HTTP 客户端
     this.http = new HttpClient({
       baseURL: this.config.baseURL,
+      axiosConfig: {
+        withCredentials: true,
+      },
     });
 
+    // 创建 Cookie 存储
+    this.cookieStore = new CookieStore();
+
     // 设置初始 cookie
-    this.http.setCookie(this.config.cookie);
+    this.updateCookie(this.config.cookie);
 
     // 初始化服务
     this.api = {
-      search: new SearchService(this.http, this.config),
-      user: new UserService(this.http, this.config),
+      search: new SearchService(this.http, this.config, this.logger),
+      user: new UserService(this.http, this.config, this.logger),
     };
 
     // 设置拦截器
@@ -108,6 +119,13 @@ export class GooFish {
    */
   private setupInterceptors(): void {
     const axios = this.http.getAxios();
+    // Cookie 拦截器
+    const cookieInterceptor = createCookieInterceptor(
+      this.logger,
+      this.cookieStore
+    );
+    axios.interceptors.request.use(cookieInterceptor.request);
+    axios.interceptors.response.use(cookieInterceptor.response);
     // 日志拦截器
     const logInterceptor = createLogInterceptor(this.logger);
     axios.interceptors.request.use(logInterceptor.request);
@@ -115,31 +133,17 @@ export class GooFish {
       logInterceptor.response,
       logInterceptor.error
     );
-    // 错误处理拦截器
-    const errorInterceptor = createErrorInterceptor({
-      onNetworkError: (error) => {
-        this.logger.error('网络错误', error);
-      },
-      onUnauthorized: (error) => {
-        this.logger.error('认证失败', error);
-      },
-      onServerError: (error) => {
-        this.logger.error('服务器错误', error);
-      },
-    });
-    axios.interceptors.response.use(undefined, errorInterceptor);
   }
 
   /**
    * 更新 Cookie
    */
   updateCookie(cookie: string): void {
-    if (!cookie || typeof cookie !== 'string') {
-      throw new Error('Cookie must be a non-empty string');
+    const cookies = CookieUtils.parse(cookie);
+    if (cookies) {
+      this.logger.debug('🔄 更新 cookie', cookies);
+      this.cookieStore.set(cookies.name, cookies.value);
     }
-
-    this.config.cookie = cookie;
-    this.http.setCookie(cookie);
   }
 
   /**

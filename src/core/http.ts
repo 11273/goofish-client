@@ -46,9 +46,10 @@ export class HttpClient {
   /**
    * 发送请求
    */
-  async request<T = unknown>(config: HttpRequestConfig): Promise<T> {
-    const response = await this.axios.request<T>(config);
-    return response.data;
+  async request<T = unknown>(
+    config: HttpRequestConfig
+  ): Promise<AxiosResponse<T>> {
+    return await this.axios.request<T>(config);
   }
 
   /**
