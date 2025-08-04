@@ -6,7 +6,10 @@ import type {
   CancelTokenSource,
 } from 'axios';
 
-import type { HttpClientConfig, HttpRequestConfig } from '../types/request';
+import type {
+  HttpClientConfig,
+  HttpRequestConfig,
+} from '../types/common/request';
 
 /**
  * HTTP 客户端

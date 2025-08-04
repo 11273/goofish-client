@@ -1,4 +1,5 @@
 import { Goofish } from '../src';
+import { SortField, SortValue } from '../src/types/mtop/search';
 // 自定义日志级别示例
 import { logger, LogLevel } from '../src/utils/logger';
 
@@ -9,21 +10,26 @@ async function testWithLogging() {
   });
   try {
     // 获取用户导航信息
-    const userNavResult = await client.api.user.getUserNav();
+    const userNavResult = await client.api.mtop.user.getUserNav();
     logger.info('用户导航信息:', userNavResult);
 
     // 获取用户头部信息
-    const userHeadResult = await client.api.user.getUserHead();
+    const userHeadResult = await client.api.mtop.user.getUserHead();
     logger.info('用户头部信息:', userHeadResult);
 
     // 搜索商品
-    const searchResult = await client.api.search.search({
-      keyword: '手机',
+    const searchResult = await client.api.mtop.search.search({
       pageNumber: 1,
-      rowsPerPage: 1,
+      keyword: 'N150',
+      rowsPerPage: 30,
+      sortValue: SortValue.DESC,
+      sortField: SortField.CREATE,
     });
 
-    logger.info('搜索结果:', searchResult);
+    logger.info(
+      '搜索结果:',
+      searchResult?.data?.resultList[0].data.item.main.exContent.detailParams
+    );
   } catch (error) {
     console.error('请求失败:', error);
   }

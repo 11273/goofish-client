@@ -1,23 +1,18 @@
-import type { HttpClient } from '../core/http';
-import type { GoofishConfig } from '../client/goofish.client';
+import type { HttpClient } from '../../core/http';
+import type { GoofishConfig } from '../../types';
 import type {
   RequestOptions,
   BuildParamsOutput,
   GoofishResponse,
   HttpRequestConfig,
-} from '../types';
-import { generateSign, type Logger } from '../utils';
-import { TokenManager } from '../managers';
+} from '../../types';
+import { generateSign, type Logger } from '../../utils';
+import { TokenManager } from '../../managers';
+import { BaseService } from './base.service';
 
-export abstract class BaseService {
-  protected http: HttpClient;
-  protected config: GoofishConfig;
-  protected logger: Logger;
-
+export abstract class BaseMtopService extends BaseService {
   constructor(http: HttpClient, config: GoofishConfig, logger: Logger) {
-    this.http = http;
-    this.config = config;
-    this.logger = logger;
+    super(http, config, logger);
 
     // 初始化 token
     if (config.cookie) {
@@ -32,25 +27,25 @@ export abstract class BaseService {
     const t = Date.now();
 
     const params = {
-      appKey: this.config.appKey,
-      jsv: this.config.jsv,
-      dataType: this.config.dataType,
-      type: this.config.type,
-      sessionOption: this.config.sessionOption,
+      appKey: this.config.mtop.appKey,
+      jsv: this.config.mtop.jsv,
+      dataType: this.config.mtop.dataType,
+      type: this.config.mtop.type,
+      sessionOption: this.config.mtop.sessionOption,
       t,
-      v: this.config.v,
-      accountSite: this.config.accountSite,
-      timeout: this.config.timeout,
+      v: this.config.mtop.v,
+      accountSite: this.config.mtop.accountSite,
+      timeout: this.config.mtop.timeout,
       api,
       sign: generateSign({
-        appKey: this.config.appKey,
+        appKey: this.config.mtop.appKey,
         t: t.toString(),
         data,
         token: TokenManager.getToken(),
       }),
-      spm_cnt: this.config.spmCnt,
-      spm_pre: this.config.spmPre,
-      log_id: this.config.logId,
+      spm_cnt: this.config.mtop.spmCnt,
+      spm_pre: this.config.mtop.spmPre,
+      log_id: this.config.mtop.logId,
     };
 
     return params;
@@ -72,12 +67,12 @@ export abstract class BaseService {
       data: { data },
       params,
       headers: {
-        Origin: this.config.origin,
-        Referer: this.config.referer,
-        'Content-Type': this.config.contentType,
-        'User-Agent': this.config.userAgent,
+        Origin: this.config.headers.origin,
+        Referer: this.config.headers.referer,
+        'Content-Type': this.config.headers.contentType,
+        'User-Agent': this.config.headers.userAgent,
       },
-      timeout: this.config.timeout,
+      timeout: this.config.mtop.timeout,
       withCredentials: true,
       ...options.config,
     };
@@ -142,6 +137,6 @@ export abstract class BaseService {
    * 构建完整的 API URL
    */
   protected buildUrl(api: string): string {
-    return `${this.config.baseURL}/${this.config.apiPrefix}/${api}/${this.config.v}/`;
+    return `${this.config.mtop.baseURL}/${this.config.mtop.apiPrefix}/${api}/${this.config.mtop.v}/`;
   }
 }

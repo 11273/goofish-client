@@ -3,38 +3,20 @@ import {
   createCookieInterceptor,
   createLogInterceptor,
 } from '../core/interceptor';
-import { SearchService } from '../services/search.service';
-import { UserService } from '../services/user.service';
-import { API_CONFIG } from '../constants';
+import { SearchService } from '../services/mtop/search.service';
+import { UserService } from '../services/mtop/user.service';
+import { API_CONFIG, MTOP_CONFIG } from '../constants';
 import { Logger, LogLevel } from '../utils/logger';
 import { CookieStore } from '../utils/cookie';
 import { CookieUtils } from '../utils/cookie';
+import type { GoofishConfig } from '../types';
 
-export interface GoofishConfig {
-  // 基本配置
-  level: LogLevel;
-  cookie: string;
-
-  // API 配置
-  baseURL: string;
-  apiPrefix: string;
-  appKey: string;
-  jsv: string;
-  timeout: number;
-  dataType: string;
-  type: string;
-  userAgent: string;
-  sessionOption: string;
-  v: string;
-  accountSite: string;
-  origin: string;
-  referer: string;
-  contentType: string;
-  spmCnt: string;
-  spmPre: string;
-  logId: string;
-}
-
+/**
+ * TODO
+ * 1. logger 设计不合理，不应该传递给每个服务，应该在客户端统一管理
+ * 2. cookieStore、cookie 不同协议隔离，以及一个总的可以互相共用
+ * 3. new HttpClient 没有隔离
+ */
 export class Goofish {
   // HTTP
   private readonly http: HttpClient;
@@ -47,8 +29,13 @@ export class Goofish {
 
   // 服务实例
   public readonly api: {
-    search: SearchService;
-    user: UserService;
+    // Mtop 服务
+    mtop: {
+      // 搜索服务
+      search: SearchService;
+      // 用户服务
+      user: UserService;
+    };
   };
 
   // 配置
@@ -58,23 +45,31 @@ export class Goofish {
     this.config = {
       level: config.level || LogLevel.INFO,
       cookie: config.cookie || '',
-      baseURL: config.baseURL || API_CONFIG.BASE_URL,
-      apiPrefix: config.apiPrefix || API_CONFIG.API_PREFIX,
-      appKey: config.appKey || API_CONFIG.APP_KEY,
-      jsv: config.jsv || API_CONFIG.JSV,
-      timeout: config.timeout || API_CONFIG.TIMEOUT,
-      dataType: config.dataType || API_CONFIG.DATA_TYPE,
-      type: config.type || API_CONFIG.TYPE,
-      sessionOption: config.sessionOption || API_CONFIG.SESSION_OPTION,
-      v: config.v || API_CONFIG.V,
-      accountSite: config.accountSite || API_CONFIG.ACCOUNT_SITE,
-      origin: config.origin || API_CONFIG.HEADERS_ORIGIN,
-      referer: config.referer || API_CONFIG.HEADERS_REFERER,
-      contentType: config.contentType || API_CONFIG.HEADERS_CONTENT_TYPE,
-      userAgent: config.userAgent || API_CONFIG.HEADERS_USER_AGENT,
-      spmCnt: config.spmCnt || API_CONFIG.SPM_CNT,
-      spmPre: config.spmPre || API_CONFIG.SPM_PRE,
-      logId: config.logId || API_CONFIG.LOG_ID,
+
+      // Mtop 配置
+      mtop: {
+        baseURL: config.mtop?.baseURL || MTOP_CONFIG.BASE_URL,
+        apiPrefix: config.mtop?.apiPrefix || MTOP_CONFIG.API_PREFIX,
+        appKey: config.mtop?.appKey || MTOP_CONFIG.APP_KEY,
+        jsv: config.mtop?.jsv || MTOP_CONFIG.JSV,
+        timeout: config.mtop?.timeout || MTOP_CONFIG.TIMEOUT,
+        dataType: config.mtop?.dataType || MTOP_CONFIG.DATA_TYPE,
+        type: config.mtop?.type || MTOP_CONFIG.TYPE,
+        sessionOption: config.mtop?.sessionOption || MTOP_CONFIG.SESSION_OPTION,
+        v: config.mtop?.v || MTOP_CONFIG.V,
+        accountSite: config.mtop?.accountSite || MTOP_CONFIG.ACCOUNT_SITE,
+        spmCnt: config.mtop?.spmCnt || MTOP_CONFIG.SPM_CNT,
+        spmPre: config.mtop?.spmPre || MTOP_CONFIG.SPM_PRE,
+        logId: config.mtop?.logId || MTOP_CONFIG.LOG_ID,
+      },
+
+      // 请求头配置
+      headers: {
+        origin: config.headers?.origin || API_CONFIG.ORIGIN,
+        referer: config.headers?.referer || API_CONFIG.REFERER,
+        contentType: config.headers?.contentType || API_CONFIG.CONTENT_TYPE,
+        userAgent: config.headers?.userAgent || API_CONFIG.USER_AGENT,
+      },
     };
 
     // 创建 Logger
@@ -84,7 +79,7 @@ export class Goofish {
 
     // 创建 HTTP 客户端
     this.http = new HttpClient({
-      baseURL: this.config.baseURL,
+      baseURL: this.config.mtop.baseURL,
       axiosConfig: {
         withCredentials: true,
       },
@@ -98,8 +93,10 @@ export class Goofish {
 
     // 初始化服务
     this.api = {
-      search: new SearchService(this.http, this.config, this.logger),
-      user: new UserService(this.http, this.config, this.logger),
+      mtop: {
+        search: new SearchService(this.http, this.config, this.logger),
+        user: new UserService(this.http, this.config, this.logger),
+      },
     };
 
     // 设置拦截器

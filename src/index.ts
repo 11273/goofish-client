@@ -4,7 +4,7 @@ export type { GoofishConfig } from './client/goofish.client';
 
 // ========== Services ==========
 // 如果你想让用户能单独使用服务
-export { SearchService } from './services/search.service';
+export { SearchService } from './services/mtop/search.service';
 
 // ========== Types ==========
 export * as Types from './types';

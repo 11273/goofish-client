@@ -1,5 +1,4 @@
-// search-params-builder.ts
-import type { SearchOptions } from '../../types/api/search';
+import type { SearchOptions } from '../../../types/mtop/search';
 
 /**
  * 内部搜索请求参数

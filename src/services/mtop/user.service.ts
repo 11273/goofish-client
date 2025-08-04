@@ -1,12 +1,12 @@
-import { BaseService } from './base.service';
-import { API_ENDPOINTS } from '../constants';
-import type { UserNavResponse, UserHeadResponse } from '../types/api/user';
-import type { GoofishResponse } from '../types';
+import { BaseMtopService } from '../common/base.mtop.service';
+import { API_ENDPOINTS } from '../../constants';
+import type { UserNavResponse, UserHeadResponse } from '../../types/mtop/user';
+import type { GoofishResponse } from '../../types';
 
 /**
  * 用户服务实现
  */
-export class UserService extends BaseService {
+export class UserService extends BaseMtopService {
   /**
    * 获取用户导航信息
    * @returns 用户导航信息，包含用户名、头像、关注、粉丝等基本信息
