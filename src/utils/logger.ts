@@ -5,18 +5,20 @@ export enum LogLevel {
   DEBUG = 3,
 }
 
+export type TimeFormat = 'full' | 'time' | 'iso' | 'timestamp' | 'none';
+
+export interface LoggerOptions {
+  level?: LogLevel;
+  prefix?: string;
+  timeFormat?: TimeFormat;
+}
+
 // 日志级别配置
 const LOG_LEVEL_CONFIG = {
-  ERROR: { emoji: '❌', consoleMethod: 'error' },
-  WARN: { emoji: '⚠️', consoleMethod: 'warn' },
-  INFO: { emoji: 'ℹ️', consoleMethod: 'log' },
-  DEBUG: { emoji: '🔍', consoleMethod: 'log' },
-} as const;
-
-// 栈追踪深度常量
-const STACK_DEPTH = {
-  DIRECT_CALL: 4, // 直接调用 logger.info() 等
-  REQUEST_CALL: 5, // 调用 logger.request() 或 logger.response()
+  ERROR: { emoji: '[ERR]', consoleMethod: 'error' },
+  WARN: { emoji: '[WRN]', consoleMethod: 'warn' },
+  INFO: { emoji: '[INF]', consoleMethod: 'log' },
+  DEBUG: { emoji: '[DBG]', consoleMethod: 'log' },
 } as const;
 
 // HTTP 状态配置
@@ -27,22 +29,6 @@ const HTTP_STATUS = {
   REQUEST_ICON: '→',
   RESPONSE_ICON: '←',
 } as const;
-
-// 时间格式选项
-export type TimeFormat = 'full' | 'time' | 'iso' | 'timestamp' | 'none';
-
-export interface LoggerOptions {
-  /** 日志级别 */
-  level?: LogLevel;
-  /** 日志前缀 */
-  prefix?: string;
-  /** 时间格式 */
-  timeFormat?: TimeFormat;
-  /** 是否显示调用位置 */
-  showLocation?: boolean;
-  /** 位置信息最大文件名长度 */
-  maxFileNameLength?: number;
-}
 
 /**
  * 闲鱼 SDK 日志工具类
@@ -57,25 +43,13 @@ export class Logger {
     level: LogLevel.INFO,
     prefix: 'Goofish-SDK',
     timeFormat: 'time' as TimeFormat,
-    showLocation: true,
-    maxFileNameLength: 20,
   } as const;
-
-  // Logger 内部文件标识，用于过滤调用栈
-  private static readonly INTERNAL_PATTERNS = [
-    'Logger.',
-    'logger.',
-    '/logger.',
-    '\\logger.',
-  ] as const;
 
   constructor(options: LoggerOptions = {}) {
     this.options = {
       ...Logger.DEFAULT_OPTIONS,
       ...options,
     };
-
-    // 尝试加载 Node.js 的 util.inspect
     this.loadInspect();
   }
 
@@ -84,16 +58,10 @@ export class Logger {
    */
   private loadInspect(): void {
     try {
-      // 检测是否在 Node.js 环境
-      if (
-        typeof process !== 'undefined' &&
-        process.versions &&
-        process.versions.node
-      ) {
+      if (typeof process !== 'undefined' && process.versions?.node) {
         const util = require('util') as {
           inspect?: (object: unknown, options?: object) => string;
         };
-
         if (util?.inspect) {
           this.inspect = util.inspect;
         }
@@ -114,15 +82,12 @@ export class Logger {
    * 格式化时间
    */
   private formatTime(): string {
-    if (this.options.timeFormat === 'none') {
-      return '';
-    }
+    if (this.options.timeFormat === 'none') return '';
 
     const now = new Date();
 
     switch (this.options.timeFormat) {
       case 'full': {
-        // 完整日期时间: 2024-01-20 15:30:45.123
         const year = now.getFullYear();
         const month = this.padZero(now.getMonth() + 1);
         const day = this.padZero(now.getDate());
@@ -130,93 +95,20 @@ export class Logger {
         const minutes = this.padZero(now.getMinutes());
         const seconds = this.padZero(now.getSeconds());
         const milliseconds = this.padZero(now.getMilliseconds(), 3);
-
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds} `;
       }
-
       case 'iso':
-        // ISO 格式: 2024-01-20T15:30:45.123Z
         return now.toISOString() + ' ';
-
       case 'timestamp':
-        // Unix 时间戳（毫秒）: 1705737045123
         return now.getTime() + ' ';
-
       case 'time':
       default: {
-        // 仅时间: 15:30:45.123
         const hours = this.padZero(now.getHours());
         const minutes = this.padZero(now.getMinutes());
         const seconds = this.padZero(now.getSeconds());
         const milliseconds = this.padZero(now.getMilliseconds(), 3);
-
         return `${hours}:${minutes}:${seconds}.${milliseconds} `;
       }
-    }
-  }
-
-  /**
-   * 获取调用位置信息
-   */
-  private getCallLocation(stackDepth: number): string {
-    if (!this.options.showLocation) {
-      return '';
-    }
-
-    try {
-      const err = new Error();
-      const stack = err.stack || '';
-      const lines = stack.split('\n');
-
-      // 查找合适的调用栈行
-      let targetLine = '';
-      let foundIndex = 0;
-
-      for (let i = 1; i < lines.length; i++) {
-        const line = lines[i];
-        // 跳过 Logger 内部的调用
-        const isInternalCall = Logger.INTERNAL_PATTERNS.some((pattern) =>
-          line?.includes(pattern)
-        );
-
-        if (!isInternalCall) {
-          if (foundIndex === stackDepth - 3) {
-            targetLine = line || '';
-            break;
-          }
-          foundIndex++;
-        }
-      }
-
-      if (!targetLine) {
-        return '';
-      }
-
-      // 解析文件路径和行号
-      const match = targetLine.match(
-        /(?:at\s+)?(?:.*?\s+)?(?:\()?([^:\s]+):(\d+):(\d+)\)?/
-      );
-
-      if (match) {
-        let filePath = match[1];
-        const line = match[2];
-        const column = match[3];
-
-        // 提取文件名（去掉路径）
-        const fileName = filePath?.split(/[/\\]/).pop() || filePath;
-
-        return `(${fileName}:${line}:${column})`;
-      }
-
-      // 如果无法解析，尝试简单提取
-      const simpleMatch = targetLine.match(/([^/\\:\s]+\.[jt]s):(\d+)/);
-      if (simpleMatch) {
-        return `(${simpleMatch[1]}:${simpleMatch[2]})`;
-      }
-
-      return '';
-    } catch {
-      return '';
     }
   }
 
@@ -235,54 +127,47 @@ export class Logger {
   }
 
   /**
-   * 设置是否显示调用位置
-   */
-  setShowLocation(show: boolean): void {
-    this.options.showLocation = show;
-  }
-
-  /**
-   * 通用日志方法（支持多参数）
+   * 通用日志方法
    */
   log(...args: unknown[]): void {
     if (this.shouldLog(LogLevel.INFO)) {
-      this.output('INFO', STACK_DEPTH.DIRECT_CALL, ...args);
+      this.output('INFO', ...args);
     }
   }
 
   /**
-   * 错误日志（支持多参数）
+   * 错误日志
    */
   error(...args: unknown[]): void {
     if (this.shouldLog(LogLevel.ERROR)) {
-      this.output('ERROR', STACK_DEPTH.DIRECT_CALL, ...args);
+      this.output('ERROR', ...args);
     }
   }
 
   /**
-   * 警告日志（支持多参数）
+   * 警告日志
    */
   warn(...args: unknown[]): void {
     if (this.shouldLog(LogLevel.WARN)) {
-      this.output('WARN', STACK_DEPTH.DIRECT_CALL, ...args);
+      this.output('WARN', ...args);
     }
   }
 
   /**
-   * 信息日志（支持多参数）
+   * 信息日志
    */
   info(...args: unknown[]): void {
     if (this.shouldLog(LogLevel.INFO)) {
-      this.output('INFO', STACK_DEPTH.DIRECT_CALL, ...args);
+      this.output('INFO', ...args);
     }
   }
 
   /**
-   * 调试日志（支持多参数）
+   * 调试日志
    */
   debug(...args: unknown[]): void {
     if (this.shouldLog(LogLevel.DEBUG)) {
-      this.output('DEBUG', STACK_DEPTH.DIRECT_CALL, ...args);
+      this.output('DEBUG', ...args);
     }
   }
 
@@ -302,13 +187,13 @@ export class Logger {
     } ${method.toUpperCase()} ${url}`;
 
     if (this.options.level >= LogLevel.DEBUG) {
-      this.output('DEBUG', STACK_DEPTH.REQUEST_CALL, message, {
+      this.output('DEBUG', message, {
         data,
         headers,
         params,
       });
-    } else {
-      this.output('INFO', STACK_DEPTH.REQUEST_CALL, message);
+    } else if (this.options.level >= LogLevel.INFO) {
+      this.output('INFO', message);
     }
   }
 
@@ -333,11 +218,11 @@ export class Logger {
     } ${statusIcon} ${status} ${method.toUpperCase()} ${url}${time}`;
 
     if (status >= HTTP_STATUS.ERROR_THRESHOLD) {
-      this.output('ERROR', STACK_DEPTH.REQUEST_CALL, message, data);
+      this.output('ERROR', message, data);
     } else if (this.options.level >= LogLevel.DEBUG) {
-      this.output('DEBUG', STACK_DEPTH.REQUEST_CALL, message, data);
-    } else {
-      this.output('INFO', STACK_DEPTH.REQUEST_CALL, message);
+      this.output('DEBUG', message, data);
+    } else if (this.options.level >= LogLevel.INFO) {
+      this.output('INFO', message);
     }
   }
 
@@ -349,20 +234,16 @@ export class Logger {
   }
 
   /**
-   * 内部输出方法（支持多参数）
+   * 内部输出方法
    */
   private output(
     levelName: keyof typeof LOG_LEVEL_CONFIG,
-    stackDepth: number,
     ...args: unknown[]
   ): void {
     const config = LOG_LEVEL_CONFIG[levelName];
     const time = this.formatTime();
-    const location = this.getCallLocation(stackDepth);
-    const prefix =
-      `[${this.options.prefix}] ${time}${config.emoji} ${location}`.trim();
+    const prefix = `[${this.options.prefix}] ${time}${config.emoji}`.trim();
 
-    // 获取对应的 console 方法
     const consoleFn =
       config.consoleMethod === 'error'
         ? console.error
@@ -370,10 +251,8 @@ export class Logger {
         ? console.warn
         : console.log;
 
-    // 处理参数，确保深层对象能正确显示
     const processedArgs = this.processArgs(args);
 
-    // 输出日志
     if (processedArgs.length > 0 && typeof processedArgs[0] === 'string') {
       consoleFn(`${prefix} ${processedArgs[0]}`, ...processedArgs.slice(1));
     } else {
@@ -385,21 +264,16 @@ export class Logger {
    * 处理参数，确保对象能完整显示
    */
   private processArgs(args: unknown[]): unknown[] {
-    // 如果没有 inspect 方法（浏览器环境），直接返回原始参数
-    if (!this.inspect) {
-      return args;
-    }
+    if (!this.inspect) return args;
 
-    // Node.js 环境，使用 inspect 处理对象
     return args.map((arg) => {
       if (typeof arg === 'object' && arg !== null && this.inspect) {
-        // 使用 inspect 确保深层对象完整显示
         return this.inspect(arg, {
-          depth: null, // 显示所有层级
-          colors: true, // 彩色输出
-          maxArrayLength: null, // 显示完整数组
-          breakLength: 80, // 每行字符数
-          compact: false, // 不压缩显示
+          depth: null,
+          colors: true,
+          maxArrayLength: null,
+          breakLength: 80,
+          compact: false,
         });
       }
       return arg;
@@ -407,7 +281,7 @@ export class Logger {
   }
 
   /**
-   * 创建子 logger（带额外前缀）
+   * 创建子 logger
    */
   child(childPrefix: string): Logger {
     return new Logger({
@@ -417,5 +291,84 @@ export class Logger {
   }
 }
 
-// 导出默认实例
-export const logger = new Logger();
+// ===== 全局日志管理 =====
+class LoggerManager {
+  private static globalLogger: Logger;
+  private static moduleLoggers: Map<string, Logger> = new Map();
+
+  static initialize(options: LoggerOptions = {}): void {
+    LoggerManager.globalLogger = new Logger({
+      level: LogLevel.INFO,
+      prefix: 'Goofish-SDK',
+      timeFormat: 'time',
+      ...options,
+    });
+  }
+
+  static getLogger(): Logger {
+    if (!LoggerManager.globalLogger) {
+      LoggerManager.initialize();
+    }
+    return LoggerManager.globalLogger;
+  }
+
+  static getModuleLogger(moduleName: string): Logger {
+    if (!LoggerManager.moduleLoggers.has(moduleName)) {
+      const baseLogger = LoggerManager.getLogger();
+      const moduleLogger = baseLogger.child(moduleName);
+      LoggerManager.moduleLoggers.set(moduleName, moduleLogger);
+    }
+    return LoggerManager.moduleLoggers.get(moduleName)!;
+  }
+
+  static setLevel(level: LogLevel): void {
+    const logger = LoggerManager.getLogger();
+    logger.setLevel(level);
+    LoggerManager.moduleLoggers.forEach((moduleLogger) => {
+      moduleLogger.setLevel(level);
+    });
+  }
+}
+
+// ===== 公共接口 =====
+
+/**
+ * 全局 logger 对象 - 主要使用接口
+ */
+export const logger = {
+  // 基础日志方法
+  log: (...args: unknown[]): void => LoggerManager.getLogger().log(...args),
+  error: (...args: unknown[]): void => LoggerManager.getLogger().error(...args),
+  warn: (...args: unknown[]): void => LoggerManager.getLogger().warn(...args),
+  info: (...args: unknown[]): void => LoggerManager.getLogger().info(...args),
+  debug: (...args: unknown[]): void => LoggerManager.getLogger().debug(...args),
+
+  // HTTP 专用方法
+  request: (config: {
+    method?: string;
+    url?: string;
+    data?: unknown;
+    headers?: Record<string, unknown>;
+    params?: Record<string, unknown>;
+  }): void => LoggerManager.getLogger().request(config),
+
+  response: (config: {
+    method?: string;
+    url?: string;
+    status?: number;
+    data?: unknown;
+    duration?: number;
+  }): void => LoggerManager.getLogger().response(config),
+
+  // 配置方法
+  setLevel: (level: LogLevel): void => LoggerManager.setLevel(level),
+  setTimeFormat: (format: TimeFormat): void =>
+    LoggerManager.getLogger().setTimeFormat(format),
+
+  // 创建子 logger
+  child: (childPrefix: string): Logger =>
+    LoggerManager.getLogger().child(childPrefix),
+
+  // 初始化方法
+  init: (options: LoggerOptions): void => LoggerManager.initialize(options),
+} as const;

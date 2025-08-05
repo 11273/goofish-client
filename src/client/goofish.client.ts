@@ -6,23 +6,19 @@ import {
 import { SearchService } from '../services/mtop/search.service';
 import { UserService } from '../services/mtop/user.service';
 import { API_CONFIG, MTOP_CONFIG } from '../constants';
-import { Logger, LogLevel } from '../utils/logger';
-import { CookieStore } from '../utils/cookie';
-import { CookieUtils } from '../utils/cookie';
+import { LogLevel } from '../utils/logger';
+import { logger } from '../utils/logger';
+import { CookieStore, CookieUtils } from '../utils/cookie';
 import type { GoofishConfig } from '../types';
 
 /**
  * TODO
- * 1. logger 设计不合理，不应该传递给每个服务，应该在客户端统一管理
  * 2. cookieStore、cookie 不同协议隔离，以及一个总的可以互相共用
  * 3. new HttpClient 没有隔离
  */
 export class Goofish {
   // HTTP
   private readonly http: HttpClient;
-
-  // 日志器
-  private readonly logger: Logger;
 
   // Cookie 存储
   private readonly cookieStore: CookieStore;
@@ -42,6 +38,9 @@ export class Goofish {
   public readonly config: GoofishConfig;
 
   constructor(config: Partial<GoofishConfig>) {
+    // 初始化日志管理器
+    logger.setLevel(config.level || LogLevel.WARN);
+
     this.config = {
       level: config.level || LogLevel.INFO,
       cookie: config.cookie || '',
@@ -72,11 +71,6 @@ export class Goofish {
       },
     };
 
-    // 创建 Logger
-    this.logger = new Logger({
-      level: this.config.level,
-    });
-
     // 创建 HTTP 客户端
     this.http = new HttpClient({
       baseURL: this.config.mtop.baseURL,
@@ -94,8 +88,8 @@ export class Goofish {
     // 初始化服务
     this.api = {
       mtop: {
-        search: new SearchService(this.http, this.config, this.logger),
-        user: new UserService(this.http, this.config, this.logger),
+        search: new SearchService(this.http, this.config),
+        user: new UserService(this.http, this.config),
       },
     };
 
@@ -103,7 +97,7 @@ export class Goofish {
     this.setupInterceptors();
 
     // 打印日志
-    this.logger.debug('Goofish 初始化完成', {
+    logger.debug('Goofish 初始化完成', {
       config: this.config,
     });
   }
@@ -121,14 +115,11 @@ export class Goofish {
   private setupInterceptors(): void {
     const axios = this.http.getAxios();
     // Cookie 拦截器
-    const cookieInterceptor = createCookieInterceptor(
-      this.logger,
-      this.cookieStore
-    );
+    const cookieInterceptor = createCookieInterceptor(this.cookieStore);
     axios.interceptors.request.use(cookieInterceptor.request);
     axios.interceptors.response.use(cookieInterceptor.response);
     // 日志拦截器
-    const logInterceptor = createLogInterceptor(this.logger);
+    const logInterceptor = createLogInterceptor();
     axios.interceptors.request.use(logInterceptor.request);
     axios.interceptors.response.use(
       logInterceptor.response,
@@ -141,7 +132,7 @@ export class Goofish {
    */
   updateCookie(cookie: string): void {
     const cookies = CookieUtils.parseCookieHeader(cookie);
-    this.logger.debug('🔄 更新 cookie', cookies);
+    logger.debug('🔄 更新 cookie', cookies);
     Object.entries(cookies).forEach(([name, value]) => {
       this.cookieStore.set(name, value);
     });

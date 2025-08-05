@@ -6,17 +6,18 @@ import type {
   GoofishResponse,
   HttpRequestConfig,
 } from '../../types';
-import { generateSign, type Logger } from '../../utils';
+import { generateSign } from '../../utils';
 import { TokenManager } from '../../managers';
+import { logger } from '../../utils/logger';
 import { BaseService } from './base.service';
 
 export abstract class BaseMtopService extends BaseService {
-  constructor(http: HttpClient, config: GoofishConfig, logger: Logger) {
-    super(http, config, logger);
+  constructor(http: HttpClient, config: GoofishConfig) {
+    super(http, config);
 
     // 初始化 token
     if (config.cookie) {
-      TokenManager.updateFromCookie(config.cookie, logger);
+      TokenManager.updateFromCookie(config.cookie);
     }
   }
 
@@ -104,9 +105,9 @@ export abstract class BaseMtopService extends BaseService {
 
     // 检查是否需要刷新 token 并重试
     if (TokenManager.isTokenError(response.data)) {
-      this.logger.info('🔄 Token 自动刷新并重试，重试原因:', response.data.ret);
+      logger.info('🔄 Token 自动刷新并重试，重试原因:', response.data.ret);
 
-      if (TokenManager.updateFromHeaders(response.headers, this.logger)) {
+      if (TokenManager.updateFromHeaders(response.headers)) {
         // 使用新 token 重新构建参数并重试
         const retryParams = this.buildParams(options.api, data);
         const retryConfig = this.buildRequestConfig(
@@ -123,7 +124,7 @@ export abstract class BaseMtopService extends BaseService {
 
         return retryResponse.data;
       } else {
-        this.logger.error('Token 刷新失败', response.data);
+        logger.error('Token 刷新失败', response.data);
       }
     }
 

@@ -3,8 +3,8 @@ import type {
   AxiosError,
   InternalAxiosRequestConfig,
 } from 'axios';
-import type { Logger } from '../utils/logger';
 import type { CookieStore } from '../utils/cookie';
+import { logger } from '../utils/logger';
 
 // ===== 类型定义 =====
 interface RequestConfigWithMetadata extends InternalAxiosRequestConfig {
@@ -29,7 +29,6 @@ export interface CookieInterceptor {
 
 // ===== Cookie 拦截器工厂 =====
 export function createCookieInterceptor(
-  logger: Logger,
   cookieStore: CookieStore
 ): CookieInterceptor {
   return {
@@ -56,7 +55,7 @@ export function createCookieInterceptor(
 }
 
 // ===== 日志拦截器工厂 =====
-export function createLogInterceptor(logger: Logger): LogInterceptor {
+export function createLogInterceptor(): LogInterceptor {
   return {
     request: (
       config: InternalAxiosRequestConfig

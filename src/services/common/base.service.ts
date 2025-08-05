@@ -1,5 +1,4 @@
 import type { HttpClient } from '../../core/http';
-import type { Logger } from '../../utils';
 import type { GoofishConfig } from '../../types';
 
 /**
@@ -8,12 +7,10 @@ import type { GoofishConfig } from '../../types';
  */
 export abstract class BaseService {
   protected http: HttpClient;
-  protected logger: Logger;
   protected config: GoofishConfig;
 
-  constructor(http: HttpClient, config: GoofishConfig, logger: Logger) {
+  constructor(http: HttpClient, config: GoofishConfig) {
     this.http = http;
-    this.logger = logger;
     this.config = config;
   }
 }
