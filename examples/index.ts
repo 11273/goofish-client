@@ -11,6 +11,7 @@ async function testWithLogging() {
     // 获取搜索结果能用
     // cookie: 'cna=xxx;',
   });
+  /*
   try {
     // 获取用户导航信息
     const userNavResult = await client.api.mtop.user.getUserNav();
@@ -37,6 +38,10 @@ async function testWithLogging() {
   } catch (error) {
     console.error('请求失败:', error);
   }
+  */
+
+  const qrResult = await client.api.passport.qr.generate();
+  logger.info('二维码生成结果:', qrResult);
 }
 
 testWithLogging();

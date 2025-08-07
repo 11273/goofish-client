@@ -1,10 +1,11 @@
-import { Goofish, type GoofishConfig } from './goofish.client';
+import type { GoofishConfig } from '../types';
+import { Goofish } from './goofish.client';
 
 // 导出主类
 export { Goofish } from './goofish.client';
 
 // 导出类型
-export type { GoofishConfig } from './goofish.client';
+export type { GoofishConfig } from '../types';
 
 /**
  * 创建闲鱼客户端实例

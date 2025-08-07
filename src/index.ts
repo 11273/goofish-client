@@ -1,6 +1,6 @@
 // ========== Client ==========
 export { Goofish } from './client/goofish.client';
-export type { GoofishConfig } from './client/goofish.client';
+export type { GoofishConfig } from './types';
 
 // ========== Services ==========
 // 如果你想让用户能单独使用服务

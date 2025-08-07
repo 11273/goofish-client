@@ -3,7 +3,7 @@ import type { GoofishConfig } from '../../types';
 import type {
   RequestOptions,
   BuildParamsOutput,
-  GoofishResponse,
+  GoofishMtopResponse,
   HttpRequestConfig,
 } from '../../types';
 import { generateSign } from '../../utils';
@@ -84,7 +84,7 @@ export abstract class BaseMtopService extends BaseService {
    */
   protected async request<TResponse, TData = unknown>(
     options: RequestOptions<TData>
-  ): Promise<GoofishResponse<TResponse>> {
+  ): Promise<GoofishMtopResponse<TResponse>> {
     const url = this.buildUrl(options.api);
     const data = JSON.stringify(options.data || {});
     const method = options.method || 'POST';
@@ -99,7 +99,7 @@ export abstract class BaseMtopService extends BaseService {
       options
     );
     // 发送请求
-    const response = await this.http.request<GoofishResponse<TResponse>>(
+    const response = await this.http.request<GoofishMtopResponse<TResponse>>(
       requestConfig
     );
 
@@ -119,7 +119,7 @@ export abstract class BaseMtopService extends BaseService {
         );
 
         const retryResponse = await this.http.request<
-          GoofishResponse<TResponse>
+          GoofishMtopResponse<TResponse>
         >(retryConfig);
 
         return retryResponse.data;

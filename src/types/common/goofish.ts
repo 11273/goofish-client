@@ -8,8 +8,11 @@ export interface GoofishConfig {
   level: LogLevel;
   cookie: string;
 
-  // 请求配置
+  // 请求配置 mtop
   mtop: GoofishMtopRequestConfig;
+
+  // 请求配置 passport
+  passport: GoofishPassportRequestConfig;
 
   // 请求头
   headers: GoofishRequestHeaders;
@@ -45,6 +48,18 @@ export interface GoofishMtopRequestConfig {
   spmPre: string;
   // 日志 ID
   logId: string;
+}
+
+/**
+ * Passport 请求配置
+ */
+export interface GoofishPassportRequestConfig {
+  // API 配置
+  baseURL: string;
+  // 应用名称
+  appName: string;
+  // 来源站点
+  fromSite: string;
 }
 
 /**

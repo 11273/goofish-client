@@ -12,6 +12,9 @@ export interface RequestOptions<TData> {
   /** 请求数据 */
   data?: TData;
 
+  /** 请求参数 */
+  params?: Record<string, unknown>;
+
   /** API 版本，默认 1.0 */
   version?: string;
 

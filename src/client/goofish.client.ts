@@ -5,23 +5,23 @@ import {
 } from '../core/interceptor';
 import { SearchService } from '../services/mtop/search.service';
 import { UserService } from '../services/mtop/user.service';
-import { API_CONFIG, MTOP_CONFIG } from '../constants';
+import { API_CONFIG, MTOP_CONFIG, PASSPORT_CONFIG } from '../constants';
 import { LogLevel } from '../utils/logger';
 import { logger } from '../utils/logger';
 import { CookieStore, CookieUtils } from '../utils/cookie';
 import type { GoofishConfig } from '../types';
+import { QrService } from '../services/passport/qr.service';
 
-/**
- * TODO
- * 2. cookieStore、cookie 不同协议隔离，以及一个总的可以互相共用
- * 3. new HttpClient 没有隔离
- */
 export class Goofish {
-  // HTTP
-  private readonly http: HttpClient;
+  // Mtop HTTP 客户端
+  private readonly httpMtop: HttpClient;
+  // Passport HTTP 客户端
+  private readonly httpPassport: HttpClient;
 
-  // Cookie 存储
-  private readonly cookieStore: CookieStore;
+  // Mtop Cookie 存储
+  private readonly cookieStoreMtop: CookieStore;
+  // Passport Cookie 存储
+  private readonly cookieStorePassport: CookieStore;
 
   // 服务实例
   public readonly api: {
@@ -31,6 +31,11 @@ export class Goofish {
       search: SearchService;
       // 用户服务
       user: UserService;
+    };
+    // Passport 服务
+    passport: {
+      // 二维码服务
+      qr: QrService;
     };
   };
 
@@ -61,6 +66,11 @@ export class Goofish {
         spmPre: config.mtop?.spmPre || MTOP_CONFIG.SPM_PRE,
         logId: config.mtop?.logId || MTOP_CONFIG.LOG_ID,
       },
+      passport: {
+        baseURL: config.passport?.baseURL || PASSPORT_CONFIG.BASE_URL,
+        appName: config.passport?.appName || PASSPORT_CONFIG.APP_NAME,
+        fromSite: config.passport?.fromSite || PASSPORT_CONFIG.FROM_SITE,
+      },
 
       // 请求头配置
       headers: {
@@ -72,24 +82,35 @@ export class Goofish {
     };
 
     // 创建 HTTP 客户端
-    this.http = new HttpClient({
+    this.httpMtop = new HttpClient({
       baseURL: this.config.mtop.baseURL,
       axiosConfig: {
         withCredentials: true,
       },
     });
 
+    this.httpPassport = new HttpClient({
+      baseURL: this.config.passport.baseURL,
+      axiosConfig: {
+        withCredentials: true,
+      },
+    });
+
     // 创建 Cookie 存储
-    this.cookieStore = new CookieStore();
+    this.cookieStoreMtop = new CookieStore();
+    this.cookieStorePassport = new CookieStore();
 
     // 设置初始 cookie
-    this.updateCookie(this.config.cookie);
+    this.updateCookieMtop(this.config.cookie);
 
     // 初始化服务
     this.api = {
       mtop: {
-        search: new SearchService(this.http, this.config),
-        user: new UserService(this.http, this.config),
+        search: new SearchService(this.httpMtop, this.config),
+        user: new UserService(this.httpMtop, this.config),
+      },
+      passport: {
+        qr: new QrService(this.httpPassport, this.config),
       },
     };
 
@@ -113,9 +134,9 @@ export class Goofish {
    * 设置拦截器
    */
   private setupInterceptors(): void {
-    const axios = this.http.getAxios();
+    const axios = this.httpMtop.getAxios();
     // Cookie 拦截器
-    const cookieInterceptor = createCookieInterceptor(this.cookieStore);
+    const cookieInterceptor = createCookieInterceptor(this.cookieStoreMtop);
     axios.interceptors.request.use(cookieInterceptor.request);
     axios.interceptors.response.use(cookieInterceptor.response);
     // 日志拦截器
@@ -128,20 +149,38 @@ export class Goofish {
   }
 
   /**
-   * 更新 Cookie
+   * 更新 Cookie mtop
    */
-  updateCookie(cookie: string): void {
+  updateCookieMtop(cookie: string): void {
     const cookies = CookieUtils.parseCookieHeader(cookie);
-    logger.debug('🔄 更新 cookie', cookies);
+    logger.debug('🔄 更新 cookie mtop', cookies);
     Object.entries(cookies).forEach(([name, value]) => {
-      this.cookieStore.set(name, value);
+      this.cookieStoreMtop.set(name, value);
     });
   }
 
   /**
-   * 直接访问 HTTP 客户端（高级用法）
+   * 更新 Cookie passport
    */
-  get httpClient(): HttpClient {
-    return this.http;
+  updateCookiePassport(cookie: string): void {
+    const cookies = CookieUtils.parseCookieHeader(cookie);
+    logger.debug('🔄 更新 cookie passport', cookies);
+    Object.entries(cookies).forEach(([name, value]) => {
+      this.cookieStorePassport.set(name, value);
+    });
+  }
+
+  /**
+   * 直接访问 HTTP 客户端 mtop
+   */
+  get httpClientMtop(): HttpClient {
+    return this.httpMtop;
+  }
+
+  /**
+   * 直接访问 HTTP 客户端 passport
+   */
+  get httpClientPassport(): HttpClient {
+    return this.httpPassport;
   }
 }
