@@ -33,6 +33,7 @@
   "files": [
     "dist",
     "README.md",
+    "assets",
     "LICENSE"
   ],
   "sideEffects": false,
@@ -51,11 +52,13 @@
   "dependencies": {
     "axios": "^1.10.0",
     "crypto-js": "^4.2.0",
+    "qrcode": "^1.5.4",
     "tslib": "^2.6.0"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",
     "@types/node": "^24.0.15",
+    "@types/qrcode": "^1.5.5",
     "@typescript-eslint/eslint-plugin": "^8.37.0",
     "@typescript-eslint/parser": "^8.37.0",
     "eslint": "^9.31.0",

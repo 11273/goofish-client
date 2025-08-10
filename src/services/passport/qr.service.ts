@@ -1,15 +1,27 @@
 import { BasePassportService } from '../common/base.passport.service';
 import { PASSPORT_ENDPOINTS } from '../../constants';
+import * as QRCode from 'qrcode';
 import type {
   GoofishPassportResponse,
   QRCodeGenerateParams,
   QrGenerateResponse,
+  QRRenderOptions,
+  QRStringRenderOptions,
+  QRDataURLRenderOptions,
 } from '../../types';
 
 /**
  * 二维码服务实现
  */
 export class QrService extends BasePassportService {
+  // 默认二维码配置
+  private defaultOptions: QRRenderOptions = {
+    outputFormat: 'string',
+    stringOptions: {
+      type: 'terminal',
+    },
+  };
+
   /**
    * 生成二维码
    * @returns 二维码生成结果
@@ -34,8 +46,47 @@ export class QrService extends BasePassportService {
         'bx-umidtoken': params?.bxUmidtoken,
         bx_et: params?.bx_et || 'not_loaded',
         umidTag: params?.umidTag || 'SERVER',
-        // 展开其他自定义参数
       },
     });
+  }
+
+  /**
+   * 渲染二维码为各种格式
+   * @param params 二维码生成参数
+   * @param options 渲染选项
+   * @returns 根据 outputFormat 返回对应格式的二维码
+   */
+  public async render({
+    params,
+    options,
+  }: {
+    params?: QRCodeGenerateParams;
+    options?: QRRenderOptions;
+  } = {}): Promise<string> {
+    const response = await this.generate(params);
+    const qrContent = response.content.data.codeContent;
+
+    // 确定输出格式
+    const outputFormat =
+      options?.outputFormat || this.defaultOptions.outputFormat;
+
+    switch (outputFormat) {
+      case 'string': {
+        const stringOpts = {
+          ...this.defaultOptions.stringOptions,
+          ...options?.stringOptions,
+        } as QRStringRenderOptions;
+        return QRCode.toString(qrContent, stringOpts);
+      }
+
+      case 'dataURL':
+      default: {
+        const dataURLOpts = {
+          ...this.defaultOptions.dataURLOptions,
+          ...options?.dataURLOptions,
+        } as QRDataURLRenderOptions;
+        return QRCode.toDataURL(qrContent, dataURLOpts);
+      }
+    }
   }
 }

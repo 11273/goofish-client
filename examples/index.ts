@@ -39,9 +39,11 @@ async function testWithLogging() {
     console.error('请求失败:', error);
   }
   */
+  const qrResult1 = await client.api.passport.qr.generate();
+  logger.info('二维码生成结果1:', qrResult1);
 
-  const qrResult = await client.api.passport.qr.generate();
-  logger.info('二维码生成结果:', qrResult);
+  const qrResult2 = await client.api.passport.qr.render();
+  logger.info('二维码生成结果2:\n' + qrResult2);
 }
 
 testWithLogging();
