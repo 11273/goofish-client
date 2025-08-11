@@ -8,6 +8,9 @@ import type {
   QRRenderOptions,
   QRStringRenderOptions,
   QRDataURLRenderOptions,
+  QRCodeQueryParams,
+  QRCodeQueryData,
+  QrQueryResponse,
 } from '../../types';
 
 /**
@@ -29,24 +32,25 @@ export class QrService extends BasePassportService {
   public async generate(
     params?: QRCodeGenerateParams
   ): Promise<GoofishPassportResponse<QrGenerateResponse>> {
+    const requestData: Partial<QRCodeGenerateParams> = {
+      appEntrance: params?.appEntrance || 'web',
+      _csrf_token: params?._csrf_token,
+      umidToken: params?.umidToken,
+      hsiz: params?.hsiz,
+      bizParams: params?.bizParams,
+      mainPage: params?.mainPage ?? false,
+      isMobile: params?.isMobile ?? false,
+      lang: params?.lang || 'zh_CN',
+      returnUrl: params?.returnUrl,
+      'bx-ua': params?.['bx-ua'],
+      'bx-umidtoken': params?.['bx-umidtoken'],
+      bx_et: params?.bx_et || 'not_loaded',
+      umidTag: params?.umidTag || 'SERVER',
+    };
     return this.request<QrGenerateResponse>({
       api: PASSPORT_ENDPOINTS.QR.GENERATE,
       method: 'GET',
-      params: {
-        appEntrance: params?.appEntrance || 'web',
-        _csrf_token: params?._csrf_token,
-        umidToken: params?.umidToken,
-        hsiz: params?.hsiz,
-        bizParams: params?.bizParams,
-        mainPage: params?.mainPage ?? false,
-        isMobile: params?.isMobile ?? false,
-        lang: params?.lang || 'zh_CN',
-        returnUrl: params?.returnUrl || '',
-        'bx-ua': params?.bxUa,
-        'bx-umidtoken': params?.bxUmidtoken,
-        bx_et: params?.bx_et || 'not_loaded',
-        umidTag: params?.umidTag || 'SERVER',
-      },
+      params: requestData,
     });
   }
 
@@ -62,7 +66,10 @@ export class QrService extends BasePassportService {
   }: {
     params?: QRCodeGenerateParams;
     options?: QRRenderOptions;
-  } = {}): Promise<string> {
+  } = {}): Promise<{
+    response: GoofishPassportResponse<QrGenerateResponse>;
+    qrCode: string;
+  }> {
     const response = await this.generate(params);
     const qrContent = response.content.data.codeContent;
 
@@ -76,7 +83,10 @@ export class QrService extends BasePassportService {
           ...this.defaultOptions.stringOptions,
           ...options?.stringOptions,
         } as QRStringRenderOptions;
-        return QRCode.toString(qrContent, stringOpts);
+        return {
+          response,
+          qrCode: await QRCode.toString(qrContent, stringOpts),
+        };
       }
 
       case 'dataURL':
@@ -85,8 +95,59 @@ export class QrService extends BasePassportService {
           ...this.defaultOptions.dataURLOptions,
           ...options?.dataURLOptions,
         } as QRDataURLRenderOptions;
-        return QRCode.toDataURL(qrContent, dataURLOpts);
+        return {
+          response,
+          qrCode: await QRCode.toDataURL(qrContent, dataURLOpts),
+        };
       }
     }
+  }
+
+  /**
+   * 查询二维码状态
+   * @param params 二维码查询参数
+   * @returns 二维码状态查询结果
+   */
+  public async query(
+    params: QRCodeQueryParams
+  ): Promise<GoofishPassportResponse<QrQueryResponse>> {
+    // 构建请求数据，将参数转换为字符串格式以匹配API要求
+    const queryData: QRCodeQueryData = {
+      t: params.t.toString(),
+      ck: params.ck,
+      appEntrance: params.appEntrance || 'web',
+      mainPage: (params.mainPage ?? false).toString(),
+      isMobile: (params.isMobile ?? false).toString(),
+      lang: params.lang || 'zh_CN',
+      returnUrl: params.returnUrl,
+      umidTag: params.umidTag || 'SERVER',
+      isIframe: (params.isIframe ?? true).toString(),
+      defaultView: params.defaultView || 'password',
+      deviceId: params.deviceId,
+      bx_et: params.bx_et || 'not_loaded',
+      ua: params.ua,
+      _csrf_token: params._csrf_token,
+      umidToken: params.umidToken,
+      hsiz: params.hsiz,
+      bizParams: params.bizParams,
+      navlanguage: params.navlanguage,
+      navUserAgent: params.navUserAgent,
+      navPlatform: params.navPlatform,
+      documentReferer: params.documentReferer,
+      pageTraceId: params.pageTraceId,
+      'bx-ua': params['bx-ua'],
+      'bx-umidtoken': params['bx-umidtoken'],
+    };
+
+    return this.request<QrQueryResponse>({
+      api: PASSPORT_ENDPOINTS.QR.QUERY,
+      method: 'POST',
+      data: queryData,
+      config: {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      },
+    });
   }
 }

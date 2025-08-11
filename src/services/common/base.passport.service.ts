@@ -21,7 +21,11 @@ export abstract class BasePassportService extends BaseService {
       >({
         url: options.api,
         method: options.method || 'POST',
-        data: options.data,
+        data: {
+          appName: this.config.passport.appName,
+          fromSite: this.config.passport.fromSite,
+          ...options.data,
+        },
         params: {
           appName: this.config.passport.appName,
           fromSite: this.config.passport.fromSite,

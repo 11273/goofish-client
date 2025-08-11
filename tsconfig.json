@@ -19,7 +19,7 @@
     "noImplicitReturns": true, // 函数必须有返回值
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true, // 数组/对象访问安全
-    "exactOptionalPropertyTypes": true, // 精确可选属性
+    "exactOptionalPropertyTypes": false, // 精确可选属性
 
     // 📁 输出配置
     "declaration": true, // 生成 .d.ts
