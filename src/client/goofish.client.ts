@@ -134,15 +134,29 @@ export class Goofish {
    * 设置拦截器
    */
   private setupInterceptors(): void {
-    const axios = this.httpMtop.getAxios();
-    // Cookie 拦截器
-    const cookieInterceptor = createCookieInterceptor(this.cookieStoreMtop);
-    axios.interceptors.request.use(cookieInterceptor.request);
-    axios.interceptors.response.use(cookieInterceptor.response);
+    const axiosMtop = this.httpMtop.getAxios();
+    const axiosPassport = this.httpPassport.getAxios();
     // 日志拦截器
     const logInterceptor = createLogInterceptor();
-    axios.interceptors.request.use(logInterceptor.request);
-    axios.interceptors.response.use(
+    // Mtop Cookie 拦截器
+    const cookieInterceptorMtop = createCookieInterceptor(this.cookieStoreMtop);
+    // Passport Cookie 拦截器
+    const cookieInterceptorPassport = createCookieInterceptor(
+      this.cookieStorePassport
+    );
+
+    axiosMtop.interceptors.request.use(cookieInterceptorMtop.request);
+    axiosMtop.interceptors.response.use(cookieInterceptorMtop.response);
+    axiosMtop.interceptors.request.use(logInterceptor.request);
+    axiosMtop.interceptors.response.use(
+      logInterceptor.response,
+      logInterceptor.error
+    );
+
+    axiosPassport.interceptors.request.use(cookieInterceptorPassport.request);
+    axiosPassport.interceptors.response.use(cookieInterceptorPassport.response);
+    axiosPassport.interceptors.request.use(logInterceptor.request);
+    axiosPassport.interceptors.response.use(
       logInterceptor.response,
       logInterceptor.error
     );
@@ -168,6 +182,20 @@ export class Goofish {
     Object.entries(cookies).forEach(([name, value]) => {
       this.cookieStorePassport.set(name, value);
     });
+  }
+
+  /**
+   * 获取 Cookie mtop
+   */
+  getCookieMtop(): string {
+    return this.cookieStoreMtop.getCookieHeader();
+  }
+
+  /**
+   * 获取 Cookie passport
+   */
+  getCookiePassport(): string {
+    return this.cookieStorePassport.getCookieHeader();
   }
 
   /**

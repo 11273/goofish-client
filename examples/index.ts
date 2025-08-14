@@ -8,12 +8,61 @@ async function main() {
   const client = new Goofish({
     level: LogLevel.INFO,
     // 获取用户信息和搜索通用
-    cookie: 'cookie2=xxx;',
+    // cookie: 'cookie2=xxxx;',
     // 获取搜索结果能用
-    // cookie: 'cna=xxx;',
+    // cookie: 'cna=xxxx;',
   });
-  /*
+
+  // 生成二维码
+  // const qrResult1 = await client.api.passport.qr.generate();
+  // logger.info('二维码生成结果1:', qrResult1);
+
+  const qrResult2 = await client.api.passport.qr.render();
+  logger.info('二维码生成结果2:\n', qrResult2.response);
+  logger.info('二维码生成结果2:\n', qrResult2.qrCode);
+
+  let success = false;
+  while (!success) {
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    // 二维码查询示例
+    const queryResult = await client.api.passport.qr.query({
+      t: qrResult2.response.content.data.t,
+      ck: qrResult2.response.content.data.ck,
+    });
+
+    logger.info('二维码查询结果:', queryResult);
+
+    // 处理不同的二维码状态
+    const qrStatus = queryResult.content.data.qrCodeStatus;
+    switch (qrStatus) {
+      case QRCodeStatus.NEW:
+        logger.info('二维码已生成，等待扫描');
+        break;
+      case QRCodeStatus.SCANED:
+        logger.info('二维码已被扫描，等待确认');
+        break;
+      case QRCodeStatus.CONFIRMED:
+        logger.info('二维码已确认，登录成功');
+        success = true;
+        break;
+      case QRCodeStatus.CANCELED:
+        logger.info('二维码已取消');
+        return;
+      case QRCodeStatus.EXPIRED:
+        logger.info('二维码已过期');
+        return;
+      case QRCodeStatus.ERROR:
+        logger.error('二维码出现错误');
+        return;
+      default:
+        logger.info('未知的二维码状态:', qrStatus);
+        return;
+    }
+  }
   try {
+    const cookiePassport = client.getCookiePassport();
+    logger.info('cookiePassport:', cookiePassport);
+    client.updateCookieMtop(cookiePassport);
     // 获取用户导航信息
     const userNavResult = await client.api.mtop.user.getUserNav();
     logger.info('用户导航信息:', userNavResult);
@@ -38,51 +87,6 @@ async function main() {
     );
   } catch (error) {
     console.error('请求失败:', error);
-  }
-  */
-  // 生成二维码
-  // const qrResult1 = await client.api.passport.qr.generate();
-  // logger.info('二维码生成结果1:', qrResult1);
-
-  const qrResult2 = await client.api.passport.qr.render();
-  logger.info('二维码生成结果2:\n', qrResult2.response);
-  logger.info('二维码生成结果2:\n', qrResult2.qrCode);
-
-  // 二维码查询示例
-  try {
-    const queryResult = await client.api.passport.qr.query({
-      t: qrResult2.response.content.data.t,
-      ck: qrResult2.response.content.data.ck,
-    });
-
-    logger.info('二维码查询结果:', queryResult);
-
-    // 处理不同的二维码状态
-    const qrStatus = queryResult.content.data.qrCodeStatus;
-    switch (qrStatus) {
-      case QRCodeStatus.NEW:
-        logger.info('二维码已生成，等待扫描');
-        break;
-      case QRCodeStatus.SCANED:
-        logger.info('二维码已被扫描，等待确认');
-        break;
-      case QRCodeStatus.CONFIRMED:
-        logger.info('二维码已确认，登录成功');
-        break;
-      case QRCodeStatus.CANCELED:
-        logger.info('二维码已取消');
-        break;
-      case QRCodeStatus.EXPIRED:
-        logger.info('二维码已过期');
-        break;
-      case QRCodeStatus.ERROR:
-        logger.error('二维码出现错误');
-        break;
-      default:
-        logger.info('未知的二维码状态:', qrStatus);
-    }
-  } catch (error) {
-    logger.error('二维码查询失败:', error);
   }
 }
 main();
