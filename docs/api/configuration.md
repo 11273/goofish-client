@@ -80,7 +80,7 @@ interface GoofishRequestHeaders {
 
 ## 默认配置
 
-默认配置值请参考源码中的 [constants](../../src/constants/) 目录。主要默认值包括：
+默认配置值请参考源码中的 `src/constants/` 目录。主要默认值包括：
 
 - **MTOP API**: `https://h5api.m.taobao.com`
 - **Passport API**: `https://passport.taobao.com`
