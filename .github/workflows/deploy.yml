@@ -29,7 +29,6 @@ concurrency:
 
 # 环境变量
 env:
-  NODE_ENV: production
   CI: true
 
 jobs:
