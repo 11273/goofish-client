@@ -1,0 +1,77 @@
+{
+  "$schema": "https://raw.githubusercontent.com/release-it/release-it/main/schema/release-it.json",
+  "git": {
+    "commitMessage": "chore: release v${version}",
+    "tagName": "v${version}",
+    "requireCleanWorkingDir": true,
+    "requireBranch": "main",
+    "push": true,
+    "pushRepo": "origin"
+  },
+  "github": {
+    "release": true,
+    "releaseName": "v${version}",
+    "releaseNotes": null,
+    "autoGenerate": true,
+    "draft": false,
+    "preRelease": false,
+    "tokenRef": "GITHUB_TOKEN"
+  },
+  "npm": {
+    "publish": true,
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "skipChecks": false
+  },
+  "hooks": {
+    "before:init": [
+      "npm run typecheck",
+      "npm run lint"
+    ],
+    "before:release": [
+      "npm run build:prod"
+    ],
+    "after:release": [
+      "echo '🎉 发布成功！版本: v${version}'"
+    ]
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": {
+        "name": "conventionalcommits",
+        "types": [
+          { "type": "feat", "section": "✨ Features | 新功能" },
+          { "type": "fix", "section": "🐛 Bug Fixes | Bug 修复" },
+          { "type": "perf", "section": "⚡ Performance Improvements | 性能优化" },
+          { "type": "refactor", "section": "♻ Code Refactoring | 代码重构" },
+          { "type": "style", "section": "💄 Styles | 代码格式" },
+          { "type": "docs", "section": "📝 Documentation | 文档" },
+          { "type": "test", "section": "✅ Tests | 测试" },
+          { "type": "build", "section": "👷‍ Build System | 构建" },
+          { "type": "ci", "section": "🔧 Continuous Integration | CI 配置" },
+          { "type": "revert", "section": "⏪ Reverts | 回退" },
+          { "type": "chore", "section": "🎫 Chores | 其他更新" },
+          { "type": "config", "section": "🔨 Configuration | 配置" },
+          { "type": "polish", "section": "💅 Polish | 优化" },
+          { "type": "ui", "section": "🎨 UI/UX | 界面" },
+          { "type": "ux", "section": "🧑‍💻 User Experience | 用户体验" },
+          { "type": "i18n", "section": "🌐 Internationalization | 国际化" },
+          { "type": "typo", "section": "✏️ Typos | 错别字" },
+          { "type": "security", "section": "🔒 Security | 安全" },
+          { "type": "deps", "section": "📦 Dependencies | 依赖" },
+          { "type": "lint", "section": "🚨 Linting | 代码检查" },
+          { "type": "release", "section": "🚀 Releases | 发布" },
+          { "type": "deploy", "section": "🚢 Deployments | 部署" },
+          { "type": "init", "section": "🎉 Init | 初始化" },
+          { "type": "prune", "section": "🔥 Prune | 清理" },
+          { "type": "license", "section": "📄 License | 许可证" }
+        ]
+      },
+      "infile": "CHANGELOG.md",
+      "header": "# 更新日志\n\n所有重要的项目更改都将记录在此文件中。\n\n此项目遵循 [语义化版本](https://semver.org/lang/zh-CN/) 规范。\n\n",
+      "gitRawCommitsOpts": {
+        "path": "."
+      }
+    }
+  }
+}
