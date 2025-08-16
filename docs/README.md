@@ -1,148 +1,219 @@
-# Goofish SDK 文档中心
+# Goofish Client 文档总览
 
-> 欢迎使用 Goofish SDK 官方文档！这里包含了完整的使用指南、API 参考和最佳实践。
+欢迎使用 Goofish Client！这是一个现代化、类型安全的 TypeScript Client，专为二手交易平台开发而设计。
 
-## 📚 文档导航
+## 📚 文档结构
 
-### 🚀 快速开始
+### 🚀 开始使用
 
-- **[00-快速开始](./00-getting-started.md)** - 安装、配置和基础使用
+**快速上手指南，帮助你在几分钟内开始使用 Client**
 
-### 🔐 身份认证
+- **[快速开始](./guide/getting-started.md)** - 安装、配置和第一个 API 调用
+- **[身份认证](./guide/authentication.md)** - Cookie 认证和二维码登录
 
-- **[01-身份认证](./01-authentication.md)** - 登录方式、Cookie 管理、Token 处理
+### 📖 API 接口
 
-### 📖 API 文档
+**完整的 API 接口文档，包含所有可用的方法和参数**
 
-- **[02-搜索接口](./02-search-api.md)** - 商品搜索、筛选、排序功能
-- **[03-用户接口](./03-user-api.md)** - 用户信息获取、统计数据
+- **[搜索接口](./api/search.md)** - 商品搜索和筛选
+- **[用户接口](./api/user.md)** - 用户信息获取和管理
+- **[认证接口](./api/authentication.md)** - 二维码登录和会话管理
+- **[配置参考](./api/configuration.md)** - 详细的配置选项说明
 
-### 📝 开发参考
+### 💡 使用示例
 
-- **[04-API 参考](./04-api-reference.md)** - 完整的 API 接口说明
-- **[05-常量配置](./05-constants.md)** - 所有常量、枚举值查询表
+**丰富的实际使用示例，涵盖各种应用场景**
 
-## 🗂️ 按功能分类
+- **[搜索示例](./examples/search.md)** - 从简单搜索到复杂筛选
+- **[认证示例](./examples/authentication.md)** - 完整的登录流程实现
 
-### 核心功能
+### 📋 参考资料
 
-| 功能     | 文档                           | API 端点                               |
-| -------- | ------------------------------ | -------------------------------------- |
-| 商品搜索 | [搜索接口](./02-search-api.md) | `mtop.taobao.idlemtopsearch.pc.search` |
-| 用户信息 | [用户接口](./03-user-api.md)   | `mtop.idle.web.user.page.nav`          |
-| 用户详情 | [用户接口](./03-user-api.md)   | `mtop.idle.web.user.page.head`         |
+**深入的技术参考和类型定义**
 
-### 登录认证
+- **[TypeScript 类型](./reference/types.md)** - 完整的类型定义和使用指南
 
-| 方式       | 推荐度     | 说明                 | 状态      |
-| ---------- | ---------- | -------------------- | --------- |
-| 二维码登录 | ⭐⭐⭐⭐⭐ | 安全便捷，无风控风险 | 🚧 开发中 |
-| 短信登录   | ⭐⭐⭐     | 15 分钟 3 次限制     | 📋 规划中 |
-| 密码登录   | ⭐         | 容易触发风控         | 📋 规划中 |
+## 🎯 学习路径
 
-## 🔍 快速查询
+### 初学者路径
 
-### 常用枚举值
+1. **[快速开始](./guide/getting-started.md)** - 了解基础安装和配置
+2. **[身份认证](./guide/authentication.md)** - 学习如何获取和使用认证信息
+3. **[搜索示例](./examples/search.md)** - 通过实例学习搜索功能
+4. **[API 接口文档](./api/search.md)** - 深入了解搜索 API 的所有功能
 
-```typescript
-// 搜索排序
-SortField.PRICE; // 按价格排序
-SortField.CREATE; // 按发布时间排序
-SortValue.ASC; // 升序
-SortValue.DESC; // 降序
+### 进阶开发者路径
 
-// 商品筛选
-QuickFilter.PERSONAL; // 个人闲置
-QuickFilter.FREE_POSTAGE; // 包邮
-QuickFilter.NEW; // 全新
+1. **[配置参考](./api/configuration.md)** - 了解所有配置选项
+2. **[TypeScript 类型](./reference/types.md)** - 深入理解类型系统
 
-// 发布时间
-PublishDays.ONE_DAY; // 1天内
-PublishDays.SEVEN_DAYS; // 7天内
-```
+## 🔧 核心功能概览
 
-### API 端点速查
+### 搜索功能
 
 ```typescript
-// 搜索相关
-"mtop.taobao.idlemtopsearch.pc.search"; // 商品搜索
-
-// 用户相关
-"mtop.idle.web.user.page.nav"; // 用户导航
-"mtop.idle.web.user.page.head"; // 用户详情
-```
-
-## 📋 使用流程
-
-### 1. 安装和配置
-
-```bash
-npm install goofish-sdk
-```
-
-### 2. 获取登录凭证
-
-推荐使用二维码登录获取 Cookie（开发中）
-
-### 3. 初始化客户端
-
-```typescript
-import { Goofish, LogLevel } from "goofish-sdk";
-
-const client = new Goofish({
-  cookie: "your-cookie-here",
-  level: LogLevel.INFO,
-});
-```
-
-### 4. 使用 API
-
-```typescript
-// 搜索商品
-const searchResult = await client.api.search.search({
-  keyword: "iPhone",
+// 基础搜索
+const results = await client.api.mtop.search.search({
+  keyword: "iPhone 14",
   pageNumber: 1,
+  rowsPerPage: 20,
 });
 
-// 获取用户信息
-const userInfo = await client.api.user.getUserNav();
+// 高级筛选
+import { PublishDays, QuickFilter } from "goofish-client";
+
+const filtered = await client.api.mtop.search.search({
+  keyword: "MacBook",
+  filter: {
+    priceRange: { from: 5000, to: 15000 },
+    publishDays: PublishDays.SEVEN_DAYS,
+    quickFilters: [QuickFilter.PERSONAL, QuickFilter.FREE_POSTAGE],
+  },
+  sortField: SortField.PRICE,
+  sortValue: SortValue.ASC,
+});
 ```
 
-## ⚠️ 重要提示
+### 用户管理
 
-1. **Cookie 安全**：请妥善保管您的登录 Cookie，不要泄露
-2. **请求频率**：合理控制 API 调用频率，避免触发限制
-3. **错误处理**：始终检查 API 响应状态并处理异常
-4. **版本更新**：建议定期更新到最新版本
+```typescript
+// 获取用户信息
+const userNav = await client.api.mtop.user.getUserNav();
+const userHead = await client.api.mtop.user.getUserHead();
+```
+
+### 身份认证
+
+```typescript
+// Cookie认证
+const client = new Goofish({
+  cookie: "cookie2=xxxx",
+});
+
+// 二维码登录
+const qrResult = await client.api.passport.qr.render();
+// 扫描二维码...
+const queryResult = await client.api.passport.qr.query({
+  t: qrResult.response.content.data.t,
+  ck: qrResult.response.content.data.ck,
+});
+```
 
 ## 🛠️ 开发工具
 
-### 调试模式
+### 日志系统
 
 ```typescript
+// 启用详细日志
 const client = new Goofish({
-  level: LogLevel.DEBUG, // 启用详细日志
-  cookie: "your-cookie",
+  cookie: "cookie2=xxxx",
+  level: LogLevel.DEBUG, // 显示所有日志
+});
+
+// 自定义日志器
+const logger = new Logger({
+  level: LogLevel.INFO,
+  prefix: "MyApp",
 });
 ```
 
-### 错误排查
+### 类型安全
 
-1. 检查 Cookie 是否有效
-2. 确认请求参数格式正确
-3. 查看详细错误日志
-4. 参考常见问题解答
+```typescript
+import type { SearchOptions, SearchResponse } from "goofish-client";
+import { SortField, SortValue } from "goofish-client";
 
-## 🔗 相关链接
+// 类型安全的参数
+const searchOptions: SearchOptions = {
+  keyword: "iPhone",
+  sortField: SortField.PRICE,
+  sortValue: SortValue.ASC,
+};
 
-- **GitHub 仓库**：[https://github.com/11273/goofish-sdk](https://github.com/11273/goofish-sdk)
-- **问题反馈**：[Issues](https://github.com/11273/goofish-sdk/issues)
-- **NPM 包**：[goofish-sdk](https://www.npmjs.com/package/goofish-sdk)
+// 类型守卫
+if (isSuccessResponse(result)) {
+  // TypeScript 知道 result.data 一定存在
+  result.data.resultList.forEach((item) => {
+    console.log(item.data.item.main.exContent.title);
+  });
+}
+```
 
-## 📄 许可证
+## 🎨 最佳实践
 
-本项目基于 [GPL-3.0](../LICENSE) 许可证开源。
+### 1. 配置管理
+
+```typescript
+// 环境配置
+const config = {
+  development: {
+    cookie: process.env.DEV_COOKIE,
+    level: LogLevel.DEBUG,
+  },
+  production: {
+    cookie: process.env.PROD_COOKIE,
+    level: LogLevel.WARN,
+  },
+};
+
+const client = new Goofish(config[process.env.NODE_ENV]);
+```
+
+### 2. 批量操作
+
+```typescript
+async function batchSearch(keywords: string[]) {
+  const results = await Promise.allSettled(
+    keywords.map((keyword) =>
+      client.api.mtop.search.search({ keyword, rowsPerPage: 10 })
+    )
+  );
+
+  return results
+    .filter(
+      (result): result is PromiseFulfilledResult<any> =>
+        result.status === "fulfilled" && result.value.success
+    )
+    .map((result) => result.value.data);
+}
+```
+
+## ⚠️ 重要提醒
+
+### TypeScript 类型覆盖
+
+> **类型定义主要覆盖成功响应场景**  
+> 对于错误状态和失败场景，类型定义可能不够完整。建议：
+>
+> - 启用 `LogLevel.DEBUG` 查看实际响应数据
+> - 进行适当的空值检查和错误处理
+> - 参考官方 API 文档获取错误码信息
+
+### 安全声明
+
+> **本 Client 为第三方开发工具**  
+> 仅供学习研究使用，使用前请确保遵守相关平台的服务条款。
+
+## 🤝 社区资源
+
+- **[GitHub Repository](https://github.com/11273/goofish-client)** - 源代码和问题反馈
+- **[Issues](https://github.com/11273/goofish-client/issues)** - 错误报告和功能请求
+- **[Discussions](https://github.com/11273/goofish-client/discussions)** - 社区讨论和交流
+
+## 📝 文档贡献
+
+如果你发现文档中的错误或有改进建议，欢迎：
+
+1. 在 [GitHub Issues](https://github.com/11273/goofish-client/issues) 提交问题
+2. 提交 Pull Request 改进文档
+3. 在 [Discussions](https://github.com/11273/goofish-client/discussions) 分享使用经验
+
+## 📄 版权信息
+
+本文档采用 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) 协议发布。
 
 ---
 
-> 💡 **提示**：建议按顺序阅读文档，从快速开始到具体的 API 使用。如有疑问，请查看相应的详细文档或提交 Issue。
+**祝你使用愉快！** 🎉
+
+如果这个 Client 帮助到了你，请考虑给我们一个 ⭐ [Star](https://github.com/11273/goofish-client)！

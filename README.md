@@ -1,21 +1,34 @@
-# Goofish SDK
+# Goofish Client
 
-闲鱼商品搜索 SDK，支持商品搜索等功能。
+🚨 **法律风险声明** 🚨
+
+**本项目为非官方客户端库，通过逆向工程方式实现对闲鱼平台的接口调用。使用本库存在以下风险：**
+
+1. **违反服务条款**：可能违反闲鱼平台的用户服务协议
+2. **账号风险**：使用可能导致账号被限制或封禁
+3. **法律风险**：在某些司法管辖区，逆向工程可能涉及法律问题
+4. **不稳定性**：平台接口变更可能导致功能失效
+
+**使用者需自行承担所有风险，开发者不承担任何法律责任。建议仅用于学习研究目的。**
+
+---
+
+非官方的闲鱼商品搜索客户端库，支持商品搜索等功能。
 
 ## 安装
 
 ```bash
-npm install goofish-sdk
+npm install goofish-client
 ```
 
 ## 快速开始
 
 ```typescript
-import { Goofish } from "goofish-sdk";
+import { Goofish } from "goofish-client";
 
 // 创建客户端实例
 const client = new Goofish({
-  cookie: "your_cookie_here",
+  cookie: "cookie2=xxxx",
   debug: true, // 启用调试模式以查看详细日志
 });
 
@@ -38,13 +51,13 @@ SDK 内置了完整的日志系统，支持请求响应日志记录：
 ```typescript
 // 启用调试模式，查看详细的请求响应日志
 const client = new Goofish({
-  cookie: "your_cookie_here",
+  cookie: "cookie2=xxxx",
   debug: true, // 启用后会显示详细的HTTP请求日志
 });
 
 // 普通模式，只显示基本信息
 const client = new Goofish({
-  cookie: "your_cookie_here",
+  cookie: "cookie2=xxxx",
   debug: false, // 默认值，只显示基本日志
 });
 ```
@@ -52,7 +65,7 @@ const client = new Goofish({
 ### 自定义日志器
 
 ```typescript
-import { createLogger, LogLevel } from "goofish-sdk";
+import { createLogger, LogLevel } from "goofish-client";
 
 // 创建自定义日志器
 const logger = createLogger({

@@ -42,7 +42,7 @@ export class Goofish {
   // 配置
   public readonly config: GoofishConfig;
 
-  constructor(config: Partial<GoofishConfig>) {
+  constructor(config: Partial<GoofishConfig> = {}) {
     // 初始化日志管理器
     logger.setLevel(config.level || LogLevel.WARN);
 

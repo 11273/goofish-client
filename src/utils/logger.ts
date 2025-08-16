@@ -31,7 +31,7 @@ const HTTP_STATUS = {
 } as const;
 
 /**
- * 闲鱼 SDK 日志工具类
+ * 闲鱼 Client 日志工具类
  */
 export class Logger {
   private options: Required<LoggerOptions>;
@@ -41,7 +41,7 @@ export class Logger {
   // 默认配置
   private static readonly DEFAULT_OPTIONS = {
     level: LogLevel.INFO,
-    prefix: 'Goofish-SDK',
+    prefix: 'Goofish-Client',
     timeFormat: 'time' as TimeFormat,
   } as const;
 
@@ -299,7 +299,7 @@ class LoggerManager {
   static initialize(options: LoggerOptions = {}): void {
     LoggerManager.globalLogger = new Logger({
       level: LogLevel.INFO,
-      prefix: 'Goofish-SDK',
+      prefix: 'Goofish-Client',
       timeFormat: 'time',
       ...options,
     });

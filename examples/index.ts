@@ -1,92 +1,144 @@
-import { Goofish, LogLevel } from '../src';
-import { SortField, SortValue } from '../src/types/mtop/search';
-import { QRCodeStatus } from '../src/types/passport/qr';
-import { logger } from '../src/utils/logger';
-
-async function main() {
-  // 创建客户端实例，启用调试模式
-  const client = new Goofish({
-    level: LogLevel.INFO,
-    // 获取用户信息和搜索通用
-    // cookie: 'cookie2=xxxx;',
-    // 获取搜索结果能用
-    // cookie: 'cna=xxxx;',
-  });
-
-  // 生成二维码
-  // const qrResult1 = await client.api.passport.qr.generate();
-  // logger.info('二维码生成结果1:', qrResult1);
-
-  const qrResult2 = await client.api.passport.qr.render();
-  logger.info('二维码生成结果2:\n', qrResult2.response);
-  logger.info('二维码生成结果2:\n', qrResult2.qrCode);
-
-  let success = false;
-  while (!success) {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    // 二维码查询示例
-    const queryResult = await client.api.passport.qr.query({
-      t: qrResult2.response.content.data.t,
-      ck: qrResult2.response.content.data.ck,
-    });
-
-    logger.info('二维码查询结果:', queryResult);
-
-    // 处理不同的二维码状态
-    const qrStatus = queryResult.content.data.qrCodeStatus;
-    switch (qrStatus) {
-      case QRCodeStatus.NEW:
-        logger.info('二维码已生成，等待扫描');
-        break;
-      case QRCodeStatus.SCANED:
-        logger.info('二维码已被扫描，等待确认');
-        break;
-      case QRCodeStatus.CONFIRMED:
-        logger.info('二维码已确认，登录成功');
-        success = true;
-        break;
-      case QRCodeStatus.CANCELED:
-        logger.info('二维码已取消');
-        return;
-      case QRCodeStatus.EXPIRED:
-        logger.info('二维码已过期');
-        return;
-      case QRCodeStatus.ERROR:
-        logger.error('二维码出现错误');
-        return;
-      default:
-        logger.info('未知的二维码状态:', qrStatus);
-        return;
-    }
-  }
+import { Goofish, QRCodeStatus, LogLevel } from 'goofish-client';
+/**
+ * Goofish 客户端快速开始示例
+ * 完整演示从二维码登录到搜索商品的全流程
+ */
+async function quickStart() {
   try {
-    const cookiePassport = client.getCookiePassport();
-    logger.info('cookiePassport:', cookiePassport);
-    client.updateCookieMtop(cookiePassport);
-    // 获取用户导航信息
-    const userNavResult = await client.api.mtop.user.getUserNav();
-    logger.info('用户导航信息:', userNavResult);
+    // ========== 第一步：初始化客户端 ==========
+    // 创建 Goofish 客户端实例，设置日志级别为 INFO
+    const client = new Goofish({
+      level: LogLevel.INFO,
+    });
+    console.log('🚀 Goofish 快速开始示例\n');
 
-    // 获取用户头部信息
-    const userHeadResult = await client.api.mtop.user.getUserHead();
-    logger.info('用户头部信息:', userHeadResult);
+    // ========== 第二步：生成登录二维码 ==========
+    console.log('📱 正在生成登录二维码...');
 
-    // 搜索商品
-    const searchResult = await client.api.mtop.search.search({
-      pageNumber: 1,
-      keyword: 'N150',
-      rowsPerPage: 30,
-      sortValue: SortValue.DESC,
-      sortField: SortField.CREATE,
+    // 调用二维码渲染接口，生成可在终端显示的二维码
+    const qrResult = await client.api.passport.qr.render({
+      params: {}, // 二维码参数（默认即可）
+      options: {
+        outputFormat: 'string', // 输出格式为字符串
+        stringOptions: {
+          type: 'terminal', // 终端显示模式
+          small: false, // 使用小尺寸二维码
+        },
+      },
     });
 
-    logger.info(
-      '搜索结果:',
-      searchResult?.data?.resultList?.[0]?.data?.item?.main?.exContent
-        ?.detailParams
-    );
+    // 检查二维码是否生成成功
+    if (!qrResult.response.content.success) {
+      throw new Error('二维码生成失败');
+    }
+
+    // 获取二维码的关键参数，用于后续查询登录状态
+    const { t, ck } = qrResult.response.content.data;
+
+    // 显示二维码
+    console.log('请使用闲鱼APP扫描下方二维码:');
+    console.log(qrResult.qrCode);
+    console.log('\n⏳ 等待扫码确认...\n');
+
+    // ========== 第三步：轮询等待用户扫码 ==========
+    let attempts = 0;
+    const maxAttempts = 60; // 最多等待60次，每次3秒，共180秒
+
+    while (attempts < maxAttempts) {
+      // 等待3秒后再次查询
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      // 查询二维码状态
+      const queryResult = await client.api.passport.qr.query({ t, ck });
+      const status = queryResult.content.data.qrCodeStatus;
+
+      // 显示当前状态
+      console.log(`状态检查 [${attempts + 1}/${maxAttempts}]: ${status}`);
+
+      // 根据不同状态处理
+      if (status === QRCodeStatus.CONFIRMED) {
+        // 用户已确认登录，更新客户端的 Cookie
+        const cookie = client.getCookiePassport();
+        client.updateCookieMtop(cookie);
+        console.log('✅ 登录成功！\n');
+        break;
+      } else if (
+        // 处理失败状态：已取消、已过期、错误
+        [
+          QRCodeStatus.CANCELED,
+          QRCodeStatus.EXPIRED,
+          QRCodeStatus.ERROR,
+        ].includes(status)
+      ) {
+        throw new Error(`登录失败: ${status}`);
+      }
+
+      attempts++;
+    }
+
+    // 检查是否超时
+    if (attempts >= maxAttempts) {
+      throw new Error('登录超时，请重试');
+    }
+
+    // ========== 第四步：验证登录状态 ==========
+    console.log('👤 正在验证登录状态...');
+
+    // 获取用户信息以验证登录是否成功
+    const userInfo = await client.api.mtop.user.getUserHead();
+
+    // 检查接口返回和登录状态
+    if (userInfo?.data?.baseInfo?.self) {
+      console.log(
+        `✅ 登录验证成功！欢迎: ${userInfo.data.module.base.displayName} (${userInfo.data.module.base.introduction})\n`
+      );
+    } else {
+      throw new Error('登录验证失败');
+    }
+
+    // ========== 第五步：搜索商品示例 ==========
+    console.log('🔍 正在搜索商品...');
+
+    // 调用搜索接口，搜索关键词为 "iPhone"
+    const searchResult = await client.api.mtop.search.search({
+      keyword: 'iPhone', // 搜索关键词
+      pageNumber: 1, // 页码（从1开始）
+      rowsPerPage: 5, // 每页显示数量
+    });
+
+    // ========== 第六步：处理并显示搜索结果 ==========
+    if (
+      searchResult.ret[0] === 'SUCCESS::调用成功' &&
+      searchResult.data?.resultList
+    ) {
+      const items = searchResult.data.resultList;
+      console.log(`✅ 搜索成功！找到 ${items.length} 个商品:\n`);
+
+      // 遍历并显示每个商品的信息
+      items.forEach((item, index) => {
+        // 提取商品信息
+        const content = item.data.item.main.exContent;
+
+        // 拼接价格文本（价格可能包含多个部分，如 "¥" + "99"）
+        const priceText = content.price.map((p) => p.text).join('');
+
+        // 显示商品信息：序号、标题、价格、地区
+        console.log(`${index + 1}. ${content.title}`);
+        console.log(`   💰 ${priceText} | 📍 ${content.area || '未知地区'}\n`);
+      });
+    } else {
+      console.log('❌ 搜索失败:', searchResult.ret[0]);
+    }
+
+    console.log('🎉 示例运行完成！');
+
+    // 返回客户端实例，便于后续操作
+    return client;
   } catch (error) {
-    console.error('请求失败:', error);
+    // 统一错误处理
+    console.error('\n❌ 发生错误:', error.message);
+    throw error;
   }
 }
-main();
+
+quickStart();

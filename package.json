@@ -1,22 +1,23 @@
 {
-  "name": "goofish-sdk",
+  "name": "goofish-client",
   "version": "1.0.0",
-  "description": "A powerful SDK for Goofish platform",
+  "description": "Unofficial Goofish (闲鱼) Web API Client",
   "keywords": [
     "goofish",
-    "sdk",
+    "client",
     "api",
-    "typescript"
+    "typescript",
+    "reverse-engineering"
   ],
   "author": "github.com/11273",
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/11273/goofish-sdk"
+    "url": "https://github.com/11273/goofish-client"
   },
-  "homepage": "https://github.com/11273/goofish-sdk#readme",
+  "homepage": "https://github.com/11273/goofish-client#readme",
   "bugs": {
-    "url": "https://github.com/11273/goofish-sdk/issues"
+    "url": "https://github.com/11273/goofish-client/issues"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -47,7 +48,10 @@
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run typecheck && npm run lint && npm run build:prod"
+    "prepublishOnly": "npm run typecheck && npm run lint && npm run build:prod",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "dependencies": {
     "axios": "^1.10.0",
@@ -65,7 +69,8 @@
     "globals": "^16.3.0",
     "tsup": "^8.5.0",
     "tsx": "^4.20.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitepress": "^1.6.4"
   },
   "peerDependencies": {
     "typescript": ">=4.5.0"
