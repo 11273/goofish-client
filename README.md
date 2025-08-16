@@ -164,6 +164,27 @@ interface SearchParams {
 
 查看 `examples/` 目录下的完整示例代码。
 
+# Contributors
+
+<a href="https://github.com/11273/goofish-client/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=11273/goofish-client" />
+</a>
+<br /><br />
+
+# GitHub Stats
+
+[![Stats](https://repobeats.axiom.co/api/embed/ef74981ca2d760958cb005652face3cad1fa3181.svg "Repobeats analytics image")](https://github.com/11273/goofish-client)
+
+# Star History
+
+<a href="https://github.com/11273/goofish-client">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=11273/goofish-client&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=11273/goofish-client&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=11273/goofish-client&type=Date" />
+ </picture>
+</a>
+
 ## 许可证
 
 MIT
