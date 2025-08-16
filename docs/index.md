@@ -46,6 +46,16 @@ features:
     details: 支持请求缓存、连接池、批量操作等性能优化特性，提升应用效率
 ---
 
+<div align="center">
+
+![NPM Version](https://img.shields.io/npm/v/goofish-client?style=flat-square&color=blue&label=npm) ![NPM Downloads](https://img.shields.io/npm/dm/goofish-client?style=flat-square&color=green&label=downloads) ![GitHub Stars](https://img.shields.io/github/stars/11273/goofish-client?style=flat-square&color=yellow&label=stars) ![GitHub Forks](https://img.shields.io/github/forks/11273/goofish-client?style=flat-square&color=blue&label=forks) ![GitHub Issues](https://img.shields.io/github/issues/11273/goofish-client?style=flat-square&color=red&label=issues)
+
+![GitHub Release Downloads](https://img.shields.io/github/downloads/11273/goofish-client/total?style=flat-square&logo=github&color=blue) ![Latest Release Downloads](https://img.shields.io/github/downloads/11273/goofish-client/v1.0.1/total?style=flat-square&logo=github&color=green) ![Views](https://komarev.com/ghpvc/?username=11273-goofish-client&label=Views&color=brightgreen&style=flat-square)
+
+![License](https://img.shields.io/github/license/11273/goofish-client?style=flat-square&color=brightgreen&label=license) ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white) ![Node.js](https://img.shields.io/badge/Node.js%2014%2B-43853d?style=flat-square&logo=node.js&logoColor=white) ![GitHub Last Commit](https://img.shields.io/github/last-commit/11273/goofish-client?style=flat-square&color=orange&label=last%20commit)
+
+</div>
+
 ## 🎯 快速上手
 
 ::: code-group
@@ -184,9 +194,9 @@ TypeScript 类型定义主要覆盖成功响应场景，错误处理请参考官
 
 <div class="footer-info">
   <p>
-    采用 <a href="https://github.com/11273/goofish-client/blob/main/LICENSE" target="_blank">GPL-3.0</a> 许可证 · 
-    <a href="https://github.com/11273/goofish-client" target="_blank">GitHub</a> · 
-    <a href="/guide/changelog">更新日志</a> · 
+    采用 <a href="https://github.com/11273/goofish-client/blob/main/LICENSE" target="_blank">GPL-3.0</a> 许可证 ·
+    <a href="https://github.com/11273/goofish-client" target="_blank">GitHub</a> ·
+    <a href="/guide/changelog">更新日志</a> ·
     <a href="/guide/contributing">贡献指南</a>
   </p>
 </div>

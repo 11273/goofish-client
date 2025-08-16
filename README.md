@@ -1,5 +1,15 @@
 # Goofish Client
 
+<div align="center">
+
+![NPM Version](https://img.shields.io/npm/v/goofish-client?style=flat-square&color=blue&label=npm) ![NPM Downloads](https://img.shields.io/npm/dm/goofish-client?style=flat-square&color=green&label=downloads) ![GitHub Stars](https://img.shields.io/github/stars/11273/goofish-client?style=flat-square&color=yellow&label=stars) ![GitHub Forks](https://img.shields.io/github/forks/11273/goofish-client?style=flat-square&color=blue&label=forks) ![GitHub Issues](https://img.shields.io/github/issues/11273/goofish-client?style=flat-square&color=red&label=issues)
+
+![GitHub Release Downloads](https://img.shields.io/github/downloads/11273/goofish-client/total?style=flat-square&logo=github&color=blue) ![Latest Release Downloads](https://img.shields.io/github/downloads/11273/goofish-client/v1.0.1/total?style=flat-square&logo=github&color=green) ![Views](https://komarev.com/ghpvc/?username=11273-goofish-client&label=Views&color=brightgreen&style=flat-square)
+
+![License](https://img.shields.io/github/license/11273/goofish-client?style=flat-square&color=brightgreen&label=license) ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white) ![Node.js](https://img.shields.io/badge/Node.js%2014%2B-43853d?style=flat-square&logo=node.js&logoColor=white) ![GitHub Last Commit](https://img.shields.io/github/last-commit/11273/goofish-client?style=flat-square&color=orange&label=last%20commit)
+
+</div>
+
 ## ⚠️ 免责声明
 
 **本项目仅供学习和研究目的使用。**
