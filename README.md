@@ -1,10 +1,12 @@
-# Goofish Client
+<div align="center">
+  <img src="./docs/public/tv.png" alt="LOGO" width="180">
+  <h1>Goofish Client</h1>
+  <p>一个非官方的闲鱼客户端库，支持商品搜索等功能。</p>
+</div>
 
 <div align="center">
 
-![NPM Version](https://img.shields.io/npm/v/goofish-client?style=flat-square&color=blue&label=npm) ![NPM Downloads](https://img.shields.io/npm/dm/goofish-client?style=flat-square&color=green&label=downloads) ![GitHub Stars](https://img.shields.io/github/stars/11273/goofish-client?style=flat-square&color=yellow&label=stars) ![GitHub Forks](https://img.shields.io/github/forks/11273/goofish-client?style=flat-square&color=blue&label=forks) ![GitHub Issues](https://img.shields.io/github/issues/11273/goofish-client?style=flat-square&color=red&label=issues)
-
-![GitHub Release Downloads](https://img.shields.io/github/downloads/11273/goofish-client/total?style=flat-square&logo=github&color=blue) ![Latest Release Downloads](https://img.shields.io/github/downloads/11273/goofish-client/v1.0.1/total?style=flat-square&logo=github&color=green) ![Views](https://komarev.com/ghpvc/?username=11273-goofish-client-github&label=Views&color=brightgreen&style=flat-square)
+![NPM Version](https://img.shields.io/npm/v/goofish-client?style=flat-square&color=blue&label=npm) ![NPM Downloads](https://img.shields.io/npm/dm/goofish-client?style=flat-square&color=green&label=downloads) ![GitHub Stars](https://img.shields.io/github/stars/11273/goofish-client?style=flat-square&color=yellow&label=stars) ![GitHub Forks](https://img.shields.io/github/forks/11273/goofish-client?style=flat-square&color=blue&label=forks) ![GitHub Issues](https://img.shields.io/github/issues/11273/goofish-client?style=flat-square&color=red&label=issues) ![Views](https://komarev.com/ghpvc/?username=11273-goofish-client-github&label=Views&color=brightgreen&style=flat-square)
 
 ![License](https://img.shields.io/github/license/11273/goofish-client?style=flat-square&color=brightgreen&label=license) ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white) ![Node.js](https://img.shields.io/badge/Node.js%2014%2B-43853d?style=flat-square&logo=node.js&logoColor=white) ![GitHub Last Commit](https://img.shields.io/github/last-commit/11273/goofish-client?style=flat-square&color=orange&label=last%20commit)
 
@@ -20,10 +22,6 @@
 - 稳定性风险：非官方实现可能随时失效，不保证功能的持续可用性
 - 使用风险：使用本库产生的任何后果由使用者自行承担
   本项目开发者不对使用本库产生的任何直接或间接后果负责。请谨慎评估风险后使用。
-
----
-
-一个非官方的闲鱼客户端库，支持商品搜索等功能。
 
 📚 **完整的在线文档**: [https://11273.github.io/goofish-client/](https://11273.github.io/goofish-client/)
 
