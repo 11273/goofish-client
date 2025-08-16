@@ -1,6 +1,6 @@
 # Goofish Client
 
-**⚠️ 免责声明**
+## ⚠️ 免责声明
 
 **本项目仅供学习和研究目的使用。**
 
@@ -14,6 +14,8 @@
 ---
 
 一个非官方的闲鱼客户端库，支持商品搜索等功能。
+
+📚 **完整的在线文档**: [https://11273.github.io/goofish-client/](https://11273.github.io/goofish-client/)
 
 ## 安装
 
@@ -46,7 +48,7 @@ console.log(results);
 
 ### 基础使用
 
-SDK 内置了完整的日志系统，支持请求响应日志记录：
+Client 内置了完整的日志系统，支持请求响应日志记录：
 
 ```typescript
 // 启用调试模式，查看详细的请求响应日志
@@ -142,7 +144,15 @@ interface SearchParams {
 }
 ```
 
-## 示例
+## 文档
+
+### 在线文档
+
+📚 **完整的在线文档**: [https://11273.github.io/goofish-client/](https://11273.github.io/goofish-client/)
+
+包含详细的 API 参考、使用指南、示例代码和最佳实践。
+
+### 本地示例
 
 查看 `examples/` 目录下的完整示例代码。
 

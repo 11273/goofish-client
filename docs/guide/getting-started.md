@@ -303,7 +303,7 @@ const client = new Goofish({
 
 ## 错误处理
 
-SDK 使用标准的 Promise 错误处理机制：
+Client 使用标准的 Promise 错误处理机制：
 
 ```typescript
 try {
@@ -319,7 +319,7 @@ try {
 
 ## TypeScript 支持
 
-SDK 提供完整的 TypeScript 类型定义：
+Client 提供完整的 TypeScript 类型定义：
 
 ```typescript
 import type { SearchOptions, SearchResponse } from "goofish-client";
