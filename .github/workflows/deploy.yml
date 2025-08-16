@@ -54,7 +54,7 @@ jobs:
       - name: Install dependencies
         run: |
           # 使用 npm ci 确保精确的依赖安装
-          npm ci --prefer-offline --no-audit
+          npm ci
           
       - name: Run type check
         run: npm run typecheck
