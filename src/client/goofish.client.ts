@@ -12,6 +12,7 @@ import { CookieStore, CookieUtils } from '../utils/cookie';
 import type { GoofishConfig } from '../types';
 import { QrService } from '../services/passport/qr.service';
 import { LoginService } from '../services/passport/login.service';
+import { HomeService } from '../services/mtop';
 
 export class Goofish {
   // Mtop HTTP 客户端
@@ -32,6 +33,8 @@ export class Goofish {
       search: SearchService;
       // 用户服务
       user: UserService;
+      // 首页服务
+      home: HomeService;
     };
     // Passport 服务
     passport: {
@@ -112,6 +115,7 @@ export class Goofish {
       mtop: {
         search: new SearchService(this.httpMtop, this.config),
         user: new UserService(this.httpMtop, this.config),
+        home: new HomeService(this.httpMtop, this.config),
       },
       passport: {
         qr: new QrService(this.httpPassport, this.config),

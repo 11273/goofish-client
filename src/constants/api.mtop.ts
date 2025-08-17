@@ -18,13 +18,21 @@ export const MTOP_CONFIG = {
 
 // Mtop API 端点
 export const MTOP_ENDPOINTS = {
+  // 首页相关
+  HOME: {
+    // 猜你喜欢
+    FEED: 'mtop.taobao.idlehome.home.webpc.feed',
+  },
   // 用户相关
   USER: {
+    // 用户导航
     NAV: 'mtop.idle.web.user.page.nav',
+    // 用户头部
     HEAD: 'mtop.idle.web.user.page.head',
   },
   // 搜索相关
   SEARCH: {
+    // 搜索
     SEARCH: 'mtop.taobao.idlemtopsearch.pc.search',
   },
   // 商品相关
@@ -40,7 +48,7 @@ export const MTOP_TOKEN = {
   // 令牌错误代码
   ERROR_CODES: [
     'FAIL_SYS_TOKEN_EMPTY',
-    'FAIL_SYS_TOKEN_ILLEGAL', 
+    'FAIL_SYS_TOKEN_ILLEGAL',
     'FAIL_SYS_SESSION_EXPIRED',
   ],
   // 令牌 cookie 名称
