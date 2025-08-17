@@ -1,0 +1,147 @@
+name: 🐛 Bug Report | Bug 报告
+description: Create a bug report to help us improve | 创建Bug报告帮助我们改进
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您花时间填写此Bug报告！请尽可能详细地描述问题。
+
+        Thank you for taking the time to fill out this bug report! Please describe the issue in as much detail as possible.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 前置条件 | Prerequisites
+      description: 在提交之前，请确认您已经检查了以下内容
+      options:
+        - label: 我已经搜索了现有的Issues，确认这个问题还没有被报告过
+          required: true
+        - label: 我正在使用最新版本的 goofish-client
+          required: true
+        - label: 我已经阅读了文档和README
+          required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: 版本信息 | Version
+      description: 您使用的 goofish-client 版本是什么？
+      placeholder: "例如: 1.1.2"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: 运行环境 | Environment
+      description: 您在什么环境下遇到的问题？
+      options:
+        - Node.js
+        - Browser (浏览器)
+        - React Native
+        - Electron
+        - Next.js
+        - Nuxt.js
+        - Other (其他)
+    validations:
+      required: true
+
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js 版本 | Node.js Version
+      description: 如果适用，请提供您的 Node.js 版本
+      placeholder: "例如: v18.17.0"
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述 | Bug Description
+      description: 请清楚简洁地描述这个Bug
+      placeholder: 详细描述您遇到的问题...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为 | Expected Behavior
+      description: 描述您期望发生什么
+      placeholder: 描述您期望的正确行为...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际行为 | Actual Behavior
+      description: 描述实际发生了什么
+      placeholder: 描述实际发生的错误行为...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 重现步骤 | Steps to Reproduce
+      description: 请提供详细的重现步骤
+      placeholder: |
+        1. 导入 goofish-client
+        2. 创建客户端实例 
+        3. 调用特定方法
+        4. 观察错误
+      value: |
+        1. 
+        2. 
+        3. 
+        4.
+    validations:
+      required: true
+
+  - type: textarea
+    id: code-sample
+    attributes:
+      label: 代码示例 | Code Sample
+      description: 如果可能，请提供最小可重现的代码示例
+      render: typescript
+      placeholder: |
+        import { Goofish } from 'goofish-client';
+
+        const client = new Goofish({
+          cookie: 'your-cookie'
+        });
+
+        // 重现Bug的代码...
+
+  - type: textarea
+    id: error-logs
+    attributes:
+      label: 错误日志 | Error Logs
+      description: 请粘贴相关的错误信息、堆栈跟踪或日志
+      render: shell
+      placeholder: 粘贴错误信息和堆栈跟踪...
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 其他信息 | Additional Context
+      description: 添加任何其他可能有助于我们理解问题的信息
+      placeholder: |
+        - 网络环境
+        - 特殊配置
+        - 相关的第三方库
+        - 截图（如果适用）
+
+  - type: checkboxes
+    id: impact
+    attributes:
+      label: 影响程度 | Impact Level
+      description: 这个Bug对您的影响程度如何？
+      options:
+        - label: 阻塞性 - 完全无法使用库的核心功能
+        - label: 严重 - 影响主要功能，有临时解决方案
+        - label: 中等 - 影响部分功能，不影响主流程
+        - label: 轻微 - 小问题，不影响正常使用

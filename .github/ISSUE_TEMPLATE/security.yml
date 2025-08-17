@@ -1,0 +1,169 @@
+name: 🔒 Security Issue | 安全问题
+description: Report a security vulnerability (use private reporting) | 报告安全漏洞（请使用私密报告）
+title: "[Security]: "
+labels: ["security", "needs-immediate-attention"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ **重要提醒 | IMPORTANT NOTICE**
+
+        **请不要在公开Issue中报告安全漏洞！**  
+        **DO NOT report security vulnerabilities in public issues!**
+
+        如果您发现了安全漏洞，请使用以下方式私密报告：
+        - GitHub私有安全咨询: [Security Advisories](https://github.com/11273/goofish-client/security/advisories)
+        - 或联系项目维护者
+
+        If you've found a security vulnerability, please report it privately via:
+        - GitHub Security Advisories: [Security Advisories](https://github.com/11273/goofish-client/security/advisories)
+        - Or contact the project maintainers directly
+
+        ---
+
+        此模板仅用于非敏感的安全相关讨论，如：
+        - 安全最佳实践建议
+        - 安全文档改进
+        - 安全配置问题
+
+        This template is only for non-sensitive security-related discussions such as:
+        - Security best practice suggestions
+        - Security documentation improvements  
+        - Security configuration questions
+
+  - type: checkboxes
+    id: not-vulnerability
+    attributes:
+      label: 确认 | Confirmation
+      description: 请确认这不是安全漏洞报告
+      options:
+        - label: 我确认这不是安全漏洞报告，而是关于安全最佳实践、文档或配置的讨论
+          required: true
+
+  - type: dropdown
+    id: security-topic
+    attributes:
+      label: 安全话题类型 | Security Topic Type
+      description: 这是关于什么类型的安全话题？
+      options:
+        - Security Best Practices (安全最佳实践)
+        - Security Documentation (安全文档)
+        - Authentication Guidance (认证指导)
+        - Credential Management (凭证管理)
+        - Network Security (网络安全)
+        - Privacy Concerns (隐私问题)
+        - Compliance (合规性)
+        - Security Configuration (安全配置)
+        - Other Security Discussion (其他安全讨论)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 描述 | Description
+      description: 请详细描述您的安全相关问题或建议
+      placeholder: |
+        例如：
+        - 建议在文档中添加关于Cookie安全存储的最佳实践
+        - 询问如何在生产环境中安全地管理认证凭证
+        - 建议添加关于网络请求安全的说明
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-situation
+    attributes:
+      label: 当前情况 | Current Situation
+      description: 请描述当前的情况或您观察到的问题
+      placeholder: |
+        例如：
+        - 当前文档没有提到Cookie的安全存储
+        - 示例代码中硬编码了认证信息
+        - 缺少关于HTTPS使用的说明
+
+  - type: textarea
+    id: suggested-improvement
+    attributes:
+      label: 改进建议 | Suggested Improvement
+      description: 您建议如何改进当前的安全性？
+      placeholder: |
+        例如：
+        - 在文档中添加安全最佳实践章节
+        - 更新示例代码以展示安全的凭证管理
+        - 添加安全配置选项
+        - 改进错误消息以避免信息泄露
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: 潜在影响 | Potential Impact
+      description: 请描述这个安全改进可能带来的影响
+      placeholder: |
+        例如：
+        - 帮助用户避免常见的安全陷阱
+        - 提高库的整体安全性
+        - 减少误用导致的安全风险
+        - 提升用户对库的信任度
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 优先级 | Priority
+      description: 您认为这个安全改进的优先级如何？
+      options:
+        - Low (低) - 一般性改进
+        - Medium (中) - 重要的安全改进
+        - High (高) - 关键的安全问题
+        - Critical (紧急) - 需要立即关注
+
+  - type: checkboxes
+    id: affected-areas
+    attributes:
+      label: 影响范围 | Affected Areas
+      description: 这个改进可能影响哪些方面？
+      options:
+        - label: 文档和指南 (Documentation and guides)
+        - label: 代码示例 (Code examples)
+        - label: 库的API设计 (Library API design)
+        - label: 配置选项 (Configuration options)
+        - label: 错误处理 (Error handling)
+        - label: 日志记录 (Logging)
+        - label: 依赖管理 (Dependency management)
+
+  - type: textarea
+    id: references
+    attributes:
+      label: 参考资料 | References
+      description: 请提供相关的安全标准、文档或最佳实践的链接
+      placeholder: |
+        例如：
+        - OWASP安全指南
+        - Node.js安全最佳实践
+        - 相关的安全标准或规范
+        - 其他项目的安全实践参考
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: 贡献意愿 | Contribution
+      description: 您是否愿意帮助实现这些安全改进？
+      options:
+        - label: 我愿意帮助编写安全文档
+        - label: 我可以协助审核安全相关的代码
+        - label: 我可以提供安全测试
+        - label: 我可以分享更多的安全最佳实践
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 其他信息 | Additional Context
+      description: 添加任何其他相关的安全信息或上下文
+      placeholder: |
+        - 相关的安全事件或案例
+        - 行业特定的安全要求
+        - 用户反馈或社区讨论
+        - 其他安全工具或库的参考
