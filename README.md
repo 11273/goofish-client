@@ -29,8 +29,6 @@
 
 </div>
 
----
-
 </div>
 
 ## 📋 Requirements
@@ -40,8 +38,6 @@
 - 支持 ES2020+ 或 CommonJS
 
 ## 📦 Installation
-
-<div align="center">
 
 ```bash
 npm install goofish-client
@@ -59,8 +55,6 @@ yarn add goofish-client
 # PNPM
 pnpm add goofish-client
 ```
-
-</div>
 
 ## 🚀 Quick Start
 
@@ -289,7 +283,7 @@ const searchOptions: SearchOptions = {
 
 </div>
 
----
+## 📄 License
 
 <div align="center">
   
