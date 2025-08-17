@@ -47,7 +47,7 @@ export default defineConfig({
   ],
 
   themeConfig: {
-    logo: { src: "/shop.webp", width: 24, height: 24 },
+    logo: { src: "/goofish-client/shop.webp", width: 24, height: 24 },
 
     // 页面内导航配置
     outline: {
