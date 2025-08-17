@@ -1,0 +1,23 @@
+name: "CodeQL Config"
+
+disable-default-queries: false
+
+queries:
+  - uses: security-and-quality
+
+paths-ignore:
+  - "**/*.md"
+  - "**/*.json"
+  - "docs/**"
+  - "examples/**"
+  - "dist/**"
+  - "node_modules/**"
+  - "**/test/**"
+  - "**/tests/**"
+  - "**/*.test.ts"
+  - "**/*.test.js"
+  - "**/*.spec.ts"
+  - "**/*.spec.js"
+
+paths:
+  - "src/**"
