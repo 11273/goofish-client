@@ -6,6 +6,19 @@
 
 
 
+## [1.1.2](https://github.com/11273/goofish-client/compare/v1.1.1...v1.1.2) (2025-08-17)
+
+### ✨ Features | 新功能
+
+* 首页猜你喜欢接口接入 ([a3a942b](https://github.com/11273/goofish-client/commit/a3a942b30e730cb999a46cd5554a64c46d6f29a6))
+
+### 📝 Documentation | 文档
+
+* 更新 README 和文档链接，添加 API 方法提示及贡献指南 ([c713218](https://github.com/11273/goofish-client/commit/c713218ececeee7437bdae92eccee94d2efbc611))
+* 更新 VitePress 配置中的 logo 路径，移除 goofish-client 目录前缀 ([b8286be](https://github.com/11273/goofish-client/commit/b8286be9d4ab228ffb0e0ca73adb8dae99d95997))
+* 更新 VitePress 配置中的图标路径，移除 goofish-client 目录前缀 ([7c0be7b](https://github.com/11273/goofish-client/commit/7c0be7b01857e54a10822fae375739843b54374d))
+* 更新首页接口和示例文档，添加首页推荐功能 ([8c8d386](https://github.com/11273/goofish-client/commit/8c8d38636a41c56f53deae5e059d67d94f71bff1))
+
 ## [1.1.1](https://github.com/11273/goofish-client/compare/v1.1.0...v1.1.1) (2025-08-17)
 
 ### ✨ Features | 新功能
