@@ -40,6 +40,8 @@
   "files": [
     "dist",
     "README.md",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
     "assets",
     "LICENSE"
   ],
