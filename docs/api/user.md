@@ -80,17 +80,26 @@ console.log(userNav);
 
 ## getUserHead()
 
-获取用户头部信息，包含更详细的用户状态和配置信息。
+获取用户头部信息，包含更详细的用户状态和配置信息。支持查看自己或其他用户的信息。
 
 **API 路径：** `mtop.idle.web.user.page.head`
 
-### 接口定义
+### getUserHead 接口定义
 
-#### 参数
+#### 请求参数
 
-无参数
+```typescript
+interface UserPageHeadRequest {
+  /** 是否为本人，默认: true */
+  self: boolean;
+  /** 用户ID（当self为false时需要） */
+  userId?: string;
+}
+```
 
-#### 响应
+完整的参数类型定义请参考：[UserPageHeadRequest](../reference/types.md#userpageheadrequest)
+
+#### 响应数据
 
 实际响应被 [`GoofishMtopResponse`](../reference/types.md#goofishmtopresponse) 统一包裹：
 
@@ -109,8 +118,8 @@ interface UserHeadResponse {
 }
 
 interface UserHeadModule {
-  /** 店铺信息 */
-  shop: UserHeadShop;
+  /** 店铺信息（查看他人信息时可能为空） */
+  shop?: UserHeadShop;
   /** 社交信息 */
   social: UserHeadSocial;
   /** 标签页信息 */
@@ -122,19 +131,107 @@ interface UserHeadModule {
 
 完整的响应类型定义请参考：[UserHeadResponse](../reference/types.md#userheadresponse) | [GoofishMtopResponse](../reference/types.md#goofishmtopresponse)
 
-### 使用示例
+### getUserHead 使用示例
 
-#### 基础使用
+#### 查看自己的信息
 
 ```typescript
 import { Goofish } from "goofish-client";
 
 const client = new Goofish({ cookie: "cookie2=xxxx" });
 
-const userHead = await client.api.mtop.user.getUserHead();
+// 查看自己的信息（默认方式）
+const myInfo = await client.api.mtop.user.getUserHead();
 
-console.log(userHead);
+// 或者显式指定查看自己
+const myInfoExplicit = await client.api.mtop.user.getUserHead({
+  self: true,
+});
+
+console.log(myInfo);
 ```
+
+#### 查看他人的信息
+
+```typescript
+// 查看其他用户的信息
+const otherUserInfo = await client.api.mtop.user.getUserHead({
+  self: false,
+  userId: "38xxxxxx950", // 目标用户的ID
+});
+
+console.log("用户昵称:", otherUserInfo.data.module.base.displayName);
+console.log("用户位置:", otherUserInfo.data.module.base.ipLocation);
+console.log("粉丝数量:", otherUserInfo.data.module.social.followers);
+console.log("关注数量:", otherUserInfo.data.module.social.following);
+```
+
+#### 提取用户信息
+
+```typescript
+// 获取用户头部信息并提取关键数据
+const response = await client.api.mtop.user.getUserHead({
+  self: false,
+  userId: "38xxxxxx950",
+});
+
+if (response.ret[0] === "SUCCESS::调用成功") {
+  const { baseInfo, module } = response.data;
+
+  const userInfo = {
+    // 基础信息
+    userId: baseInfo.kcUserId,
+    isMyself: baseInfo.self,
+    encryptedId: baseInfo.encryptedUserId,
+
+    // 个人信息
+    nickname: module.base.displayName,
+    avatar: module.base.avatar.avatar,
+    location: module.base.ipLocation,
+    introduction: module.base.introduction,
+
+    // 社交信息
+    followers: module.social.followers,
+    following: module.social.following,
+    followStatus: module.social.followStatus, // 1-已关注，0-未关注
+
+    // 统计信息
+    itemCount: module.tabs.item.number,
+    rateCount: module.tabs.rate.number,
+
+    // 信用标签
+    creditTags: module.base.ylzTags.map((tag) => ({
+      role: tag.attributes.role, // seller 或 buyer
+      level: tag.attributes.level,
+      text: tag.text,
+      icon: tag.icon,
+    })),
+
+    // 用户标签
+    tags: {
+      realNameVerified: baseInfo.tags.real_name_certification_77,
+      zhimaAuth: baseInfo.tags.idle_zhima_zheng,
+      isUpgraded: baseInfo.tags.xianyu_user_upgrade,
+    },
+  };
+
+  console.log(userInfo);
+}
+```
+
+### 参数详解
+
+#### 查看他人信息的注意事项
+
+1. **用户 ID 获取**: 可以从搜索结果、商品详情页的卖家信息等途径获取用户 ID
+2. **隐私设置**: 某些用户可能设置了隐私保护，部分信息可能不可见
+3. **权限限制**: 查看他人信息需要登录状态，请确保 Cookie 有效
+4. **数据差异**: 查看他人信息时，`shop`字段可能为空，`baseInfo.self`为 false
+
+#### 关注状态说明
+
+- `followStatus: 0` - 未关注
+- `followStatus: 1` - 已关注
 
 ## TypeScript 支持
 
@@ -142,12 +239,30 @@ console.log(userHead);
 import type {
   UserNavResponse,
   UserHeadResponse,
+  UserPageHeadRequest,
   GoofishMtopResponse,
 } from "goofish-client";
 
 // 类型安全的用户信息获取
 const userNav: GoofishMtopResponse<UserNavResponse> =
   await client.api.mtop.user.getUserNav();
-const userHead: GoofishMtopResponse<UserHeadResponse> =
+
+// 查看自己的信息
+const myInfo: GoofishMtopResponse<UserHeadResponse> =
   await client.api.mtop.user.getUserHead();
+
+// 查看他人信息
+const params: UserPageHeadRequest = {
+  self: false,
+  userId: "38xxxxxx950",
+};
+const otherUserInfo: GoofishMtopResponse<UserHeadResponse> =
+  await client.api.mtop.user.getUserHead(params);
 ```
+
+### 注意事项
+
+1. **登录状态**: 所有用户接口都需要用户登录状态，请确保已设置有效的 Cookie
+2. **数据结构**: 查看他人信息时，某些字段可能为空或不可见
+3. **请求频率**: 建议控制请求频率，避免过于频繁的调用
+4. **隐私保护**: 尊重用户隐私，合理使用获取的用户信息

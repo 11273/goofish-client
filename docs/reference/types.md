@@ -923,6 +923,22 @@ interface ItemLabelExt {
 
 ## 用户相关类型
 
+### UserPageHeadRequest
+
+用户页面头部请求参数：
+
+```typescript
+/**
+ * 用户页面头部请求参数
+ */
+interface UserPageHeadRequest {
+  /** 是否为本人 */
+  self: boolean;
+  /** 用户ID（当self为false时需要） */
+  userId?: string;
+}
+```
+
 ### UserNavResponse
 
 用户导航响应：

@@ -1,3 +1,11 @@
+// 用户页面头部请求参数
+export interface UserPageHeadRequest {
+  /** 是否为本人 */
+  self: boolean;
+  /** 用户ID（当self为false时需要） */
+  userId?: string;
+}
+
 // 用户导航响应数据类型
 export interface UserNavBase {
   /** 未付款订单数量 */
@@ -41,7 +49,7 @@ export interface UserHeadBaseInfo {
   /** 用户标签 */
   tags: Record<string, boolean>;
   /** 用户类型 */
-  userType: number;
+  userType?: number;
 }
 
 export interface UserHeadShop {
@@ -74,6 +82,8 @@ export interface UserHeadSocial {
   followers: string;
   /** 关注数量 */
   following: string;
+  /** 关注隐私保护 */
+  attentionPrivacyProtected?: string;
 }
 
 export interface UserHeadTab {
@@ -134,7 +144,7 @@ export interface UserHeadBase {
 
 export interface UserHeadModule {
   /** 店铺信息 */
-  shop: UserHeadShop;
+  shop?: UserHeadShop;
   /** 社交信息 */
   social: UserHeadSocial;
   /** 标签页信息 */
