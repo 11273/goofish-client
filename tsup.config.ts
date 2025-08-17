@@ -41,8 +41,8 @@ export default defineConfig({
   splitting: false, // SDK 通常不需要代码分割
   clean: true, // 构建前清理输出目录
 
-  // 🗺️ Source Map
-  sourcemap: true,
+  // 🗺️ Source Map - 禁用以减少包大小
+  sourcemap: false,
 
   // 🔍 代码优化
   minify: process.env.NODE_ENV === 'production',

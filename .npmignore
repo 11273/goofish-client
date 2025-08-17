@@ -36,3 +36,6 @@ coverage/
 *.swp
 *.swo
 CONTRIBUTING.md
+
+# Source Map
+*.map
