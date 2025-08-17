@@ -10,9 +10,22 @@ export default defineConfig({
 
   head: [
     // Favicon 配置
-    ["link", { rel: "icon", href: "/shop.webp", type: "image/webp" }],
-    ["link", { rel: "icon", href: "/favicon.ico", type: "image/x-icon" }],
-    ["link", { rel: "apple-touch-icon", href: "/icon-144-144.png" }],
+    [
+      "link",
+      { rel: "icon", href: "/goofish-client/shop.webp", type: "image/webp" },
+    ],
+    [
+      "link",
+      {
+        rel: "icon",
+        href: "/goofish-client/favicon.ico",
+        type: "image/x-icon",
+      },
+    ],
+    [
+      "link",
+      { rel: "apple-touch-icon", href: "/goofish-client/icon-144-144.png" },
+    ],
 
     // Meta 标签
     ["meta", { name: "theme-color", content: "#3c82f6" }],
@@ -26,7 +39,7 @@ export default defineConfig({
       },
     ],
     ["meta", { name: "og:site_name", content: "Goofish Client" }],
-    ["meta", { name: "og:image", content: "/logo.png" }],
+    ["meta", { name: "og:image", content: "/goofish-client/logo.png" }],
     [
       "meta",
       { name: "og:url", content: "https://github.com/11273/goofish-client" },
@@ -34,7 +47,7 @@ export default defineConfig({
   ],
 
   themeConfig: {
-    logo: { src: "/shop.webp", width: 24, height: 24 },
+    logo: { src: "/goofish-client/shop.webp", width: 24, height: 24 },
 
     // 页面内导航配置
     outline: {
