@@ -18,7 +18,7 @@
     "tokenRef": "GITHUB_TOKEN"
   },
   "npm": {
-    "publish": true,
+    "publish": false,
     "registry": "https://registry.npmjs.org/",
     "access": "public",
     "skipChecks": false
@@ -32,6 +32,8 @@
       "npm run build:prod"
     ],
     "after:release": [
+      "echo '📦 开始发布到npm...'",
+      "npm publish --access public --registry https://registry.npmjs.org/",
       "echo '🎉 发布成功！版本: v${version}'"
     ]
   },
