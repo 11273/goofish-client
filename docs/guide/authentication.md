@@ -80,25 +80,21 @@ async function loginWithQR() {
   const client = new Goofish({});
 
   try {
-    // 2. 生成二维码（两种方法可选）
-    // qr.generate() - 获取二维码URL数据
-    // qr.render() - 直接生成可显示的二维码（推荐）
-    const qrResult = await client.api.passport.qr.render({
-      params: {},
-      options: {
-        outputFormat: "string",
-        stringOptions: { type: "terminal", small: true },
-      },
-    });
+    // 调用二维码渲染接口，生成可在终端显示的二维码
+    const qrResult = await client.api.passport.qr.generate();
 
-    if (!qrResult.success) {
+    // 检查二维码是否生成成功
+    if (!qrResult.content.success) {
       throw new Error("二维码生成失败");
     }
 
-    const { t, ck, codeContent } = qrResult.response.content.data;
-    console.log("请扫描二维码:");
-    console.log(qrResult.qrCode); // 控制台显示二维码
-    console.log("或访问链接:", codeContent);
+    // 获取二维码的关键参数，用于后续查询登录状态
+    const { t, ck } = qrResult.content.data;
+
+    // 显示二维码
+    console.log("请将下列链接转换为二维码，并使用闲鱼APP扫描:");
+    console.log(qrResult.content.data.codeContent);
+    console.log("\n⏳ 等待扫码确认...\n");
 
     // 3. 轮询等待用户扫码确认
     let attempts = 0;

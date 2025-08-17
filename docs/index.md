@@ -161,7 +161,7 @@ const client = new Goofish({
 
 // 方式2: 二维码登录
 const client = new Goofish({});
-const loginResult = await client.api.passport.qr.render();
+const loginResult = await client.api.passport.qr.generate();
 // 扫描二维码后获取Cookie...
 ```
 

@@ -91,11 +91,11 @@ const client = new Goofish({
 });
 
 // 二维码登录
-const qrResult = await client.api.passport.qr.render();
+const qrResult = await client.api.passport.qr.generate();
 // 扫描二维码...
 const queryResult = await client.api.passport.qr.query({
-  t: qrResult.response.content.data.t,
-  ck: qrResult.response.content.data.ck,
+  t: qrResult.content.data.t,
+  ck: qrResult.content.data.ck,
 });
 ```
 

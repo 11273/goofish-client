@@ -53,28 +53,19 @@ async function quickStart() {
     console.log("📱 正在生成登录二维码...");
 
     // 调用二维码渲染接口，生成可在终端显示的二维码
-    const qrResult = await client.api.passport.qr.render({
-      params: {}, // 二维码参数（默认即可）
-      options: {
-        outputFormat: "string", // 输出格式为字符串
-        stringOptions: {
-          type: "terminal", // 终端显示模式
-          small: false, // 使用小尺寸二维码
-        },
-      },
-    });
+    const qrResult = await client.api.passport.qr.generate();
 
     // 检查二维码是否生成成功
-    if (!qrResult.response.content.success) {
+    if (!qrResult.content.success) {
       throw new Error("二维码生成失败");
     }
 
     // 获取二维码的关键参数，用于后续查询登录状态
-    const { t, ck } = qrResult.response.content.data;
+    const { t, ck } = qrResult.content.data;
 
     // 显示二维码
-    console.log("请使用闲鱼APP扫描下方二维码:");
-    console.log(qrResult.qrCode);
+    console.log("请将下列链接转换为二维码，并使用闲鱼APP扫描:");
+    console.log(qrResult.content.data.codeContent);
     console.log("\n⏳ 等待扫码确认...\n");
 
     // ========== 第三步：轮询等待用户扫码 ==========
@@ -254,28 +245,19 @@ async function quickStart() {
     console.log("📱 正在生成登录二维码...");
 
     // 调用二维码渲染接口，生成可在终端显示的二维码
-    const qrResult = await client.api.passport.qr.render({
-      params: {}, // 二维码参数（默认即可）
-      options: {
-        outputFormat: "string", // 输出格式为字符串
-        stringOptions: {
-          type: "terminal", // 终端显示模式
-          small: false, // 使用小尺寸二维码
-        },
-      },
-    });
+    const qrResult = await client.api.passport.qr.generate();
 
     // 检查二维码是否生成成功
-    if (!qrResult.response.content.success) {
+    if (!qrResult.content.success) {
       throw new Error("二维码生成失败");
     }
 
     // 获取二维码的关键参数，用于后续查询登录状态
-    const { t, ck } = qrResult.response.content.data;
+    const { t, ck } = qrResult.content.data;
 
     // 显示二维码
-    console.log("请使用闲鱼APP扫描下方二维码:");
-    console.log(qrResult.qrCode);
+    console.log("请将下列链接转换为二维码，并使用闲鱼APP扫描:");
+    console.log(qrResult.content.data.codeContent);
     console.log("\n⏳ 等待扫码确认...\n");
 
     // ========== 第三步：轮询等待用户扫码 ==========

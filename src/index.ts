@@ -65,9 +65,6 @@ export type {
   HttpClientConfig,
   HttpRequestConfig,
   BuildParamsOutput,
-  QRStringRenderOptions,
-  QRDataURLRenderOptions,
-  QRRenderOptions,
 } from './types';
 
 // Types 模块导出 - 枚举

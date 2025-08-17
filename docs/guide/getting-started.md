@@ -54,22 +54,6 @@ const client = new Goofish({
 
 如果没有 Cookie，可以使用二维码登录自动获取。Client 提供两种二维码生成方法：
 
-::: info 二维码生成方法对比
-**方法一：`qr.generate()`**
-
-- 只获取二维码数据（URL 格式）
-- 需要自行将 URL 转换为二维码图片显示
-- 适合需要自定义二维码显示的场景
-
-**方法二：`qr.render()`（推荐）**
-
-- 直接生成可显示的二维码
-- 支持多种输出格式（控制台文本、SVG、图片等）
-- 适合快速开发和调试
-  :::
-
-推荐使用 `render()` 方法，可以直接在控制台显示二维码：
-
 - 前往[二维码登录](./authentication.md#二维码登录)章节查看详细流程
 
 ### 3. 进行 API 调用
@@ -111,28 +95,19 @@ async function quickStart() {
     console.log("📱 正在生成登录二维码...");
 
     // 调用二维码渲染接口，生成可在终端显示的二维码
-    const qrResult = await client.api.passport.qr.render({
-      params: {}, // 二维码参数（默认即可）
-      options: {
-        outputFormat: "string", // 输出格式为字符串
-        stringOptions: {
-          type: "terminal", // 终端显示模式
-          small: false, // 使用小尺寸二维码
-        },
-      },
-    });
+    const qrResult = await client.api.passport.qr.generate();
 
     // 检查二维码是否生成成功
-    if (!qrResult.response.content.success) {
+    if (!qrResult.content.success) {
       throw new Error("二维码生成失败");
     }
 
     // 获取二维码的关键参数，用于后续查询登录状态
-    const { t, ck } = qrResult.response.content.data;
+    const { t, ck } = qrResult.content.data;
 
     // 显示二维码
-    console.log("请使用闲鱼APP扫描下方二维码:");
-    console.log(qrResult.qrCode);
+    console.log("请将下列链接转换为二维码，并使用闲鱼APP扫描:");
+    console.log(qrResult.content.data.codeContent);
     console.log("\n⏳ 等待扫码确认...\n");
 
     // ========== 第三步：轮询等待用户扫码 ==========

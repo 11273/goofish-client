@@ -82,10 +82,10 @@ interface GoofishRequestHeaders {
 
 默认配置值请参考源码中的 `src/constants/` 目录。主要默认值包括：
 
-- **MTOP API**: `https://h5api.m.taobao.com`
-- **Passport API**: `https://passport.taobao.com`
-- **AppKey**: `12574478`
-- **Timeout**: `10000ms`
+- **MTOP API**: `https://h5api.m.goofish.com`
+- **Passport API**: `https://passport.goofish.com`
+- **AppKey**: `34839810`
+- **Timeout**: `20000ms`
 
 ## 基础使用
 
