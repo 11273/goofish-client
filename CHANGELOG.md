@@ -6,6 +6,25 @@
 
 
 
+## [1.1.1](https://github.com/11273/goofish-client/compare/v1.1.0...v1.1.1) (2025-08-17)
+
+### ✨ Features | 新功能
+
+* 添加单个请求示例 ([84f2d75](https://github.com/11273/goofish-client/commit/84f2d7592bf1effb4f01458249a09997e9c00919))
+
+### 📝 Documentation | 文档
+
+* 更新 VitePress 配置中的图标路径，调整为 goofish-client 目录下的资源 ([#2](https://github.com/11273/goofish-client/issues/2)) ([122cfba](https://github.com/11273/goofish-client/commit/122cfbaac3ce8d8ef66b5caf958e7d7af8cc0d68))
+
+### 🔧 Continuous Integration | CI 配置
+
+* codeql config ([e15e45f](https://github.com/11273/goofish-client/commit/e15e45fc5bd58ba6538567929049ff0d6e32bb03))
+
+### 🎫 Chores | 其他更新
+
+* 更新 ESLint 配置 ([9229cf3](https://github.com/11273/goofish-client/commit/9229cf30e07b47216b4cccde7ce2d4966d2574e4))
+* 禁用源映射以减少包大小，并在 .npmignore 中添加源映射文件的忽略规则 ([5e161c6](https://github.com/11273/goofish-client/commit/5e161c66b75c53878f33df8474bb34fc4e90f965))
+
 ## [1.1.0](https://github.com/11273/goofish-client/compare/v1.0.1...v1.1.0) (2025-08-17)
 
 ### 📝 Documentation | 文档
