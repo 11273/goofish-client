@@ -22,8 +22,8 @@ export * as Managers from './managers';
 // ========== 全部直接导出 ==========
 
 // Client 模块导出
-export { Goofish, createClient } from './client';
-export type { GoofishConfig } from './client';
+export { Goofish } from './client';
+export type { GoofishConfig } from './types';
 
 // Core 模块导出
 export {

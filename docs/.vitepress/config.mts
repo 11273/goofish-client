@@ -115,7 +115,7 @@ export default defineConfig({
 
     footer: {
       message: "基于 GPL-3.0 许可证发布",
-      copyright: "Copyright © 2024 Goofish Client",
+      copyright: "Copyright © 2025 Goofish Client",
     },
 
     editLink: {

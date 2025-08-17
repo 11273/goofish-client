@@ -80,7 +80,7 @@ async function loginWithQR() {
   const client = new Goofish({});
 
   try {
-    // 调用二维码渲染接口，生成可在终端显示的二维码
+    // 调用二维码生成接口，获取二维码数据
     const qrResult = await client.api.passport.qr.generate();
 
     // 检查二维码是否生成成功
