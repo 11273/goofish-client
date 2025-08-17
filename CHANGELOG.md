@@ -6,6 +6,17 @@
 
 
 
+## [1.1.3](https://github.com/11273/goofish-client/compare/v1.1.2...v1.1.3) (2025-08-17)
+
+### ✨ Features | 新功能
+
+* 更新用户头部信息接口文档，补充接口请求数据获取他人数据 ([a4f9c6d](https://github.com/11273/goofish-client/commit/a4f9c6dbaf9f3a6af3e4bf8aea8dbcad5c716749))
+* 添加商品服务和商品信息接口 ([d7807a3](https://github.com/11273/goofish-client/commit/d7807a3398dd6719b470c59dd0dd850f234bf982))
+
+### 📝 Documentation | 文档
+
+* 修复文档中出现的问题 ([228f21a](https://github.com/11273/goofish-client/commit/228f21a67049ad8137b3d20770ba04ef3e33b3df))
+
 ## [1.1.2](https://github.com/11273/goofish-client/compare/v1.1.1...v1.1.2) (2025-08-17)
 
 ### ✨ Features | 新功能
