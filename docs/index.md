@@ -234,8 +234,8 @@ TypeScript 类型定义主要覆盖成功响应场景，错误处理请参考官
   <p>
     采用 <a href="https://github.com/11273/goofish-client/blob/main/LICENSE" target="_blank">GPL-3.0</a> 许可证 ·
     <a href="https://github.com/11273/goofish-client" target="_blank">GitHub</a> ·
-    <a href="/guide/changelog">更新日志</a> ·
-    <a href="/guide/contributing">贡献指南</a>
+    <a href="https://github.com/11273/goofish-client/blob/main/CHANGELOG.md">更新日志</a> ·
+    <a href="./guide/contributing">贡献指南</a>
   </p>
 </div>
 

@@ -61,6 +61,7 @@ export default defineConfig({
           { text: "快速开始", link: "/guide/getting-started" },
           { text: "身份认证", link: "/guide/authentication" },
           { text: "自定义扩展", link: "/guide/custom-extensions" },
+          { text: "贡献指南", link: "/guide/contributing" },
         ],
       },
       {
@@ -91,6 +92,7 @@ export default defineConfig({
           { text: "🚀 快速开始", link: "/guide/getting-started" },
           { text: "🔐 身份认证", link: "/guide/authentication" },
           { text: "🔧 自定义扩展", link: "/guide/custom-extensions" },
+          { text: "🤝 贡献指南", link: "/guide/contributing" },
         ],
       },
       {
