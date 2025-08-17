@@ -10,10 +10,7 @@ export default defineConfig({
 
   head: [
     // Favicon 配置
-    [
-      "link",
-      { rel: "icon", href: "/goofish-client/shop.webp", type: "image/webp" },
-    ],
+    ["link", { rel: "icon", href: "/shop.webp", type: "image/webp" }],
     [
       "link",
       {
