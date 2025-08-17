@@ -15,7 +15,7 @@ hero:
       link: /guide/getting-started
     - theme: alt
       text: 查看示例
-      link: /examples/search
+      link: /examples/home
     - theme: alt
       text: GitHub
       link: https://github.com/11273/goofish-client
@@ -27,7 +27,7 @@ features:
 
   - icon: 🔍
     title: 功能丰富
-    details: 支持商品搜索、用户信息获取、二维码登录等核心功能，满足各种业务需求
+    details: 支持首页Feed、商品搜索、用户信息获取、二维码登录等核心功能，满足各种业务需求
 
   - icon: 🛡️
     title: 稳定可靠
@@ -100,6 +100,14 @@ const client = new Goofish({
   level: LogLevel.INFO,
 });
 
+// 获取首页Feed数据
+const feedData = await client.api.mtop.home.getFeed({
+  pageSize: 20,
+  pageNumber: 1,
+});
+
+console.log(`获取到 ${feedData.data.cardList.length} 个商品`);
+
 // 搜索商品
 const results = await client.api.mtop.search.search({
   keyword: "iPhone 14",
@@ -111,6 +119,13 @@ console.log(`找到 ${results.data.resultList.length} 个商品`);
 ```
 
 ## 📚 核心功能
+
+### 🏠 首页推荐
+
+- **个性化推荐**：基于用户行为的智能 Feed 推荐
+- **分页加载**：支持无限滚动和分页浏览
+- **实时更新**：动态获取最新的商品推荐
+- **丰富标签**：商品状态、卖家信用、价格标签等
 
 ### 🔍 智能搜索
 
@@ -168,6 +183,12 @@ const loginResult = await client.api.passport.qr.generate();
 ### 3. 开始使用
 
 ```typescript
+// 获取首页推荐
+const feedData = await client.api.mtop.home.getFeed({
+  pageSize: 30,
+  pageNumber: 1,
+});
+
 // 搜索商品
 const products = await client.api.mtop.search.search({
   keyword: "MacBook Pro",
@@ -188,9 +209,9 @@ const userInfo = await client.api.mtop.user.getUserNav();
 
 [🚀 **快速开始** - 5 分钟快速上手指南](/guide/getting-started)
 
-[📚 **API 文档** - 完整的接口参考文档](/api/search)
+[📚 **API 文档** - 完整的接口参考文档](/api/home)
 
-[💡 **使用示例** - 实际应用场景演示](/examples/search)
+[💡 **使用示例** - 实际应用场景演示](/examples/home)
 
 </div>
 :::
@@ -213,8 +234,8 @@ TypeScript 类型定义主要覆盖成功响应场景，错误处理请参考官
   <p>
     采用 <a href="https://github.com/11273/goofish-client/blob/main/LICENSE" target="_blank">GPL-3.0</a> 许可证 ·
     <a href="https://github.com/11273/goofish-client" target="_blank">GitHub</a> ·
-    <a href="/guide/changelog">更新日志</a> ·
-    <a href="/guide/contributing">贡献指南</a>
+    <a href="https://github.com/11273/goofish-client/blob/main/CHANGELOG.md">更新日志</a> ·
+    <a href="./guide/contributing">贡献指南</a>
   </p>
 </div>
 

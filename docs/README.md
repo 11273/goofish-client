@@ -15,6 +15,7 @@
 
 **完整的 API 接口文档，包含所有可用的方法和参数**
 
+- **[首页接口](./api/home.md)** - 首页猜你喜欢 Feed 数据获取
 - **[搜索接口](./api/search.md)** - 商品搜索和筛选
 - **[用户接口](./api/user.md)** - 用户信息获取和管理
 - **[认证接口](./api/authentication.md)** - 二维码登录和会话管理
@@ -24,6 +25,7 @@
 
 **丰富的实际使用示例，涵盖各种应用场景**
 
+- **[首页示例](./examples/home.md)** - 首页 Feed 数据获取和分页加载
 - **[搜索示例](./examples/search.md)** - 从简单搜索到复杂筛选
 - **[认证示例](./examples/authentication.md)** - 完整的登录流程实现
 
@@ -48,6 +50,25 @@
 2. **[TypeScript 类型](./reference/types.md)** - 深入理解类型系统
 
 ## 🔧 核心功能概览
+
+### 首页功能
+
+```typescript
+// 获取首页Feed数据
+const feedData = await client.api.mtop.home.getFeed();
+
+// 自定义参数获取
+const customFeed = await client.api.mtop.home.getFeed({
+  pageSize: 20,
+  pageNumber: 1,
+});
+
+// 分页加载
+const secondPage = await client.api.mtop.home.getFeed({
+  pageNumber: 2,
+  pageSize: 30,
+});
+```
 
 ### 搜索功能
 

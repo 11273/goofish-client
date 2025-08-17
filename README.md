@@ -161,6 +161,8 @@ const client = new Goofish({
 | `client.api.passport.qr.generate()`  | 生成登录二维码 | `Promise<QRResponse>`       |
 | `client.api.passport.qr.query()`     | 查询二维码状态 | `Promise<QRStatusResponse>` |
 
+> **📝 注意**: 更多 API 方法正在持续添加中，完整的 API 文档请参考 [API 接口文档](https://11273.github.io/goofish-client/api/home)
+
 </div>
 
 ### 配置选项
@@ -216,7 +218,7 @@ interface SearchOptions {
 
 ### 🤝 Contributing
 
-欢迎贡献代码！请查看 [Contributing Guide](https://github.com/11273/goofish-client/blob/main/CONTRIBUTING.md) 了解详情。
+欢迎贡献代码！请查看 [贡献指南](https://11273.github.io/goofish-client/guide/contributing) 了解详情。
 
 ### 💡 使用技巧
 
