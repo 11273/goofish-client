@@ -5,6 +5,7 @@ import {
 } from '../core/interceptor';
 import { SearchService } from '../services/mtop/search.service';
 import { UserService } from '../services/mtop/user.service';
+import { ItemService } from '../services/mtop/item.service';
 import { API_CONFIG, MTOP_CONFIG, PASSPORT_CONFIG } from '../constants';
 import { LogLevel } from '../utils/logger';
 import { logger } from '../utils/logger';
@@ -35,6 +36,8 @@ export class Goofish {
       user: UserService;
       // 首页服务
       home: HomeService;
+      // 商品服务
+      item: ItemService;
     };
     // Passport 服务
     passport: {
@@ -116,6 +119,7 @@ export class Goofish {
         search: new SearchService(this.httpMtop, this.config),
         user: new UserService(this.httpMtop, this.config),
         home: new HomeService(this.httpMtop, this.config),
+        item: new ItemService(this.httpMtop, this.config),
       },
       passport: {
         qr: new QrService(this.httpPassport, this.config),

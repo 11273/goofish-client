@@ -36,7 +36,10 @@ export const MTOP_ENDPOINTS = {
     SEARCH: 'mtop.taobao.idlemtopsearch.pc.search',
   },
   // 商品相关
-  ITEM: {},
+  ITEM: {
+    // 商品详情
+    DETAIL: 'mtop.taobao.idle.pc.detail',
+  },
   // 订单相关
   ORDER: {},
   // 消息相关
