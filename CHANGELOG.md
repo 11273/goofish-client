@@ -6,6 +6,30 @@
 
 
 
+## [1.1.0](https://github.com/11273/goofish-client/compare/v1.0.1...v1.1.0) (2025-08-17)
+
+### 📝 Documentation | 文档
+
+* README.md ([ab2395a](https://github.com/11273/goofish-client/commit/ab2395a1bee5a827e01b54612653082f74e0b3f0))
+* 在 README.md 中添加贡献者信息、GitHub 统计和星标历史图表 ([17dc819](https://github.com/11273/goofish-client/commit/17dc819a6e41dac3007145157b70532b4ff4f222))
+* 更新 README.md 中的视图徽章链接 ([e8da923](https://github.com/11273/goofish-client/commit/e8da9233cf46dfaac67607bd136064a0d1063a4a))
+* 更新 README.md 和文档首页，优化徽章链接，添加指向相关页面的链接 ([c1bb02e](https://github.com/11273/goofish-client/commit/c1bb02e7be5e526b06b98f54d4b4ed3b0b2523e9))
+* 更新 README.md 和文档首页，添加项目描述和徽章，优化布局 ([f5c9bc4](https://github.com/11273/goofish-client/commit/f5c9bc4bead8e4420aa58af8bdc8b891969d6056))
+* 更新文档中的二维码生成相关描述，优化示例代码和配置选项，修正版权信息 ([0ef7f87](https://github.com/11273/goofish-client/commit/0ef7f8707c697ebca31d736f75e1e870c2872670))
+* 更新默认配置文档中的路径格式 ([5f1f465](https://github.com/11273/goofish-client/commit/5f1f46540af602339eb292fd3a496cba6597b2de))
+* 清理 README.md 中的多余空行，添加许可证部分并更新发布工作流中的 GitHub 令牌 ([535b859](https://github.com/11273/goofish-client/commit/535b859c50ac912b84b7c13f2e157e14ac00d2ac))
+
+### 🎫 Chores | 其他更新
+
+* package.json ([13ef9d7](https://github.com/11273/goofish-client/commit/13ef9d7c415c04f183bab34b42fcae0c024b9634))
+* 修改 .release-it.json 配置，禁用自动发布到 npm，并添加发布前的提示信息 ([b2d7af8](https://github.com/11273/goofish-client/commit/b2d7af8d8d760f371c3591e49047a3b130f4070b))
+* 更新 package.json，添加新依赖项并修改文档中的术语 ([f534f67](https://github.com/11273/goofish-client/commit/f534f671808fd99e848dac414b0c620e9de4c613))
+* 更新 tsconfig.json 添加 DOM 支持，优化 deploy.yml 中的 npm ci 命令 ([cc754ed](https://github.com/11273/goofish-client/commit/cc754edfde7d88d5846708f057caed2e3938bfb4))
+* 更新发布工作流中的 GitHub 令牌，使用 PAT_TOKEN 替代原有的 GITHUB_TOKEN ([5f099d8](https://github.com/11273/goofish-client/commit/5f099d83836c1077c2d9eb61e60345dfac786519))
+* 更新许可证为GNU通用公共许可证第3版，并在README和文档中添加徽章以显示项目状态和信息 ([518d6db](https://github.com/11273/goofish-client/commit/518d6db0d4e66da578d6b7b653244d281cab4d22))
+* 移除 deploy.yml 中的 NODE_ENV 环境变量 ([59b78c8](https://github.com/11273/goofish-client/commit/59b78c87b8d9ecbcfce915db29c80ef4606a62e8))
+* 移除二维码渲染方法 render()，统一使用 generate() 方法生成二维码，并更新相关文档 ([a11efbe](https://github.com/11273/goofish-client/commit/a11efbe1fd9add9679f72cded6f61049192d509e))
+
 ## 1.0.1 (2025-08-16)
 
 ### ✨ Features | 新功能
