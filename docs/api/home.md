@@ -73,27 +73,83 @@ interface ItemCardData {
   /** 商品ID */
   itemId: string;
   /** 标题摘要 */
-  titleSummary: {
-    text: string;
-  };
+  titleSummary: TitleSummary;
   /** 价格信息 */
-  priceInfo: {
-    price: string;
-    preText: string;
-    sufText?: string;
-  };
+  priceInfo: PriceInfo;
   /** 城市 */
   city: string;
   /** 用户信息 */
-  user: {
-    userNick: string;
-    avatar: string;
-  };
+  user: UserInfo;
   /** 商品图片列表 */
   images: ItemImage[];
+  /** 主图信息 */
+  mainPicInfo: ItemImage;
   /** Fish标签 */
   fishTags: HomeFishTags;
+  /** 业务类型 */
+  bizType: string;
+  /** 拍卖类型 */
+  auctionType: string;
+  /** 属性映射 */
+  attributeMap: Record<string, string>;
+  /** 详情参数 */
+  detailParams: Record<string, unknown>;
+  /** 跟踪参数 */
+  trackParams: Record<string, unknown>;
+  /** 不喜欢跟踪参数 */
+  dislikeTrackParams: Record<string, unknown>;
+  /** 重定向URL */
+  redirectUrl: string;
+  /** 是否需要粉丝价 */
+  needFansPrice: boolean;
+  /** 是否需要促销价 */
+  needPromotionPrice: boolean;
+  /** 热点信息 */
+  hotPoint: {
+    text: string;
+    topTags: unknown[];
+  };
   // ... 其他字段
+}
+
+interface PriceInfo {
+  /** 当前价格 */
+  price: string;
+  /** 原价 */
+  oriPrice: string;
+  /** 价格前缀 */
+  preText: string;
+  /** 价格后缀（如闲鱼币抵扣信息） */
+  sufText?: string;
+}
+
+interface UserInfo {
+  /** 用户昵称 */
+  userNick: string;
+  /** 用户头像 */
+  avatar: string;
+  /** 跟踪参数 */
+  trackParams: {
+    trackName: string;
+  };
+}
+
+interface ItemImage {
+  /** 图片地址 */
+  url: string;
+  /** 图片高度 */
+  heightSize: number;
+  /** 图片宽度 */
+  widthSize: number;
+  /** 是否主图 */
+  major: boolean;
+  /** 图片类型 */
+  type: number;
+}
+
+interface TitleSummary {
+  /** 标题文本 */
+  text: string;
 }
 ```
 
@@ -112,6 +168,107 @@ const client = new Goofish({ cookie: "cookie2=xxxx" });
 const result = await client.api.mtop.home.getFeed();
 
 console.log(result);
+```
+
+#### 提取商品信息
+
+```typescript
+// 获取首页Feed数据并提取商品信息
+const response = await client.api.mtop.home.getFeed({
+  pageSize: 20,
+  pageNumber: 1,
+});
+
+if (response.ret[0] === "SUCCESS::调用成功") {
+  const { cardList } = response.data;
+
+  // 提取商品信息
+  const items = cardList.map((card) => {
+    const { cardData } = card;
+    return {
+      // 基本信息
+      itemId: cardData.itemId,
+      title: cardData.titleSummary.text,
+      city: cardData.city,
+
+      // 价格信息
+      price: {
+        current: cardData.priceInfo.price,
+        original: cardData.priceInfo.oriPrice,
+        prefix: cardData.priceInfo.preText,
+        suffix: cardData.priceInfo.sufText,
+      },
+
+      // 用户信息
+      seller: {
+        nick: cardData.user.userNick,
+        avatar: cardData.user.avatar,
+      },
+
+      // 图片信息
+      images: cardData.images.map((img) => ({
+        url: img.url,
+        isMain: img.major,
+        dimensions: {
+          width: img.widthSize,
+          height: img.heightSize,
+        },
+      })),
+
+      // 主图
+      mainImage: cardData.mainPicInfo.url,
+
+      // 跳转链接
+      detailUrl: cardData.redirectUrl,
+
+      // 业务信息
+      bizType: cardData.bizType,
+      auctionType: cardData.auctionType,
+    };
+  });
+
+  console.log(`获取到 ${items.length} 个商品：`, items);
+}
+```
+
+#### 分页加载
+
+```typescript
+// 分页加载示例
+async function loadHomeFeed(pageNumber = 1, pageSize = 30) {
+  try {
+    const response = await client.api.mtop.home.getFeed({
+      pageNumber,
+      pageSize,
+    });
+
+    if (response.ret[0] === "SUCCESS::调用成功") {
+      const { cardList, feedsCount, nextPage, serverTime } = response.data;
+
+      return {
+        items: cardList,
+        total: feedsCount,
+        hasMore: nextPage,
+        serverTime,
+        currentPage: pageNumber,
+      };
+    } else {
+      throw new Error(response.message || "获取Feed数据失败");
+    }
+  } catch (error) {
+    console.error("加载首页Feed失败:", error);
+    throw error;
+  }
+}
+
+// 使用示例
+const page1 = await loadHomeFeed(1, 20);
+console.log(`第1页: ${page1.items.length} 个商品，还有更多: ${page1.hasMore}`);
+
+if (page1.hasMore) {
+  const page2 = await loadHomeFeed(2, 20);
+  console.log(`第2页: ${page2.items.length} 个商品`);
+}
 ```
 
 ### 参数详解

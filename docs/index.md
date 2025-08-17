@@ -116,6 +116,13 @@ const results = await client.api.mtop.search.search({
 });
 
 console.log(`找到 ${results.data.resultList.length} 个商品`);
+
+// 获取商品详情
+const itemDetail = await client.api.mtop.item.getDetail({
+  itemId: "95xxxxxxxxx334",
+});
+
+console.log(`商品标题: ${itemDetail.data.itemDO.title}`);
 ```
 
 ## 📚 核心功能
@@ -133,6 +140,13 @@ console.log(`找到 ${results.data.resultList.length} 个商品`);
 - **高级筛选**：价格区间、发布时间、商品状态等多维度筛选
 - **智能排序**：按价格、时间、距离、信用等多种排序方式
 - **地理位置**：基于 GPS 的附近商品搜索
+
+### 📦 商品详情
+
+- **完整信息**：获取商品的详细信息和属性
+- **卖家信息**：卖家资料、信用等级、历史记录
+- **图片处理**：高清图片获取和多尺寸支持
+- **实时数据**：浏览量、收藏数、想要数等实时统计
 
 ### 🔐 身份认证
 
@@ -195,6 +209,11 @@ const products = await client.api.mtop.search.search({
   filter: {
     priceRange: { from: 5000, to: 15000 },
   },
+});
+
+// 获取商品详情
+const itemDetail = await client.api.mtop.item.getDetail({
+  itemId: "95xxxxxxxxx334",
 });
 
 // 获取用户信息
