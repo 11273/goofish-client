@@ -369,6 +369,558 @@ enum PublishDays {
 }
 ```
 
+## 首页相关类型
+
+### HomeFeedRequest
+
+首页 Feed 请求参数：
+
+```typescript
+/**
+ * 首页Feed请求参数
+ */
+interface HomeFeedRequest {
+  /** 商品ID，用于分页定位 */
+  itemId?: string;
+  /** 每页大小 */
+  pageSize?: number;
+  /** 页码 */
+  pageNumber?: number;
+  /** 机器ID */
+  machId?: string;
+}
+```
+
+### HomeFeedResponse
+
+首页 Feed 响应数据：
+
+```typescript
+/**
+ * 首页Feed响应数据
+ */
+interface HomeFeedResponse {
+  /** 是否异步 */
+  asyn: boolean;
+  /** 卡片列表 */
+  cardList: ItemCard[];
+  /** Feed数量 */
+  feedsCount: number;
+  /** 是否有下一页 */
+  nextPage: boolean;
+  /** 服务器时间 */
+  serverTime: string;
+}
+```
+
+### ItemCard
+
+商品卡片：
+
+```typescript
+/**
+ * 商品卡片
+ */
+interface ItemCard {
+  /** 卡片数据 */
+  cardData: ItemCardData;
+  /** 卡片类型 */
+  cardType: number;
+}
+```
+
+### ItemCardData
+
+商品卡片数据：
+
+```typescript
+/**
+ * 商品卡片数据
+ */
+interface ItemCardData {
+  /** 商品ID */
+  itemId: string;
+  /** 标题摘要 */
+  titleSummary: TitleSummary;
+  /** 价格信息 */
+  priceInfo: PriceInfo;
+  /** 城市 */
+  city: string;
+  /** 用户信息 */
+  user: UserInfo;
+  /** 商品图片列表 */
+  images: ItemImage[];
+  /** 主图信息 */
+  mainPicInfo: ItemImage;
+  /** Fish标签 */
+  fishTags: HomeFishTags;
+  /** 业务类型 */
+  bizType: string;
+  /** 拍卖类型 */
+  auctionType: string;
+  /** 属性映射 */
+  attributeMap: Record<string, string>;
+  /** 详情参数 */
+  detailParams: Record<string, unknown>;
+  /** 跟踪参数 */
+  trackParams: Record<string, unknown>;
+  /** 不喜欢跟踪参数 */
+  dislikeTrackParams: Record<string, unknown>;
+  /** 重定向URL */
+  redirectUrl: string;
+  /** 是否需要粉丝价 */
+  needFansPrice: boolean;
+  /** 是否需要促销价 */
+  needPromotionPrice: boolean;
+  /** 热点信息 */
+  hotPoint: {
+    text: string;
+    topTags: unknown[];
+  };
+  /** 是否用户命中标签新样式 */
+  isUserHitLabelNewStyle: boolean;
+  /** 标签自定义业务参数 */
+  labelCustomBizParam: Record<string, string>;
+  /** 日志器 */
+  logger: Record<string, unknown>;
+  /** 是否放置详情参数 */
+  putDetailParams: boolean;
+}
+```
+
+### ItemImage
+
+商品图片信息（首页）：
+
+```typescript
+/**
+ * 商品图片信息
+ */
+interface ItemImage {
+  /** 图片地址 */
+  url: string;
+  /** 图片高度 */
+  heightSize: number;
+  /** 图片宽度 */
+  widthSize: number;
+  /** 是否主图 */
+  major: boolean;
+  /** 图片类型 */
+  type: number;
+}
+```
+
+### PriceInfo
+
+商品价格信息：
+
+```typescript
+/**
+ * 商品价格信息
+ */
+interface PriceInfo {
+  /** 当前价格 */
+  price: string;
+  /** 原价 */
+  oriPrice: string;
+  /** 价格前缀 */
+  preText: string;
+  /** 价格后缀（如闲鱼币抵扣信息） */
+  sufText?: string;
+}
+```
+
+### UserInfo
+
+用户信息（首页）：
+
+```typescript
+/**
+ * 用户信息
+ */
+interface UserInfo {
+  /** 用户昵称 */
+  userNick: string;
+  /** 用户头像 */
+  avatar: string;
+  /** 跟踪参数 */
+  trackParams: {
+    trackName: string;
+  };
+}
+```
+
+### TitleSummary
+
+标题摘要：
+
+```typescript
+/**
+ * 标题摘要
+ */
+interface TitleSummary {
+  /** 标题文本 */
+  text: string;
+}
+```
+
+### HomeFishTags
+
+首页 Fish 标签集合：
+
+```typescript
+/**
+ * 首页Fish标签集合
+ */
+interface HomeFishTags {
+  /** 第一行标签 */
+  r1?: HomeTagRegion;
+  /** 第二行标签 */
+  r2?: HomeTagRegion;
+  /** 第三行标签 */
+  r3?: HomeTagRegion;
+  /** 第四行标签 */
+  r4?: HomeTagRegion;
+}
+```
+
+### HomeTagRegion
+
+首页标签区域：
+
+```typescript
+/**
+ * 首页标签区域
+ */
+interface HomeTagRegion {
+  /** 标签列表 */
+  tagList: HomeTagItem[];
+  /** 配置 */
+  config: HomeTagConfig;
+}
+```
+
+### HomeTagItem
+
+首页标签项：
+
+```typescript
+/**
+ * 首页标签项
+ */
+interface HomeTagItem {
+  /** 标签数据 */
+  data: HomeTagData;
+  /** 用户跟踪参数 */
+  utParams: {
+    args: Record<string, string>;
+    arg1: string;
+  };
+}
+```
+
+### HomeTagData
+
+首页标签数据：
+
+```typescript
+/**
+ * 首页标签数据
+ */
+interface HomeTagData {
+  /** 标签内容 */
+  content: string;
+  /** 文字颜色 */
+  color: string;
+  /** 字体大小 */
+  size: string;
+  /** 标签ID */
+  labelId: string;
+  /** 行高 */
+  lineHeight: string;
+  /** 标签类型 */
+  type: string;
+  /** 背景色 */
+  bgColor?: string;
+  /** 边框半径 */
+  borderRadius?: string;
+  /** 边框左内边距 */
+  borderPaddingLeft?: string;
+  /** 边框右内边距 */
+  borderPaddingRight?: string;
+  /** 高度 */
+  height?: string;
+  /** 是否加粗 */
+  bold?: string;
+  /** 左边距 */
+  marginLeft?: string;
+  /** 右边距 */
+  marginRight?: string;
+  /** 宽度 */
+  width?: string;
+  /** 对齐方式 */
+  alignment?: string;
+  /** 图片地址 */
+  url?: string;
+}
+```
+
+### HomeTagConfig
+
+首页标签配置：
+
+```typescript
+/**
+ * 首页标签配置
+ */
+interface HomeTagConfig {
+  /** 是否相互标签业务组 */
+  mutualLabelBizGroup: string;
+  /** 是否有分隔符 */
+  hasDelimiter?: string;
+  /** 分隔符颜色 */
+  delimiterColor?: string;
+  /** 分隔符高度 */
+  delimiterHeight?: string;
+  /** 分隔符位置 */
+  delimiterPosition?: string;
+  /** 分隔符宽度 */
+  delimiterWidth?: string;
+  /** 分隔符左边距 */
+  delimiterMarginLeft?: string;
+  /** 分隔符右边距 */
+  delimiterMarginRight?: string;
+}
+```
+
+## 商品相关类型
+
+### ItemDetailRequest
+
+商品详情请求参数：
+
+```typescript
+/**
+ * 商品详情请求参数
+ */
+interface ItemDetailRequest {
+  /** 商品ID */
+  itemId: string;
+}
+```
+
+### ItemDetailResponse
+
+商品详情响应数据：
+
+```typescript
+/**
+ * 商品详情响应数据
+ */
+interface ItemDetailResponse {
+  /** B2C买家信息 */
+  b2cBuyerDO: B2cBuyerDO;
+  /** 商品信息 */
+  itemDO: ItemDO;
+  /** B2C卖家信息 */
+  b2cSellerDO: B2cSellerDO;
+  /** 卖家信息 */
+  sellerDO: SellerDO;
+  /** B2C商品信息 */
+  b2cItemDO: B2cItemDO;
+  /** 买家信息 */
+  buyerDO: BuyerDO;
+  /** UI倒计时信息 */
+  uiCountDownInfoDO: UiCountDownInfoDO;
+  /** B2C UI闲置详情配置 */
+  b2cUiIdleDetailConfigDO: B2cUiIdleDetailConfigDO;
+  /** 跟踪参数 */
+  trackParams: DetailTrackParams;
+  /** 海鲜信息 */
+  seafoodDO: SeafoodDO;
+  /** 配置信息 */
+  configInfo: ConfigInfo;
+  /** 服务器时间 */
+  serverTime: string;
+  /** 买家信息 */
+  buyerDO: BuyerDO;
+}
+```
+
+### ItemDO
+
+商品详情信息：
+
+```typescript
+/**
+ * 商品详情信息
+ */
+interface ItemDO {
+  /** 商品ID */
+  itemId: number;
+  /** 商品标题 */
+  title: string;
+  /** 商品描述 */
+  desc: string;
+  /** 已售价格 */
+  soldPrice: string;
+  /** 原价 */
+  originalPrice: string;
+  /** 运费 */
+  transportFee: string;
+  /** 商品状态 */
+  itemStatus: number;
+  /** 商品状态字符串 */
+  itemStatusStr: string;
+  /** 浏览次数 */
+  browseCnt: number;
+  /** 收藏次数 */
+  collectCnt: number;
+  /** 想要次数 */
+  wantCnt: number;
+  /** 数量 */
+  quantity: number;
+  /** 图片信息列表 */
+  imageInfos: ItemImageInfo[];
+  /** 商品标签扩展列表 */
+  itemLabelExtList: ItemLabelExt[];
+  /** CPV标签列表 */
+  cpvLabels: CpvLabel[];
+  /** 富文本描述 */
+  richTextDesc: string;
+  /** 创建时间 */
+  gmtCreate: number;
+  /** 创建日期键 */
+  GMT_CREATE_DATE_KEY: string;
+  /** 分类ID */
+  categoryId: number;
+  /** 商品分类信息 */
+  itemCatDTO: ItemCatDTO;
+  /** 跟踪参数 */
+  trackParams: ItemTrackParams;
+  /** 安全指南 */
+  secuGuide: SecuGuide;
+  /** 慈善标签 */
+  charitableTag: CharitableTag;
+  // ... 其他字段
+}
+```
+
+### SellerDO
+
+卖家信息：
+
+```typescript
+/**
+ * 卖家信息
+ */
+interface SellerDO {
+  /** 卖家ID */
+  sellerId: number;
+  /** 昵称 */
+  nick: string;
+  /** 唯一名称 */
+  uniqueName: string;
+  /** 城市 */
+  city: string;
+  /** 发布城市 */
+  publishCity: string;
+  /** 签名 */
+  signature: string;
+  /** 头像URL */
+  portraitUrl: string;
+  /** 已售数量 */
+  hasSoldNumInteger: number;
+  /** 商品数量 */
+  itemCount: number;
+  /** 24小时回复率 */
+  replyRatio24h: string;
+  /** 30天平均回复时间 */
+  avgReply30dLong: number;
+  /** 回复间隔 */
+  replyInterval: string;
+  /** 最后访问时间 */
+  lastVisitTime: string;
+  /** 注册时间 */
+  registerTime: number;
+  /** 用户注册天数 */
+  userRegDay: number;
+  /** 芝麻认证 */
+  zhimaAuth: boolean;
+  /** 芝麻等级信息 */
+  zhimaLevelInfo: ZhimaLevelInfo;
+  /** 闲鱼信用标签 */
+  idleFishCreditTag: IdleFishCreditTag;
+  /** 身份标签 */
+  identityTags: IdentityTag[];
+  /** 等级标签 */
+  levelTags: LevelTag[];
+  /** 评价信息 */
+  remarkDO: RemarkDO;
+  /** 卖家商品 */
+  sellerItems: SellerItem[];
+  /** 闲鱼摘要 */
+  xianyuSummary: string;
+  // ... 其他字段
+}
+```
+
+### ItemImageInfo
+
+商品图片信息：
+
+```typescript
+/**
+ * 商品图片信息
+ */
+interface ItemImageInfo {
+  /** 是否主图 */
+  major: boolean;
+  /** 图搜URL */
+  photoSearchUrl: string;
+  /** 宽度 */
+  widthSize: number;
+  /** 高度 */
+  heightSize: number;
+  /** 类型 */
+  type: number;
+  /** 图片URL */
+  url: string;
+  /** 额外信息 */
+  extraInfo: {
+    raw: string;
+    isT: string;
+    isH: string;
+  };
+  /** 标签 */
+  labels: unknown[];
+}
+```
+
+### ItemLabelExt
+
+商品标签扩展信息：
+
+```typescript
+/**
+ * 商品标签扩展信息
+ */
+interface ItemLabelExt {
+  /** 渠道分类ID */
+  channelCateId: number;
+  /** 标签ID */
+  labelId: string;
+  /** 标签类型 */
+  labelType: string;
+  /** 来源 */
+  from: string;
+  /** 标签文本 */
+  text: string;
+  /** 属性 */
+  properties: string;
+}
+```
+
 ## 用户相关类型
 
 ### UserNavResponse
@@ -442,6 +994,110 @@ interface UserHeadModule {
   tabs: UserHeadTabs;
   /** 基础信息 */
   base: UserHeadBase;
+}
+```
+
+## 认证相关类型
+
+### LoginParams
+
+登录参数：
+
+```typescript
+/**
+ * 登录参数
+ */
+interface LoginParams {
+  /** 登录ID（手机号/用户名） */
+  loginId: string;
+  /** 加密后的密码 */
+  password2: string;
+  /** 是否保持登录 */
+  keepLogin?: boolean;
+  /** 是否在iframe中 */
+  isIframe?: boolean;
+  /** 文档引用页 */
+  documentReferer?: string;
+  /** 默认视图 */
+  defaultView?: string;
+  /** 用户代理字符串 */
+  ua?: string;
+  /** 用户标识获取状态值 */
+  umidGetStatusVal?: string | number;
+  /** 屏幕像素 */
+  screenPixel?: string;
+  /** 导航语言 */
+  navlanguage?: string;
+  /** 导航用户代理 */
+  navUserAgent?: string;
+  /** 导航平台 */
+  navPlatform?: string;
+  /** 应用名称 */
+  appName?: string;
+  /** 应用入口 */
+  appEntrance?: string;
+  /** 跨站请求伪造令牌 */
+  _csrf_token?: string;
+  /** 用户标识令牌 */
+  umidToken?: string;
+  /** 用户代理hash */
+  hsiz?: string;
+  /** 业务参数 */
+  bizParams?: string;
+  /** 是否为主页面 */
+  mainPage?: boolean;
+  /** 是否为移动端 */
+  isMobile?: boolean;
+  /** 语言 */
+  lang?: string;
+  /** 返回URL */
+  returnUrl?: string;
+  /** 来源站点 */
+  fromSite?: string;
+  /** 用户标识标签 */
+  umidTag?: string;
+  // ... 其他字段
+}
+```
+
+### LoginResponse
+
+登录响应数据：
+
+```typescript
+/**
+ * 登录响应数据
+ */
+interface LoginResponse {
+  /** 标题消息（错误时显示） */
+  titleMsg?: string;
+  /** 结果码 */
+  resultCode?: number;
+}
+```
+
+### LoginData
+
+登录数据（用于 POST 请求 body）：
+
+```typescript
+/**
+ * 登录数据（用于POST请求body）
+ */
+interface LoginData {
+  /** 登录ID（手机号/用户名） */
+  loginId: string;
+  /** 加密后的密码 */
+  password2: string;
+  /** 是否保持登录 */
+  keepLogin?: string;
+  /** 是否在iframe中 */
+  isIframe?: string;
+  /** 文档引用页 */
+  documentReferer?: string;
+  /** 默认视图 */
+  defaultView?: string;
+  // ... 其他字段（与LoginParams相似但字段类型为string）
 }
 ```
 
@@ -678,6 +1334,75 @@ interface InternalRequestOptions<TData>
 }
 ```
 
+### HttpClientConfig
+
+HTTP 客户端配置：
+
+```typescript
+/**
+ * HTTP 客户端配置
+ */
+interface HttpClientConfig {
+  baseURL: string;
+  timeout?: number;
+  headers?: Record<string, string>;
+  /** 原生 Axios 配置 */
+  axiosConfig?: AxiosRequestConfig;
+}
+```
+
+### HttpRequestConfig
+
+扩展的请求配置：
+
+```typescript
+/**
+ * 扩展的请求配置
+ */
+interface HttpRequestConfig extends AxiosRequestConfig {
+  /** 跳过错误处理 */
+  skipErrorHandler?: boolean;
+}
+```
+
+### BuildParamsOutput
+
+buildParams 方法的返回值类型：
+
+```typescript
+/**
+ * buildParams 方法的返回值类型
+ */
+interface BuildParamsOutput {
+  /** 应用密钥 */
+  appKey: string;
+  /** JavaScript 版本 */
+  jsv: string;
+  /** 数据类型 */
+  dataType: string;
+  /** 请求类型 */
+  type: string;
+  /** 会话选项 */
+  sessionOption: string;
+  /** 时间戳 */
+  t: number;
+  /** 版本号 */
+  v: string;
+  /** 账户站点 */
+  accountSite: string;
+  /** 超时时间 */
+  timeout: number;
+  /** API 接口名称 */
+  api: string;
+  /** 请求签名 */
+  sign: string;
+  /** SPM 计数 */
+  spm_cnt: string;
+  /** SPM 前缀 */
+  spm_pre: string;
+}
+```
+
 ## 日志相关类型
 
 ### LogLevel
@@ -837,6 +1562,155 @@ async function typeSafeSearch(client: Goofish, keyword: string) {
 }
 ```
 
+### 首页 Feed 类型安全调用
+
+```typescript
+import {
+  Goofish,
+  HomeFeedRequest,
+  HomeFeedResponse,
+  GoofishMtopResponse,
+  isSuccessMtopResponse,
+} from "goofish-client";
+
+async function getHomeFeedSafely(client: Goofish, params?: HomeFeedRequest) {
+  // 类型安全的请求参数
+  const request: HomeFeedRequest = {
+    pageSize: params?.pageSize ?? 30,
+    pageNumber: params?.pageNumber ?? 1,
+    itemId: params?.itemId,
+    machId: params?.machId,
+  };
+
+  try {
+    // API调用
+    const response: GoofishMtopResponse<HomeFeedResponse> =
+      await client.api.mtop.home.getFeed(request);
+
+    // 类型守卫检查
+    if (isSuccessMtopResponse(response)) {
+      // TypeScript 知道这里 response.data 一定存在
+      const { cardList, feedsCount, nextPage } = response.data;
+
+      // 提取商品信息
+      const items = cardList.map((card) => ({
+        itemId: card.cardData.itemId,
+        title: card.cardData.titleSummary.text,
+        price: {
+          current: card.cardData.priceInfo.price,
+          original: card.cardData.priceInfo.oriPrice,
+        },
+        seller: {
+          nick: card.cardData.user.userNick,
+          avatar: card.cardData.user.avatar,
+        },
+        images: card.cardData.images.map((img) => ({
+          url: img.url,
+          isMain: img.major,
+        })),
+        city: card.cardData.city,
+        detailUrl: card.cardData.redirectUrl,
+      }));
+
+      return {
+        success: true,
+        data: {
+          items,
+          total: feedsCount,
+          hasMore: nextPage,
+        },
+      };
+    } else {
+      // 错误响应
+      return {
+        success: false,
+        error: response.ret[0] || "获取首页Feed失败",
+      };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "网络请求失败",
+    };
+  }
+}
+```
+
+### 商品详情类型安全调用
+
+```typescript
+import {
+  Goofish,
+  ItemDetailRequest,
+  ItemDetailResponse,
+  GoofishMtopResponse,
+  isSuccessMtopResponse,
+} from "goofish-client";
+
+async function getItemDetailSafely(client: Goofish, itemId: string) {
+  // 类型安全的请求参数
+  const request: ItemDetailRequest = {
+    itemId,
+  };
+
+  try {
+    // API调用
+    const response: GoofishMtopResponse<ItemDetailResponse> =
+      await client.api.mtop.item.getDetail(request);
+
+    // 类型守卫检查
+    if (isSuccessMtopResponse(response)) {
+      // TypeScript 知道这里 response.data 一定存在
+      const { itemDO, sellerDO } = response.data;
+
+      // 提取商品信息
+      const itemInfo = {
+        id: itemDO.itemId,
+        title: itemDO.title,
+        price: itemDO.soldPrice,
+        description: itemDO.desc,
+        browseCnt: itemDO.browseCnt,
+        collectCnt: itemDO.collectCnt,
+        // 获取主图
+        mainImage: itemDO.imageInfos.find((img) => img.major)?.url,
+        // 获取所有图片
+        images: itemDO.imageInfos.map((img) => ({
+          url: img.url,
+          isMain: img.major,
+          width: img.widthSize,
+          height: img.heightSize,
+        })),
+        // 卖家信息
+        seller: {
+          id: sellerDO.sellerId,
+          nick: sellerDO.nick,
+          city: sellerDO.city,
+          avatar: sellerDO.portraitUrl,
+          soldCount: sellerDO.hasSoldNumInteger,
+          replyRate: sellerDO.replyRatio24h,
+        },
+      };
+
+      return {
+        success: true,
+        data: itemInfo,
+      };
+    } else {
+      // 错误响应
+      return {
+        success: false,
+        error: response.ret[0] || "获取商品详情失败",
+      };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "网络请求失败",
+    };
+  }
+}
+```
+
 ## 最佳实践
 
 1. **始终使用类型守卫**：避免直接访问可能不存在的属性
@@ -856,6 +1730,8 @@ async function typeSafeSearch(client: Goofish, keyword: string) {
 ## 相关链接
 
 - [API 配置](../api/configuration.md) - 了解配置选项
+- [首页接口](../api/home.md) - 首页 Feed 相关类型的详细说明
 - [搜索接口](../api/search.md) - 搜索相关类型的详细说明
+- [商品接口](../api/item.md) - 商品详情相关类型的详细说明
 - [用户接口](../api/user.md) - 用户相关类型的详细说明
-- [认证接口](../api/authentication.md) - 二维码登录相关类型的详细说明
+- [认证接口](../api/authentication.md) - 认证和二维码登录相关类型的详细说明

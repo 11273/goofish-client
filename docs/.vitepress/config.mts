@@ -69,6 +69,7 @@ export default defineConfig({
         items: [
           { text: "首页接口", link: "/api/home" },
           { text: "搜索接口", link: "/api/search" },
+          { text: "商品接口", link: "/api/item" },
           { text: "用户接口", link: "/api/user" },
           { text: "认证接口", link: "/api/authentication" },
           { text: "配置参考", link: "/api/configuration" },
@@ -79,6 +80,7 @@ export default defineConfig({
         items: [
           { text: "首页示例", link: "/examples/home" },
           { text: "搜索示例", link: "/examples/search" },
+          { text: "商品示例", link: "/examples/item" },
           { text: "认证示例", link: "/examples/authentication" },
         ],
       },
@@ -101,6 +103,7 @@ export default defineConfig({
         items: [
           { text: "🏠 首页接口", link: "/api/home" },
           { text: "🔍 搜索接口", link: "/api/search" },
+          { text: "📦 商品接口", link: "/api/item" },
           { text: "👤 用户接口", link: "/api/user" },
           { text: "🔐 认证接口", link: "/api/authentication" },
           { text: "⚙️ 配置参考", link: "/api/configuration" },
@@ -112,6 +115,7 @@ export default defineConfig({
         items: [
           { text: "🏠 首页示例", link: "/examples/home" },
           { text: "🔍 搜索示例", link: "/examples/search" },
+          { text: "📦 商品示例", link: "/examples/item" },
           { text: "🔐 认证示例", link: "/examples/authentication" },
         ],
       },
