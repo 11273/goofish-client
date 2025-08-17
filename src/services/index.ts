@@ -9,3 +9,4 @@ export { UserService } from './mtop/user.service';
 
 // 导出 Passport 服务
 export { QrService } from './passport/qr.service';
+export { LoginService } from './passport/login.service';

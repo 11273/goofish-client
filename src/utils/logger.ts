@@ -180,18 +180,15 @@ export class Logger {
     data?: unknown;
     headers?: Record<string, unknown>;
     params?: Record<string, unknown>;
+    cookie?: string;
   }): void {
-    const { method = 'GET', url = '', data, headers, params } = config;
+    const { method = 'GET', url = '' } = config;
     const message = `${
       HTTP_STATUS.REQUEST_ICON
     } ${method.toUpperCase()} ${url}`;
 
     if (this.options.level >= LogLevel.DEBUG) {
-      this.output('DEBUG', message, {
-        data,
-        headers,
-        params,
-      });
+      this.output('DEBUG', message, config);
     } else if (this.options.level >= LogLevel.INFO) {
       this.output('INFO', message);
     }
@@ -206,8 +203,9 @@ export class Logger {
     status?: number;
     data?: unknown;
     duration?: number;
+    setCookie?: string[];
   }): void {
-    const { method = 'GET', url = '', status = 200, data, duration } = config;
+    const { method = 'GET', url = '', status = 200, duration } = config;
     const statusIcon =
       status >= HTTP_STATUS.ERROR_THRESHOLD
         ? HTTP_STATUS.ERROR_ICON
@@ -218,11 +216,11 @@ export class Logger {
     } ${statusIcon} ${status} ${method.toUpperCase()} ${url}${time}`;
 
     if (status >= HTTP_STATUS.ERROR_THRESHOLD) {
-      this.output('ERROR', message, data);
+      this.output('ERROR', message, config);
     } else if (this.options.level >= LogLevel.DEBUG) {
-      this.output('DEBUG', message, data);
+      this.output('DEBUG', message, config);
     } else if (this.options.level >= LogLevel.INFO) {
-      this.output('INFO', message);
+      this.output('INFO', message, config);
     }
   }
 
@@ -350,6 +348,7 @@ export const logger = {
     data?: unknown;
     headers?: Record<string, unknown>;
     params?: Record<string, unknown>;
+    cookie?: string;
   }): void => LoggerManager.getLogger().request(config),
 
   response: (config: {
@@ -358,6 +357,7 @@ export const logger = {
     status?: number;
     data?: unknown;
     duration?: number;
+    setCookie?: string[];
   }): void => LoggerManager.getLogger().response(config),
 
   // 配置方法
