@@ -29,6 +29,130 @@ const client = new Goofish({
 });
 ```
 
+## 账号密码登录
+
+### 基础账号密码登录
+
+```javascript
+const { Goofish, LogLevel } = require("goofish-client");
+
+async function passwordLogin() {
+  try {
+    // 创建 Client 实例
+    const client = new Goofish({
+      // 过滑块验证码的cookie，cookie具有时效性，需要定期更新
+      cookie: "x5sec=",
+      level: LogLevel.INFO,
+    });
+
+    console.log("🚀 开始账号密码登录...\n");
+
+    // 准备登录参数
+    const loginParams = {
+      loginId: "13800138000", // 必填：登录ID（账户名或邮箱或手机号）
+      password2: "123456", // 必填：密码
+      keepLogin: true, // 可选：是否保持登录
+    };
+
+    const loginResult = await client.api.passport.login.login(loginParams);
+    console.log("🔐 登录结果:", loginResult);
+  } catch (error) {
+    console.error("❌ 登录发生错误:", error.message);
+    throw error;
+  }
+}
+
+passwordLogin();
+```
+
+### TypeScript 版本
+
+```typescript
+import { Goofish, LogLevel } from "goofish-client";
+import type { LoginParams } from "goofish-client";
+
+async function passwordLogin() {
+  try {
+    // 创建 Client 实例
+    const client = new Goofish({
+      // 过滑块验证码的cookie，cookie具有时效性，需要定期更新
+      cookie: "x5sec=",
+      level: LogLevel.INFO,
+    });
+
+    console.log("🚀 开始账号密码登录...\n");
+
+    // 准备登录参数（类型安全）
+    const loginParams: LoginParams = {
+      loginId: "13800138000", // 必填：登录ID（账户名或邮箱或手机号）
+      password2: "123456", // 必填：密码
+      keepLogin: true, // 可选：是否保持登录
+    };
+
+    const loginResult = await client.api.passport.login.login(loginParams);
+    console.log("🔐 登录结果:", loginResult);
+
+    // 验证登录状态
+    const userNav = await client.api.mtop.user.getUserNav();
+    console.log("登录状态验证:", userNav.success && userNav.data?.login);
+
+    return client;
+  } catch (error) {
+    console.error("❌ 登录发生错误:", error.message);
+    throw error;
+  }
+}
+
+passwordLogin();
+```
+
+### 完整参数示例
+
+```typescript
+import { Goofish, LogLevel } from "goofish-client";
+
+async function passwordLoginWithFullParams() {
+  const client = new Goofish({
+    cookie: "x5sec=",
+    level: LogLevel.INFO,
+  });
+
+  const loginParams = {
+    // 必填参数
+    loginId: "13800138000", // 登录ID（手机号/用户名/邮箱）
+    password2: "123456", // 密码（会自动加密）
+
+    // 可选参数
+    keepLogin: true, // 是否保持登录
+    isIframe: false, // 是否在iframe中
+    documentReferer: "", // 文档引用页
+    defaultView: "password", // 默认视图
+    appName: "xianyu", // 应用名称
+    appEntrance: "web", // 应用入口
+    mainPage: false, // 是否为主页面
+    isMobile: false, // 是否为移动端
+    lang: "zh_CN", // 语言
+    fromSite: "77", // 来源站点
+    umidTag: "SERVER", // 用户标识标签
+  };
+
+  try {
+    const loginResult = await client.api.passport.login.login(loginParams);
+
+    if (loginResult.content.success) {
+      console.log("✅ 登录成功");
+      return client;
+    } else {
+      console.error("❌ 登录失败:", loginResult.content.data?.titleMsg);
+      throw new Error(loginResult.content.data?.titleMsg || "登录失败");
+    }
+  } catch (error) {
+    console.error("❌ 登录异常:", error.message);
+    throw error;
+  }
+}
+```
+
 ## 二维码登录
 
 ### 基础二维码登录
@@ -366,17 +490,63 @@ quickStart();
 
 ## 最佳实践
 
-### 1. Cookie 安全
+### 1. 账号密码登录
+
+- **Cookie 管理**: 确保提供有效的滑块验证 Cookie
+- **密码安全**: 密码会自动加密，无需手动处理
+- **错误处理**: 实现完善的错误处理和重试机制
+- **状态验证**: 登录后验证登录状态
+
+```typescript
+// 推荐的密码登录实现
+async function securePasswordLogin() {
+  const client = new Goofish({
+    cookie: process.env.GOOFISH_COOKIE, // 使用环境变量
+    level: LogLevel.INFO,
+  });
+
+  try {
+    const result = await client.api.passport.login.login({
+      loginId: process.env.LOGIN_ID, // 环境变量存储敏感信息
+      password2: process.env.PASSWORD,
+      keepLogin: true,
+    });
+
+    if (result.content.success) {
+      // 更新Cookie
+      const newCookie = client.getCookiePassport();
+      client.updateCookieMtop(newCookie);
+
+      // 验证登录状态
+      const userNav = await client.api.mtop.user.getUserNav();
+      if (userNav.success && userNav.data?.login) {
+        console.log("✅ 登录验证成功");
+        return client;
+      }
+    }
+
+    throw new Error(result.content.data?.titleMsg || "登录失败");
+  } catch (error) {
+    console.error("❌ 登录失败:", error.message);
+    throw error;
+  }
+}
+```
+
+### 2. Cookie 安全
 
 - 使用环境变量存储 Cookie
 - 避免在代码中硬编码敏感信息
+- 定期更新过期的 Cookie
 
-### 2. 状态检查
+### 3. 状态检查
 
 - 定期验证认证状态
 - 处理认证过期的情况
+- 实现自动重新登录机制
 
-### 3. 用户体验
+### 4. 用户体验
 
 - 设置合理的超时时间
 - 提供清晰的状态提示
+- 实现优雅的错误处理

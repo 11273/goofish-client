@@ -11,6 +11,7 @@ import { logger } from '../utils/logger';
 import { CookieStore, CookieUtils } from '../utils/cookie';
 import type { GoofishConfig } from '../types';
 import { QrService } from '../services/passport/qr.service';
+import { LoginService } from '../services/passport/login.service';
 
 export class Goofish {
   // Mtop HTTP 客户端
@@ -36,6 +37,8 @@ export class Goofish {
     passport: {
       // 二维码服务
       qr: QrService;
+      // 登录服务
+      login: LoginService;
     };
   };
 
@@ -102,6 +105,7 @@ export class Goofish {
 
     // 设置初始 cookie
     this.updateCookieMtop(this.config.cookie);
+    this.updateCookiePassport(this.config.cookie);
 
     // 初始化服务
     this.api = {
@@ -111,6 +115,7 @@ export class Goofish {
       },
       passport: {
         qr: new QrService(this.httpPassport, this.config),
+        login: new LoginService(this.httpPassport, this.config),
       },
     };
 
@@ -144,22 +149,21 @@ export class Goofish {
     const cookieInterceptorPassport = createCookieInterceptor(
       this.cookieStorePassport
     );
-
-    axiosMtop.interceptors.request.use(cookieInterceptorMtop.request);
-    axiosMtop.interceptors.response.use(cookieInterceptorMtop.response);
     axiosMtop.interceptors.request.use(logInterceptor.request);
     axiosMtop.interceptors.response.use(
       logInterceptor.response,
       logInterceptor.error
     );
+    axiosMtop.interceptors.request.use(cookieInterceptorMtop.request);
+    axiosMtop.interceptors.response.use(cookieInterceptorMtop.response);
 
-    axiosPassport.interceptors.request.use(cookieInterceptorPassport.request);
-    axiosPassport.interceptors.response.use(cookieInterceptorPassport.response);
     axiosPassport.interceptors.request.use(logInterceptor.request);
     axiosPassport.interceptors.response.use(
       logInterceptor.response,
       logInterceptor.error
     );
+    axiosPassport.interceptors.request.use(cookieInterceptorPassport.request);
+    axiosPassport.interceptors.response.use(cookieInterceptorPassport.response);
   }
 
   /**

@@ -8,7 +8,7 @@ Goofish Client 提供多种身份认证方式，满足不同场景的接入需�
 | ----------- | --------- | ------------------------ |
 | Cookie 认证 | ✅ 已支持 | 使用现有 Cookie 直接认证 |
 | 二维码登录  | ✅ 已支持 | 扫码获取 Cookie 认证     |
-| 账号密码    | 🚧 规划中 | 用户名密码登录           |
+| 账号密码    | ✅ 已支持 | 用户名密码登录           |
 | 短信验证    | 🚧 规划中 | 手机号验证登录           |
 
 ## Cookie 认证
@@ -166,11 +166,47 @@ client.updateCookieMtop(newCookie);
 - 接口调用原生返回错误，请根据错误码进行处理
 - 接口调用成功，但返回数据为空，请根据返回数据进行处理
 
+## 账号密码登录
+
+### 基础流程
+
+```typescript
+import { Goofish, LogLevel } from "goofish-client";
+
+async function passwordLogin() {
+  try {
+    // 创建 Client 实例
+    const client = new Goofish({
+      // 过滑块验证码的cookie，cookie具有时效性，需要定期更新
+      cookie: "x5sec=",
+      level: LogLevel.INFO,
+    });
+
+    console.log("🚀 开始账号密码登录...\n");
+
+    // 准备登录参数
+    const loginParams = {
+      loginId: "13800138000", // 必填：登录ID（账户名或邮箱或手机号）
+      password2: "123456", // 必填：密码
+      keepLogin: true, // 可选：是否保持登录
+    };
+
+    const loginResult = await client.api.passport.login.login(loginParams);
+    console.log("🔐 登录结果:", loginResult);
+
+    return client;
+  } catch (error) {
+    console.error("❌ 登录发生错误:", error.message);
+    throw error;
+  }
+}
+```
+
+详细的账号密码登录 API 请参考：[认证接口](../api/authentication.md#login)
+
 ## 扩展性设计
 
-当前版本支持 Cookie 和二维码登录，后续版本将支持：
-
-### 账号密码登录（规划中）
+当前版本支持 Cookie、二维码登录和账号密码登录，后续版本将支持：
 
 ### 短信验证登录（规划中）
 

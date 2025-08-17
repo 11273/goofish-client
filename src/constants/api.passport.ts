@@ -15,4 +15,9 @@ export const PASSPORT_ENDPOINTS = {
     // 查询二维码
     QUERY: '/newlogin/qrcode/query.do',
   },
+  // 登录相关
+  LOGIN: {
+    // 账号密码登录
+    LOGIN: '/newlogin/login.do',
+  },
 } as const;

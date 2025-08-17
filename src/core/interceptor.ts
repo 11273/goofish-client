@@ -72,6 +72,7 @@ export function createLogInterceptor(): LogInterceptor {
         data: config.data,
         headers: config.headers as Record<string, unknown>,
         params: config.params as Record<string, unknown>,
+        cookie: config.headers?.Cookie || config.headers?.cookie,
       });
 
       return config;
@@ -89,6 +90,7 @@ export function createLogInterceptor(): LogInterceptor {
         status: response.status,
         data: response.data,
         duration: duration || 0,
+        setCookie: response.headers['set-cookie'],
       });
 
       return response;
@@ -107,12 +109,14 @@ export function createLogInterceptor(): LogInterceptor {
           status: error.response.status,
           data: error.response.data,
           duration: duration || 0,
+          setCookie: error.response.headers['set-cookie'],
         });
       } else if (error.request) {
         logger.error('请求失败，无响应', {
           method: error.config?.method || '',
           url: error.config?.url || '',
           message: error.message,
+          setCookie: error.config?.headers?.Cookie || '',
         });
       } else {
         logger.error('请求配置错误', error.message);

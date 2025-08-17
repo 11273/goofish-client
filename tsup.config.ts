@@ -57,6 +57,16 @@ export default defineConfig({
   external: [
     // Node.js 内置模块
     /^node:/,
+    'crypto',
+    'fs',
+    'path',
+    'url',
+    'http',
+    'https',
+    'stream',
+    'util',
+    'events',
+    'buffer',
     // dependencies 中的包（如果有的话）
     ...Object.keys(pkg.dependencies || {}),
     // peerDependencies 中的包

@@ -43,6 +43,7 @@ export {
   SearchService,
   UserService,
   QrService,
+  LoginService,
 } from './services';
 
 // Types 模块导出 - 常用类型和接口
@@ -55,6 +56,9 @@ export type {
   QRCodeQueryParams,
   QrGenerateResponse,
   QrQueryResponse,
+  LoginParams,
+  LoginResponse,
+  LoginData,
   UserNavResponse,
   UserHeadResponse,
   GoofishMtopResponse,
@@ -108,6 +112,7 @@ export {
   CookieUtils,
   CookieStore,
   cookieStore,
+  encryptPassword,
 } from './utils';
 export type { LoggerOptions, TimeFormat, Cookie } from './utils';
 
