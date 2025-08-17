@@ -1,0 +1,21 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Documentation | 文档
+    url: https://11273.github.io/goofish-client/
+    about: Browse the complete documentation | 浏览完整文档
+
+  - name: 💬 GitHub Discussions | GitHub 讨论
+    url: https://github.com/11273/goofish-client/discussions
+    about: Ask questions and discuss with the community | 在社区中提问和讨论
+
+  - name: 🔒 Security Advisory | 安全咨询
+    url: https://github.com/11273/goofish-client/security/advisories
+    about: Report security vulnerabilities privately | 私密报告安全漏洞
+
+  - name: 📧 Contact Maintainer | 联系维护者
+    url: https://github.com/11273
+    about: Contact the project maintainer directly | 直接联系项目维护者
+
+  - name: ⭐ Star the Project | 为项目点星
+    url: https://github.com/11273/goofish-client
+    about: Show your support by starring the project | 通过点星表示支持

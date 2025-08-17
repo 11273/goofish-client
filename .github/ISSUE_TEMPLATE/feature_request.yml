@@ -1,0 +1,158 @@
+name: ✨ Feature Request | 功能请求
+description: Suggest an idea for this project | 为这个项目提出新功能建议
+title: "[Feature]: "
+labels: ["enhancement", "needs-discussion"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您提出功能建议！请详细描述您希望添加的功能。
+
+        Thank you for suggesting a new feature! Please describe the feature you'd like to see added in detail.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 前置条件 | Prerequisites
+      description: 在提交之前，请确认您已经检查了以下内容
+      options:
+        - label: 我已经搜索了现有的Issues和Pull Requests，确认这个功能还没有被提出过
+          required: true
+        - label: 我已经阅读了文档，确认这个功能不存在
+          required: true
+        - label: 这个功能请求符合项目的目标和范围
+          required: true
+
+  - type: dropdown
+    id: feature-type
+    attributes:
+      label: 功能类型 | Feature Type
+      description: 这是什么类型的功能请求？
+      options:
+        - API Enhancement (API增强)
+        - New API Endpoint (新API接口)
+        - Developer Experience (开发体验)
+        - Performance Improvement (性能改进)
+        - Security Enhancement (安全增强)
+        - Documentation (文档)
+        - Testing (测试)
+        - Configuration (配置)
+        - Other (其他)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 优先级 | Priority
+      description: 您认为这个功能的优先级如何？
+      options:
+        - Low (低) - 有就更好
+        - Medium (中) - 对某些用户场景有帮助
+        - High (高) - 对大多数用户都很重要
+        - Critical (关键) - 必须有的功能
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 问题描述 | Problem Description
+      description: 您遇到了什么问题？这个功能请求是为了解决什么问题？
+      placeholder: |
+        例如：我在使用当前的搜索功能时，无法按照商品的发布时间进行排序，这让我很难找到最新的商品...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 解决方案 | Proposed Solution
+      description: 您希望的解决方案是什么？请详细描述您想要的功能。
+      placeholder: |
+        例如：希望在搜索API中添加一个新的排序选项 `sortBy: 'publishTime'`，允许用户按发布时间排序搜索结果...
+    validations:
+      required: true
+
+  - type: textarea
+    id: api-design
+    attributes:
+      label: API 设计 | API Design
+      description: 如果涉及新的API，请描述您期望的API设计
+      render: typescript
+      placeholder: |
+        // 例如：
+        interface SearchOptions {
+          keyword: string;
+          sortBy?: 'relevance' | 'price' | 'publishTime'; // 新增
+          sortOrder?: 'asc' | 'desc';
+        }
+
+        // 或新的方法：
+        await client.api.mtop.item.getItemHistory(itemId);
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: 使用场景 | Use Cases
+      description: 请描述这个功能的具体使用场景
+      placeholder: |
+        1. 作为买家，我想要查看最新发布的商品
+        2. 作为开发者，我需要为我的应用提供时间排序功能
+        3. 作为数据分析师，我需要按时间分析商品发布趋势
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 替代方案 | Alternatives Considered
+      description: 您是否考虑过其他解决方案？为什么它们不够好？
+      placeholder: |
+        例如：
+        - 我尝试过在客户端手动排序，但这需要获取所有数据，效率很低
+        - 我考虑过使用其他库，但它们不支持这个平台的API
+        - 我想过绕过这个限制，但会违反平台的使用条款
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: 实现建议 | Implementation Suggestions
+      description: 如果您有实现想法，请分享
+      placeholder: |
+        - 可能需要修改 SearchParams 接口
+        - 在 search.service.ts 中添加新的参数处理
+        - 更新文档和示例
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: 贡献意愿 | Contribution
+      description: 您是否愿意帮助实现这个功能？
+      options:
+        - label: 我愿意提交Pull Request来实现这个功能
+        - label: 我可以帮助测试这个功能
+        - label: 我可以帮助更新文档
+        - label: 我可以提供更多的使用场景和反馈
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 其他信息 | Additional Context
+      description: 添加任何其他相关信息、截图或参考资料
+      placeholder: |
+        - 相关的官方API文档链接
+        - 其他库的实现参考
+        - 用户反馈或社区讨论
+        - 截图或mockup
+
+  - type: checkboxes
+    id: breaking-changes
+    attributes:
+      label: 兼容性 | Compatibility
+      description: 这个功能是否可能引入破坏性变更？
+      options:
+        - label: 这个功能可以向后兼容地添加
+        - label: 这个功能可能需要破坏性变更
+        - label: 我不确定兼容性影响

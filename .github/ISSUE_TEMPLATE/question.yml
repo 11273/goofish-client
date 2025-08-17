@@ -1,0 +1,158 @@
+name: ❓ Question | 提问
+description: Ask a question about using goofish-client | 询问关于使用 goofish-client 的问题
+title: "[Question]: "
+labels: ["question", "needs-answer"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        欢迎提问！我们很乐意帮助您解决使用中遇到的问题。
+
+        Welcome! We're happy to help you with any questions about using goofish-client.
+
+        💡 **提示**: 如果是Bug报告，请使用 "Bug Report" 模板。如果是功能请求，请使用 "Feature Request" 模板。
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 前置条件 | Prerequisites
+      description: 在提问之前，请确认您已经检查了以下内容
+      options:
+        - label: 我已经搜索了现有的Issues和Discussions
+          required: true
+        - label: 我已经查看了项目文档和README
+          required: true
+        - label: 我已经查看了示例代码
+          required: true
+
+  - type: dropdown
+    id: question-type
+    attributes:
+      label: 问题类型 | Question Type
+      description: 这是什么类型的问题？
+      options:
+        - How to use (如何使用)
+        - Best practices (最佳实践)
+        - Configuration (配置相关)
+        - Authentication (认证相关)
+        - API Usage (API使用)
+        - Error Understanding (错误理解)
+        - Performance (性能相关)
+        - Integration (集成相关)
+        - Troubleshooting (故障排除)
+        - Other (其他)
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: 版本信息 | Version
+      description: 您使用的 goofish-client 版本
+      placeholder: "例如: 1.1.2"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: 运行环境 | Environment
+      description: 您在什么环境下使用？
+      options:
+        - Node.js
+        - Browser (浏览器)
+        - React Native
+        - Electron
+        - Next.js
+        - Nuxt.js
+        - Other (其他)
+
+  - type: textarea
+    id: question
+    attributes:
+      label: 详细问题 | Detailed Question
+      description: 请详细描述您的问题
+      placeholder: |
+        请清楚地描述您想了解的内容：
+        - 您想实现什么功能？
+        - 您遇到了什么困难？
+        - 您期望的结果是什么？
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-code
+    attributes:
+      label: 当前代码 | Current Code
+      description: 如果适用，请分享您当前的代码
+      render: typescript
+      placeholder: |
+        import { Goofish } from 'goofish-client';
+
+        // 您当前的代码...
+
+  - type: textarea
+    id: what-tried
+    attributes:
+      label: 已尝试的方法 | What I've Tried
+      description: 请描述您已经尝试过的解决方法
+      placeholder: |
+        例如：
+        - 我尝试了文档中的示例，但是...
+        - 我查看了源码，发现...
+        - 我在网上搜索了相关信息，但是...
+
+  - type: textarea
+    id: expected-outcome
+    attributes:
+      label: 期望结果 | Expected Outcome
+      description: 您希望实现什么结果？
+      placeholder: |
+        描述您期望的行为或结果...
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: 紧急程度 | Urgency
+      description: 这个问题对您的项目有多重要？
+      options:
+        - Low (低) - 学习目的，不急
+        - Medium (中) - 会影响开发进度
+        - High (高) - 阻塞了主要功能
+        - Critical (紧急) - 生产环境问题
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 使用场景 | Use Case Context
+      description: 请描述您的具体使用场景
+      placeholder: |
+        例如：
+        - 我正在开发一个商品比价应用
+        - 我需要为我的网站添加商品搜索功能
+        - 我在做数据分析项目
+
+  - type: checkboxes
+    id: help-type
+    attributes:
+      label: 需要的帮助 | Type of Help Needed
+      description: 您希望得到什么类型的帮助？
+      options:
+        - label: 代码示例 (Code examples)
+        - label: 概念解释 (Concept explanation)
+        - label: 最佳实践建议 (Best practice recommendations)
+        - label: 故障排除指导 (Troubleshooting guidance)
+        - label: 替代方案 (Alternative approaches)
+        - label: 文档或资源推荐 (Documentation or resource recommendations)
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: 其他信息 | Additional Information
+      description: 任何其他可能有助于回答您问题的信息
+      placeholder: |
+        - 相关的错误消息
+        - 网络环境特殊情况
+        - 项目的特殊要求
+        - 截图或日志

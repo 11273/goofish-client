@@ -1,0 +1,161 @@
+name: 📚 Documentation | 文档改进
+description: Suggest improvements to documentation | 建议改进文档
+title: "[Docs]: "
+labels: ["documentation", "good first issue"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您帮助改进文档！清晰的文档对项目非常重要。
+
+        Thank you for helping improve our documentation! Clear documentation is crucial for the project.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 前置条件 | Prerequisites
+      description: 在提交之前，请确认您已经检查了以下内容
+      options:
+        - label: 我已经搜索了现有的Issues，确认这个问题还没有被报告过
+          required: true
+        - label: 我已经浏览了现有的文档
+          required: true
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: 文档类型 | Documentation Type
+      description: 这是关于哪种类型的文档？
+      options:
+        - README.md
+        - API Reference (API参考)
+        - Getting Started Guide (入门指南)
+        - Examples (示例)
+        - Troubleshooting (故障排除)
+        - Contributing Guide (贡献指南)
+        - Code Comments (代码注释)
+        - TypeScript Types (类型定义)
+        - Other (其他)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: issue-type
+    attributes:
+      label: 问题类型 | Issue Type
+      description: 这是什么类型的文档问题？
+      options:
+        - Missing Information (信息缺失)
+        - Incorrect Information (信息错误)
+        - Unclear Explanation (解释不清)
+        - Outdated Content (内容过时)
+        - Typo/Grammar (拼写/语法错误)
+        - Translation (翻译相关)
+        - Code Example Issues (代码示例问题)
+        - Structure/Organization (结构/组织问题)
+        - Other (其他)
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: 文档位置 | Documentation Location
+      description: 请指出具体的文件路径或URL
+      placeholder: "例如: docs/api/search.md 或 https://11273.github.io/goofish-client/api/search"
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-content
+    attributes:
+      label: 当前内容 | Current Content
+      description: 请引用当前有问题的文档内容（如果适用）
+      placeholder: |
+        请粘贴当前的文档内容或描述当前的问题...
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述 | Issue Description
+      description: 请详细描述文档中的问题
+      placeholder: |
+        例如：
+        - 缺少关于错误处理的说明
+        - 示例代码无法运行
+        - 参数说明不清楚
+        - 中文翻译有误
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggested-improvement
+    attributes:
+      label: 改进建议 | Suggested Improvement
+      description: 您建议如何改进这部分文档？
+      placeholder: |
+        请提供具体的改进建议，如：
+        - 添加什么内容
+        - 如何重新组织
+        - 更好的解释方式
+        - 修正的代码示例
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-content
+    attributes:
+      label: 建议内容 | Proposed Content
+      description: 如果可能，请提供建议的文档内容
+      render: markdown
+      placeholder: |
+        ## 建议的新内容
+
+        请在这里写下您建议的文档内容...
+
+  - type: dropdown
+    id: user-type
+    attributes:
+      label: 用户类型 | User Type
+      description: 从什么角度提出这个建议？
+      options:
+        - Beginner (初学者)
+        - Intermediate User (中级用户)
+        - Advanced User (高级用户)
+        - Contributor (贡献者)
+        - Maintainer (维护者)
+
+  - type: checkboxes
+    id: affected-areas
+    attributes:
+      label: 影响范围 | Affected Areas
+      description: 这个改进可能影响哪些方面？
+      options:
+        - label: 用户体验 (User Experience)
+        - label: 开发效率 (Developer Productivity)
+        - label: 学习曲线 (Learning Curve)
+        - label: 项目采用 (Project Adoption)
+        - label: 错误减少 (Error Reduction)
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: 贡献意愿 | Contribution
+      description: 您是否愿意帮助改进文档？
+      options:
+        - label: 我愿意提交Pull Request来改进这部分文档
+        - label: 我可以帮助审核文档改进
+        - label: 我可以提供更多的例子和用例
+        - label: 我可以帮助翻译文档
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 其他信息 | Additional Context
+      description: 添加任何其他相关信息
+      placeholder: |
+        - 用户反馈
+        - 社区讨论
+        - 相关的Issues或Pull Requests
+        - 参考资料
