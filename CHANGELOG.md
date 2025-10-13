@@ -6,6 +6,22 @@
 
 
 
+## [1.2.0](https://github.com/11273/goofish-client/compare/v1.1.3...v1.2.0) (2025-10-13)
+
+### ✨ Features | 新功能
+
+* 添加收藏管理功能，更新文档和类型定义 ([fe09b88](https://github.com/11273/goofish-client/commit/fe09b8874cbca370f50e50e2f325e03bc5692c11))
+* 添加订单相关功能及文档，包含订单状态和请求响应类型 ([fccba6b](https://github.com/11273/goofish-client/commit/fccba6b3d43086b1384e5a4f5aabd87039e4fc5f))
+
+### 📝 Documentation | 文档
+
+* 在 package.json 中添加 SECURITY.md 和 CONTRIBUTING.md 文件 ([c21b25f](https://github.com/11273/goofish-client/commit/c21b25fceab539d9565d16e84032ebaf413e564c))
+* 更新pr模板，优化提交规范 ([bc62661](https://github.com/11273/goofish-client/commit/bc62661b7f1971946d8f4b24d40b7cda11772959))
+
+### 🔧 Continuous Integration | CI 配置
+
+* issue_template ([31b9bb9](https://github.com/11273/goofish-client/commit/31b9bb98f3d4397e3ec4891fb3a30804b7ddac0f))
+
 ## [1.1.3](https://github.com/11273/goofish-client/compare/v1.1.2...v1.1.3) (2025-08-17)
 
 ### ✨ Features | 新功能
