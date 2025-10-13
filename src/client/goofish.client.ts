@@ -6,6 +6,8 @@ import {
 import { SearchService } from '../services/mtop/search.service';
 import { UserService } from '../services/mtop/user.service';
 import { ItemService } from '../services/mtop/item.service';
+import { FavorService } from '../services/mtop/favor.service';
+import { OrderService } from '../services/mtop/order.service';
 import { API_CONFIG, MTOP_CONFIG, PASSPORT_CONFIG } from '../constants';
 import { LogLevel } from '../utils/logger';
 import { logger } from '../utils/logger';
@@ -38,6 +40,10 @@ export class Goofish {
       home: HomeService;
       // 商品服务
       item: ItemService;
+      // 收藏服务
+      favor: FavorService;
+      // 订单服务
+      order: OrderService;
     };
     // Passport 服务
     passport: {
@@ -120,6 +126,8 @@ export class Goofish {
         user: new UserService(this.httpMtop, this.config),
         home: new HomeService(this.httpMtop, this.config),
         item: new ItemService(this.httpMtop, this.config),
+        favor: new FavorService(this.httpMtop, this.config),
+        order: new OrderService(this.httpMtop, this.config),
       },
       passport: {
         qr: new QrService(this.httpPassport, this.config),
