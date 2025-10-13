@@ -128,6 +128,11 @@ console.log(`商品标题: ${itemDetail.data.itemDO.title}`);
 const favorList = await client.api.mtop.favor.getAllFavorItems();
 
 console.log(`收藏商品数量: ${favorList.data.items.length}`);
+
+// 获取订单列表
+const orderList = await client.api.mtop.order.getAllOrders();
+
+console.log(`订单数量: ${orderList.data.items.length}`);
 ```
 
 ## 📚 核心功能
@@ -159,6 +164,13 @@ console.log(`收藏商品数量: ${favorList.data.items.length}`);
 - **分类筛选**：支持全部、降价、有效、失效宝贝分类
 - **状态监控**：实时监控收藏商品的价格变化和状态
 - **批量操作**：支持分页加载和批量数据处理
+
+### 📋 订单管理
+
+- **订单列表**：获取用户买到的所有订单信息
+- **状态筛选**：支持全部、待付款、待发货、待收货、待评价、退款中等状态分类
+- **详细信息**：商品详情、卖家信息、价格、数量、物流等完整订单数据
+- **操作支持**：查看可用操作（付款、确认收货、申请退款等）
 
 ### 🔐 身份认证
 

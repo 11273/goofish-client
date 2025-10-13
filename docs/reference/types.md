@@ -1957,6 +1957,199 @@ async function getItemDetailSafely(client: Goofish, itemId: string) {
 - 生产环境中请妥善处理所有可能的错误场景
   :::
 
+## 订单类型
+
+### OrderStatus
+
+订单状态枚举。
+
+```typescript
+enum OrderStatus {
+  /** 全部 */
+  ALL = "ALL",
+  /** 待付款 */
+  NOT_PAY = "NOT_PAY",
+  /** 待发货 */
+  NOT_SHIP = "NOT_SHIP",
+  /** 待收货 */
+  SHIPPED = "SHIPPED",
+  /** 待评价 */
+  NOT_RATE = "NOT_RATE",
+  /** 退款中 */
+  REFUND = "REFUND",
+}
+```
+
+### BoughtListRequest
+
+买到的订单列表请求参数。
+
+```typescript
+interface BoughtListRequest {
+  /** 页码，从1开始 */
+  pageNumber: number;
+  /** 订单状态 */
+  orderStatus: OrderStatus;
+}
+```
+
+### BoughtListResponse
+
+买到的订单列表响应数据。
+
+```typescript
+interface BoughtListResponse {
+  /** 订单列表 */
+  items: BoughtOrder[];
+  /** 最后一行 */
+  lastEndRow: string;
+  /** 是否有下一页 */
+  nextPage: string;
+  /** 总数量 */
+  totalCount: string;
+}
+```
+
+### BoughtOrder
+
+买到的订单详细信息。
+
+```typescript
+interface BoughtOrder {
+  /** 通用数据 */
+  commonData: OrderCommonData;
+  /** 内容 */
+  content: OrderContent;
+  /** 头部 */
+  head: OrderHead;
+  /** 尾部 */
+  tail: OrderTail;
+}
+```
+
+### OrderCommonData
+
+订单通用数据。
+
+```typescript
+interface OrderCommonData {
+  /** 商品ID */
+  itemId: string;
+  /** 订单ID */
+  orderId: string;
+  /** 对方用户ID */
+  peerUserId: string;
+  /** 交易状态枚举 */
+  tradeStatusEnum: string;
+}
+```
+
+### OrderContent
+
+订单内容信息。
+
+```typescript
+interface OrderContent {
+  /** 数据 */
+  data: {
+    /** 详情信息 */
+    detailInfo: OrderDetailInfo;
+    /** 价格信息 */
+    priceInfo: OrderPriceInfo;
+  };
+}
+
+interface OrderDetailInfo {
+  /** 商品标题 */
+  auctionTitle: string;
+  /** 商品图片URL */
+  auctionPic: string;
+  /** 其他详情字段 */
+  [key: string]: unknown;
+}
+
+interface OrderPriceInfo {
+  /** 价格 */
+  price: string;
+  /** 购买数量 */
+  buyAmount: string;
+  /** 其他价格字段 */
+  [key: string]: unknown;
+}
+```
+
+### OrderHead
+
+订单头部信息。
+
+```typescript
+interface OrderHead {
+  /** 数据 */
+  data: {
+    /** 用户信息 */
+    userInfo: OrderUserInfo;
+    /** 状态展示信息 */
+    statusViewMsg: string;
+    /** 创建时间 */
+    createTime: string;
+    /** 其他头部字段 */
+    [key: string]: unknown;
+  };
+}
+
+interface OrderUserInfo {
+  /** 用户ID */
+  userId: string;
+  /** 用户昵称 */
+  userNick: string;
+  /** 用户头像URL */
+  userIcon: string;
+  /** 其他用户字段 */
+  [key: string]: unknown;
+}
+```
+
+### OrderTail
+
+订单尾部信息。
+
+```typescript
+interface OrderTail {
+  /** 数据 */
+  data: {
+    /** 按钮列表 */
+    btnList: OrderButton[];
+    /** 其他尾部字段 */
+    [key: string]: unknown;
+  };
+}
+
+interface OrderButton {
+  /** 按钮名称 */
+  name: string;
+  /** 交易操作类型 */
+  tradeAction: string;
+  /** 样式 */
+  style: string;
+  /** 是否展开 */
+  expanded: string;
+  /** 点击事件 */
+  clickEvent?: {
+    /** 数据 */
+    data?: {
+      /** URL */
+      url?: string;
+      /** 代码 */
+      code?: string;
+      /** 其他事件数据 */
+      [key: string]: unknown;
+    };
+  };
+  /** 其他按钮字段 */
+  [key: string]: unknown;
+}
+```
+
 ## 相关链接
 
 - [API 配置](../api/configuration.md) - 了解配置选项
@@ -1964,4 +2157,6 @@ async function getItemDetailSafely(client: Goofish, itemId: string) {
 - [搜索接口](../api/search.md) - 搜索相关类型的详细说明
 - [商品接口](../api/item.md) - 商品详情相关类型的详细说明
 - [用户接口](../api/user.md) - 用户相关类型的详细说明
+- [收藏接口](../api/favor.md) - 收藏相关类型的详细说明
+- [订单接口](../api/order.md) - 订单相关类型的详细说明
 - [认证接口](../api/authentication.md) - 认证和二维码登录相关类型的详细说明

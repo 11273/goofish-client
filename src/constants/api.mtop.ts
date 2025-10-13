@@ -41,7 +41,10 @@ export const MTOP_ENDPOINTS = {
     DETAIL: 'mtop.taobao.idle.pc.detail',
   },
   // 订单相关
-  ORDER: {},
+  ORDER: {
+    // 买到的订单列表
+    BOUGHT_LIST: 'mtop.idle.web.trade.bought.list',
+  },
   // 消息相关
   MESSAGE: {},
   // 收藏相关
