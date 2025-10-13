@@ -44,6 +44,11 @@ export const MTOP_ENDPOINTS = {
   ORDER: {},
   // 消息相关
   MESSAGE: {},
+  // 收藏相关
+  FAVOR: {
+    // 收藏商品列表
+    ITEM_LIST: 'mtop.taobao.idle.web.favor.item.list',
+  },
 } as const;
 
 // Mtop 令牌相关

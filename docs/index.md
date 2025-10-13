@@ -53,7 +53,7 @@ features:
   <h1>Goofish Client</h1>
   <p>一个非官方的闲鱼客户端库，支持商品搜索等功能。</p>
 
-[![NPM Version](https://img.shields.io/npm/v/goofish-client?style=flat-square&color=blue&label=npm)](https://www.npmjs.com/package/goofish-client) [![GitHub Stars](https://img.shields.io/github/stars/11273/goofish-client?style=flat-square&color=yellow&label=stars)](https://github.com/11273/goofish-client) [![GitHub Forks](https://img.shields.io/github/forks/11273/goofish-client?style=flat-square&color=blue&label=forks)](https://github.com/11273/goofish-client) [![GitHub Issues](https://img.shields.io/github/issues/11273/goofish-client?style=flat-square&color=red&label=issues)](https://github.com/11273/goofish-client/issues) [![Views](https://komarev.com/ghpvc/?username=11273-goofish-client-page&label=Views&color=brightgreen&style=flat-square)](https://github.com/11273/goofish-client) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/11273/goofish-client/pulls) [![Build Status](https://img.shields.io/github/actions/workflow/status/11273/goofish-client/release.yml?style=flat-square&label=build)](https://github.com/11273/goofish-client)
+[![NPM Version](https://img.shields.io/npm/v/goofish-client?style=flat-square&color=blue&label=npm)](https://www.npmjs.com/package/goofish-client) [![GitHub Stars](https://img.shields.io/github/stars/11273/goofish-client?style=flat-square&color=yellow&label=stars)](https://github.com/11273/goofish-client) [![GitHub Forks](https://img.shields.io/github/forks/11273/goofish-client?style=flat-square&color=blue&label=forks)](https://github.com/11273/goofish-client) [![GitHub Issues](https://img.shields.io/github/issues/11273/goofish-client?style=flat-square&color=red&label=issues)](https://github.com/11273/goofish-client/issues) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/11273/goofish-client/pulls) [![Build Status](https://img.shields.io/github/actions/workflow/status/11273/goofish-client/release.yml?style=flat-square&label=build)](https://github.com/11273/goofish-client)
 
 [![License](https://img.shields.io/github/license/11273/goofish-client?style=flat-square&color=brightgreen&label=license)](https://github.com/11273/goofish-client/blob/main/LICENSE) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)](https://github.com/11273/goofish-client) [![Node.js](https://img.shields.io/badge/Node.js%2014%2B-43853d?style=flat-square&logo=node.js&logoColor=white)](https://github.com/11273/goofish-client) [![GitHub Last Commit](https://img.shields.io/github/last-commit/11273/goofish-client?style=flat-square&color=orange&label=last%20commit)](https://github.com/11273/goofish-client) [![Bundle Size](https://flat.badgen.net/packagephobia/publish/goofish-client)](https://bundlephobia.com/package/goofish-client) [![NPM Downloads](https://img.shields.io/npm/dm/goofish-client?style=flat-square&color=green&label=downloads)](https://www.npmjs.com/package/goofish-client)
 
@@ -123,6 +123,11 @@ const itemDetail = await client.api.mtop.item.getDetail({
 });
 
 console.log(`商品标题: ${itemDetail.data.itemDO.title}`);
+
+// 获取收藏列表
+const favorList = await client.api.mtop.favor.getAllFavorItems();
+
+console.log(`收藏商品数量: ${favorList.data.items.length}`);
 ```
 
 ## 📚 核心功能
@@ -147,6 +152,13 @@ console.log(`商品标题: ${itemDetail.data.itemDO.title}`);
 - **卖家信息**：卖家资料、信用等级、历史记录
 - **图片处理**：高清图片获取和多尺寸支持
 - **实时数据**：浏览量、收藏数、想要数等实时统计
+
+### ❤️ 收藏管理
+
+- **收藏列表**：获取用户收藏的所有商品信息
+- **分类筛选**：支持全部、降价、有效、失效宝贝分类
+- **状态监控**：实时监控收藏商品的价格变化和状态
+- **批量操作**：支持分页加载和批量数据处理
 
 ### 🔐 身份认证
 
@@ -218,6 +230,9 @@ const itemDetail = await client.api.mtop.item.getDetail({
 
 // 获取用户信息
 const userInfo = await client.api.mtop.user.getUserNav();
+
+// 获取收藏商品
+const favorItems = await client.api.mtop.favor.getAllFavorItems();
 ```
 
 ## 📖 学习资源
