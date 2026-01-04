@@ -4,3 +4,4 @@ export * from './error';
 export * from './business';
 export * from './api.mtop';
 export * from './api.passport';
+export * from './api.im';

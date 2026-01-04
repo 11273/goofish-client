@@ -4,10 +4,11 @@
 
 ## 接口概览
 
-| 方法                            | API 路径                       | 描述             |
-| ------------------------------- | ------------------------------ | ---------------- |
-| [`getUserNav()`](#getusernav)   | `mtop.idle.web.user.page.nav`  | 获取用户导航信息 |
-| [`getUserHead()`](#getuserhead) | `mtop.idle.web.user.page.head` | 获取用户头部信息 |
+| 方法                            | API 路径                                  | 描述                   |
+| ------------------------------- | ----------------------------------------- | ---------------------- |
+| [`getUserNav()`](#getusernav)   | `mtop.idle.web.user.page.nav`            | 获取用户导航信息       |
+| [`getUserHead()`](#getuserhead) | `mtop.idle.web.user.page.head`           | 获取用户头部信息       |
+| [`queryUser()`](#queryuser)     | `mtop.taobao.idlemessage.pc.user.query`  | 按会话查询用户基础信息 |
 
 ## getUserNav()
 
@@ -240,6 +241,8 @@ import type {
   UserNavResponse,
   UserHeadResponse,
   UserPageHeadRequest,
+  UserQueryRequest,
+  UserQueryResponse,
   GoofishMtopResponse,
 } from "goofish-client";
 
@@ -258,6 +261,13 @@ const params: UserPageHeadRequest = {
 };
 const otherUserInfo: GoofishMtopResponse<UserHeadResponse> =
   await client.api.mtop.user.getUserHead(params);
+
+// 按会话查询用户信息（IM 场景常用）
+const queryParams: UserQueryRequest = {
+  sessionId: "conversation-or-session-id",
+};
+const userQueryRes: GoofishMtopResponse<UserQueryResponse> =
+  await client.api.mtop.user.queryUser(queryParams);
 ```
 
 ### 注意事项
@@ -266,3 +276,91 @@ const otherUserInfo: GoofishMtopResponse<UserHeadResponse> =
 2. **数据结构**: 查看他人信息时，某些字段可能为空或不可见
 3. **请求频率**: 建议控制请求频率，避免过于频繁的调用
 4. **隐私保护**: 尊重用户隐私，合理使用获取的用户信息
+
+## queryUser()
+
+按会话维度查询用户信息，常用于 IM 会话中根据 `sessionId` 反查用户详情。
+
+**API 路径：** `mtop.taobao.idlemessage.pc.user.query`
+
+### 请求参数
+
+```typescript
+interface UserQueryRequest {
+  /** 类型，可选，默认 0 */
+  type?: number;
+  /** 会话类型，可选，默认 1 */
+  sessionType?: number;
+  /** 会话ID */
+  sessionId: string;
+  /** 是否为会话所有者，可选，默认 false */
+  isOwner?: boolean;
+}
+```
+
+### 响应数据
+
+实际响应被 [`GoofishMtopResponse`](../reference/types.md#goofishmtopresponse) 统一包裹：
+
+```typescript
+GoofishMtopResponse<UserQueryResponse>;
+```
+
+其中 `UserQueryResponse` 的结构为：
+
+```typescript
+interface UserInfoExt {
+  /** 用户勋章 */
+  userMedal?: string;
+}
+
+interface UserInfo {
+  /** 扩展信息 */
+  ext: UserInfoExt;
+  /** 闲鱼昵称 */
+  fishNick: string;
+  /** 头像 */
+  logo: string;
+  /** 昵称（可能加密） */
+  nick: string;
+  /** 用户类型 */
+  type: number;
+}
+
+interface UserQueryResponse {
+  /** 需要解密的键 */
+  needDecryptKeys: string[];
+  /** 需要解密的键V2 */
+  needDecryptKeysV2: string[];
+  /** 用户信息 */
+  userInfo: UserInfo;
+}
+```
+
+### 使用示例
+
+```typescript
+import type {
+  UserQueryRequest,
+  UserQueryResponse,
+  GoofishMtopResponse,
+} from "goofish-client";
+
+// 从 IM 会话中获取到的 sessionId
+const params: UserQueryRequest = {
+  sessionId: "xxxxxx",
+};
+
+const res: GoofishMtopResponse<UserQueryResponse> =
+  await client.api.mtop.user.queryUser(params);
+
+console.log("用户昵称:", res.data.userInfo.fishNick);
+console.log("头像:", res.data.userInfo.logo);
+console.log("勋章:", res.data.userInfo.ext.userMedal);
+```
+
+### 适用场景
+
+1. **IM 会话详情**: 根据会话 ID 获取对端用户详细信息
+2. **多端联动**: 结合会话数据与用户资料进行展示
+3. **权限判断**: 通过 `isOwner` 标记区分会话所有者视角

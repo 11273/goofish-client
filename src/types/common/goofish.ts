@@ -14,6 +14,9 @@ export interface GoofishConfig {
   // 请求配置 passport
   passport: GoofishPassportRequestConfig;
 
+  // IM 配置
+  im?: GoofishImConfig;
+
   // 请求头
   headers: GoofishRequestHeaders;
 }
@@ -60,6 +63,30 @@ export interface GoofishPassportRequestConfig {
   appName: string;
   // 来源站点
   fromSite: string;
+}
+
+/**
+ * IM 配置
+ */
+export interface GoofishImConfig {
+  // WebSocket URL
+  wsUrl?: string;
+  // 辅助 WebSocket URL
+  // secondaryWsUrl?: string;
+  // 应用密钥
+  appKey?: string;
+  // 设备 ID
+  deviceId?: string;
+  // 自动重连
+  autoReconnect?: boolean;
+  // 心跳间隔（毫秒）
+  heartbeatInterval?: number;
+  // 重连间隔（毫秒）
+  reconnectInterval?: number;
+  // 最大重连次数
+  maxReconnectAttempts?: number;
+  // 请求超时时间（毫秒）
+  requestTimeout?: number;
 }
 
 /**

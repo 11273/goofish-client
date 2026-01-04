@@ -18,6 +18,7 @@
 - **[首页接口](./api/home.md)** - 首页猜你喜欢 Feed 数据获取
 - **[搜索接口](./api/search.md)** - 商品搜索和筛选
 - **[用户接口](./api/user.md)** - 用户信息获取和管理
+- **[IM 接口](./api/im.md)** - 即时通讯、会话与消息
 - **[认证接口](./api/authentication.md)** - 二维码登录和会话管理
 - **[配置参考](./api/configuration.md)** - 详细的配置选项说明
 

@@ -1,7 +1,7 @@
 <div align="center">
   <img src="./docs/public/tv.png" alt="LOGO" width="180">
   <h1>Goofish Client</h1>
-  <p>一个非官方的闲鱼客户端库，支持商品搜索等功能。</p>
+  <p>一个非官方的闲鱼客户端库，支持商品搜索、IM 会话与消息等功能。</p>
 </div>
 
 <div align="center">
@@ -55,6 +55,17 @@ yarn add goofish-client
 # PNPM
 pnpm add goofish-client
 ```
+
+## ✨ 核心功能
+
+- 🔍 **商品搜索** - 支持关键词搜索、价格筛选、地理位置筛选等
+- 🏠 **首页推荐** - 获取个性化商品推荐 Feed
+- 📦 **商品详情** - 获取商品完整信息、卖家信息等
+- 👤 **用户管理** - 获取用户信息、查询用户资料
+- ❤️ **收藏管理** - 获取收藏列表、降价提醒等
+- 📋 **订单管理** - 获取订单列表、订单状态查询
+- 🔐 **身份认证** - 支持 Cookie、二维码、账号密码登录
+- 💬 **IM 即时通讯** - 完整的 IM 功能，支持会话管理、消息收发、实时推送
 
 ## 🚀 Quick Start
 
@@ -112,6 +123,42 @@ while (true) {
 }
 ```
 
+### IM 消息示例
+
+```typescript
+import { Goofish, LogLevel } from "goofish-client";
+import type {
+  GoofishMtopResponse,
+  ImLoginTokenResponse,
+} from "goofish-client";
+
+// 1. 创建客户端实例（开启 IM 能力）
+const client = new Goofish({
+  cookie: "cookie2=xxxx",
+  level: LogLevel.INFO,
+  im: {
+    // 可选：自定义 IM 配置
+    autoReconnect: true,
+  },
+});
+
+// 2. 获取 IM 登录 Token（Mtop 接口）
+const tokenRes: GoofishMtopResponse<ImLoginTokenResponse> =
+  await client.api.mtop.im.getLoginToken();
+
+// 3. 连接 WebSocket 并注册 IM 服务
+await client.wsClientIm.connect();
+await client.api.im.auth.register({
+  token: tokenRes.data.accessToken,
+});
+
+// 4. 监听格式化后的消息
+client.api.im.message.onFormattedMessage((msg) => {
+  // msg.text 为解析后的文本内容
+  console.log("收到消息:", msg);
+});
+```
+
 ## 📝 Logging
 
 ### 日志配置
@@ -154,12 +201,15 @@ const client = new Goofish({
 
 <div align="center">
 
-| 方法                                 | 描述           | 返回类型                    |
-| ------------------------------------ | -------------- | --------------------------- |
-| `client.api.mtop.search.search()`    | 搜索商品       | `Promise<SearchResponse>`   |
-| `client.api.mtop.user.getUserHead()` | 获取用户信息   | `Promise<UserResponse>`     |
-| `client.api.passport.qr.generate()`  | 生成登录二维码 | `Promise<QRResponse>`       |
-| `client.api.passport.qr.query()`     | 查询二维码状态 | `Promise<QRStatusResponse>` |
+| 方法                                      | 描述               | 返回类型                                                 |
+| ----------------------------------------- | ------------------ | -------------------------------------------------------- |
+| `client.api.mtop.search.search()`         | 搜索商品           | `Promise<GoofishMtopResponse<SearchResponse>>`          |
+| `client.api.mtop.user.getUserHead()`      | 获取用户信息       | `Promise<GoofishMtopResponse<UserHeadResponse>>`        |
+| `client.api.passport.qr.generate()`       | 生成登录二维码     | `Promise<GoofishPassportResponse<QrGenerateResponse>>`  |
+| `client.api.passport.qr.query()`          | 查询二维码状态     | `Promise<GoofishPassportResponse<QrQueryResponse>>`     |
+| `client.api.mtop.im.getLoginToken()`      | 获取 IM 登录 Token | `Promise<GoofishMtopResponse<ImLoginTokenResponse>>`    |
+| `client.api.im.conversation.listNewestPagination()` | 获取会话列表 | `Promise<WsResponse<ConversationListNewestPaginationResponse>>` |
+| `client.api.im.message.sendTextMessage()` | 发送文本消息       | `Promise<WsResponse<SendMessageByReceiverScopeResponse>>`      |
 
 > **📝 注意**: 更多 API 方法正在持续添加中，完整的 API 文档请参考 [API 接口文档](https://11273.github.io/goofish-client/api/home)
 
@@ -168,17 +218,32 @@ const client = new Goofish({
 ### 配置选项
 
 ```typescript
-interface GoofishConfig {
-  cookie?: string; // 登录凭证
-  level?: LogLevel; // 日志级别: ERROR, WARN, INFO, DEBUG
-  mtop?: {
-    timeout?: number; // 请求超时时间 (ms)
-    baseURL?: string; // 自定义API地址
-  };
-  headers?: {
-    userAgent?: string; // 自定义User-Agent
-  };
-}
+import type { GoofishConfig } from "goofish-client";
+
+// 推荐：使用 Partial<GoofishConfig> 作为配置输入类型
+const config: Partial<GoofishConfig> = {
+  // 登录凭证
+  cookie: "cookie2=xxxx",
+  // 日志级别: ERROR, WARN, INFO, DEBUG
+  level: LogLevel.DEBUG,
+  // 可选：覆盖 Mtop 配置
+  mtop: {
+    timeout: 10000,
+  },
+  // 可选：Passport 配置
+  passport: {
+    baseURL: "https://passport.taobao.com/",
+  },
+  // 可选：IM 配置
+  im: {
+    autoReconnect: true,
+    heartbeatInterval: 10000,
+  },
+  // 请求头
+  headers: {
+    userAgent: "Mozilla/5.0 ...",
+  },
+};
 ```
 
 ### 搜索参数
@@ -244,12 +309,10 @@ const searchOptions: SearchOptions = {
 <details>
 <summary><strong>🌐 环境支持</strong></summary>
 
-- ✅ **Node.js** - 服务端应用
-- ✅ **Browser** - 浏览器环境 (需处理跨域)
+- ✅ **Node.js** - 服务端应用（Node.js >= 14.0.0）
 - ✅ **Electron** - 桌面应用
-- ✅ **React Native** - 移动应用
-- ✅ **Next.js** - 全栈框架
-- ✅ **Nuxt.js** - Vue 全栈框架
+- ✅ **Next.js** - 服务端渲染
+- ✅ **Nuxt.js** - 服务端渲染
 
 </details>
 

@@ -15,7 +15,6 @@ export default [
         sourceType: 'module',
       },
       globals: {
-        ...globals.browser, // 添加浏览器环境全局变量
         ...globals.node, // 添加 Node.js 环境全局变量
         ...globals.es2021, // 添加 ES2021 全局变量
       },

@@ -1,9 +1,11 @@
 import { BaseMtopService } from '../common/base.mtop.service';
-import { MTOP_ENDPOINTS } from '../../constants';
+import { MTOP_API_VERSIONS, MTOP_ENDPOINTS } from '../../constants';
 import type {
   UserNavResponse,
   UserHeadResponse,
   UserPageHeadRequest,
+  UserQueryRequest,
+  UserQueryResponse,
 } from '../../types/mtop/user';
 import type { GoofishMtopResponse } from '../../types';
 
@@ -32,6 +34,26 @@ export class UserService extends BaseMtopService {
     return this.request<UserHeadResponse, UserPageHeadRequest>({
       api: MTOP_ENDPOINTS.USER.HEAD,
       data: params,
+    });
+  }
+  /**
+   * 查询用户信息
+   * @param params 请求参数，包含会话类型、会话ID等信息
+   * @returns 用户信息
+   */
+  public async queryUser(
+    params: UserQueryRequest
+  ): Promise<GoofishMtopResponse<UserQueryResponse>> {
+    const api = MTOP_ENDPOINTS.USER.QUERY;
+    return this.request<UserQueryResponse, UserQueryRequest>({
+      api,
+      version: MTOP_API_VERSIONS[api],
+      data: {
+        type: params.type || 0,
+        sessionType: params.sessionType || 1,
+        sessionId: params.sessionId,
+        isOwner: params.isOwner || false,
+      },
     });
   }
 }

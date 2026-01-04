@@ -159,3 +159,45 @@ export interface UserHeadResponse {
   /** 模块数据 */
   module: UserHeadModule;
 }
+
+// 用户查询请求参数
+export interface UserQueryRequest {
+  /** 类型 */
+  type?: number;
+  /** 会话类型 */
+  sessionType?: number;
+  /** 会话ID */
+  sessionId: string;
+  /** 是否为所有者 */
+  isOwner?: boolean;
+}
+
+// 用户信息扩展
+export interface UserInfoExt {
+  /** 用户勋章 */
+  userMedal?: string;
+}
+
+// 用户信息
+export interface UserInfo {
+  /** 扩展信息 */
+  ext: UserInfoExt;
+  /** 闲鱼昵称 */
+  fishNick: string;
+  /** 头像 */
+  logo: string;
+  /** 昵称（可能加密） */
+  nick: string;
+  /** 用户类型 */
+  type: number;
+}
+
+// 用户查询响应数据类型
+export interface UserQueryResponse {
+  /** 需要解密的键 */
+  needDecryptKeys: string[];
+  /** 需要解密的键V2 */
+  needDecryptKeysV2: string[];
+  /** 用户信息 */
+  userInfo: UserInfo;
+}
