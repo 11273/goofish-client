@@ -29,6 +29,8 @@ export const MTOP_ENDPOINTS = {
     NAV: 'mtop.idle.web.user.page.nav',
     // 用户头部
     HEAD: 'mtop.idle.web.user.page.head',
+    // 用户查询
+    QUERY: 'mtop.taobao.idlemessage.pc.user.query',
   },
   // 搜索相关
   SEARCH: {
@@ -53,6 +55,11 @@ export const MTOP_ENDPOINTS = {
     ITEM_LIST: 'mtop.taobao.idle.web.favor.item.list',
   },
 } as const;
+
+// Mtop API 版本配置
+export const MTOP_API_VERSIONS: Record<string, string> = {
+  'mtop.taobao.idlemessage.pc.user.query': '4.0',
+};
 
 // Mtop 令牌相关
 export const MTOP_TOKEN = {

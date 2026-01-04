@@ -68,3 +68,27 @@ export function getTokenFromCookie(cookieStr: string): string {
   const underscoreIndex = mH5Tk.indexOf('_');
   return underscoreIndex > 0 ? mH5Tk.substring(0, underscoreIndex) : mH5Tk;
 }
+
+/**
+ * 生成 UUID
+ */
+export function generateUUID(): string {
+  const chars =
+    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+  const uuid: string[] = [];
+  const random = Math.random;
+
+  for (let i = 0; i < 36; i++) {
+    if (i === 8 || i === 13 || i === 18 || i === 23) {
+      uuid[i] = '-';
+    } else if (i === 14) {
+      uuid[i] = '4';
+    } else {
+      const r = Math.floor(16 * random());
+      const char = chars[i === 19 ? (r & 0x3) | 0x8 : r];
+      uuid[i] = char || '0'; // 提供默认值防止 undefined
+    }
+  }
+
+  return uuid.join('');
+}

@@ -1,4 +1,5 @@
 import { HttpClient } from '../core/http';
+import { WsClient } from '../core/ws';
 import {
   createCookieInterceptor,
   createLogInterceptor,
@@ -8,7 +9,15 @@ import { UserService } from '../services/mtop/user.service';
 import { ItemService } from '../services/mtop/item.service';
 import { FavorService } from '../services/mtop/favor.service';
 import { OrderService } from '../services/mtop/order.service';
-import { API_CONFIG, MTOP_CONFIG, PASSPORT_CONFIG } from '../constants';
+import { ImService } from '../services/mtop/im.service';
+import { ConversationService } from '../services/im/conversation.service';
+import { MessageService } from '../services/im/message.service';
+import {
+  API_CONFIG,
+  MTOP_CONFIG,
+  PASSPORT_CONFIG,
+  IM_CONFIG,
+} from '../constants';
 import { LogLevel } from '../utils/logger';
 import { logger } from '../utils/logger';
 import { CookieStore, CookieUtils } from '../utils/cookie';
@@ -16,12 +25,16 @@ import type { GoofishConfig } from '../types';
 import { QrService } from '../services/passport/qr.service';
 import { LoginService } from '../services/passport/login.service';
 import { HomeService } from '../services/mtop';
+import { generateUUID } from '../utils';
+import { AuthService } from '../services/im';
 
 export class Goofish {
   // Mtop HTTP 客户端
   private readonly httpMtop: HttpClient;
   // Passport HTTP 客户端
   private readonly httpPassport: HttpClient;
+  // IM WebSocket 客户端
+  private readonly wsIm: WsClient;
 
   // Mtop Cookie 存储
   private readonly cookieStoreMtop: CookieStore;
@@ -44,6 +57,8 @@ export class Goofish {
       favor: FavorService;
       // 订单服务
       order: OrderService;
+      // IM 服务
+      im: ImService;
     };
     // Passport 服务
     passport: {
@@ -51,6 +66,15 @@ export class Goofish {
       qr: QrService;
       // 登录服务
       login: LoginService;
+    };
+    // IM 服务
+    im: {
+      // 认证服务
+      auth: AuthService;
+      // 会话服务
+      conversation: ConversationService;
+      // 消息服务
+      message: MessageService;
     };
   };
 
@@ -81,10 +105,26 @@ export class Goofish {
         spmPre: config.mtop?.spmPre || MTOP_CONFIG.SPM_PRE,
         logId: config.mtop?.logId || MTOP_CONFIG.LOG_ID,
       },
+      // Passport 配置
       passport: {
         baseURL: config.passport?.baseURL || PASSPORT_CONFIG.BASE_URL,
         appName: config.passport?.appName || PASSPORT_CONFIG.APP_NAME,
         fromSite: config.passport?.fromSite || PASSPORT_CONFIG.FROM_SITE,
+      },
+      // IM 配置
+      im: {
+        wsUrl: config.im?.wsUrl || IM_CONFIG.WS_URL,
+        // secondaryWsUrl: config.im?.secondaryWsUrl || IM_CONFIG.SECONDARY_WS_URL,
+        appKey: config.im?.appKey || IM_CONFIG.APP_KEY,
+        deviceId: config.im?.deviceId || `${generateUUID()}-${Date.now()}`,
+        autoReconnect: config.im?.autoReconnect ?? true,
+        heartbeatInterval:
+          config.im?.heartbeatInterval || IM_CONFIG.HEARTBEAT_INTERVAL,
+        reconnectInterval:
+          config.im?.reconnectInterval || IM_CONFIG.RECONNECT_INTERVAL,
+        maxReconnectAttempts:
+          config.im?.maxReconnectAttempts || IM_CONFIG.MAX_RECONNECT_ATTEMPTS,
+        requestTimeout: config.im?.requestTimeout || IM_CONFIG.REQUEST_TIMEOUT,
       },
 
       // 请求头配置
@@ -111,6 +151,16 @@ export class Goofish {
       },
     });
 
+    // 创建 WebSocket 客户端
+    this.wsIm = new WsClient({
+      wsUrl: this.config.im?.wsUrl,
+      autoReconnect: this.config.im?.autoReconnect,
+      reconnectInterval: this.config.im?.reconnectInterval,
+      maxReconnectAttempts: this.config.im?.maxReconnectAttempts,
+      heartbeatInterval: this.config.im?.heartbeatInterval,
+      requestTimeout: this.config.im?.requestTimeout,
+    });
+
     // 创建 Cookie 存储
     this.cookieStoreMtop = new CookieStore();
     this.cookieStorePassport = new CookieStore();
@@ -128,10 +178,20 @@ export class Goofish {
         item: new ItemService(this.httpMtop, this.config),
         favor: new FavorService(this.httpMtop, this.config),
         order: new OrderService(this.httpMtop, this.config),
+        im: new ImService(this.httpMtop, this.config),
       },
       passport: {
         qr: new QrService(this.httpPassport, this.config),
         login: new LoginService(this.httpPassport, this.config),
+      },
+      im: {
+        auth: new AuthService(this.wsIm, this.httpMtop, this.config),
+        conversation: new ConversationService(
+          this.wsIm,
+          this.httpMtop,
+          this.config
+        ),
+        message: new MessageService(this.wsIm, this.httpMtop, this.config),
       },
     };
 
@@ -230,5 +290,12 @@ export class Goofish {
    */
   get httpClientPassport(): HttpClient {
     return this.httpPassport;
+  }
+
+  /**
+   * 直接访问 WebSocket 客户端 IM
+   */
+  get wsClientIm(): WsClient {
+    return this.wsIm;
   }
 }

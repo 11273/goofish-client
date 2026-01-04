@@ -27,7 +27,7 @@ features:
 
   - icon: 🔍
     title: 功能丰富
-    details: 支持首页Feed、商品搜索、用户信息获取、二维码登录等核心功能，满足各种业务需求
+    details: 支持首页Feed、商品搜索、用户信息获取、IM 会话与消息、二维码登录等核心功能，满足各种业务需求
 
   - icon: 🛡️
     title: 稳定可靠
@@ -185,6 +185,14 @@ console.log(`订单数量: ${orderList.data.items.length}`);
 - **导航数据**：用户导航和菜单信息
 - **状态监控**：实时监控登录状态和会话有效性
 
+### 💬 IM 即时通讯
+
+- **IM Token 获取**：通过 Mtop 接口安全获取 IM 登录 Token
+- **WebSocket 管理**：内置 `WsClient`，支持自动重连、心跳保活、消息队列
+- **会话列表**：基于 `/r/Conversation/listNewestPagination` 获取最新会话列表
+- **消息收发**：支持按接收者范围发送消息、快捷发送文本消息
+- **消息解码与格式化**：内置 MsgPack 解码与结构化格式化，直接拿到可用的消息结构
+
 ### 🔧 高级扩展
 
 - **自定义客户端**：扩展 HTTP 客户端功能
@@ -245,6 +253,16 @@ const userInfo = await client.api.mtop.user.getUserNav();
 
 // 获取收藏商品
 const favorItems = await client.api.mtop.favor.getAllFavorItems();
+
+// （可选）初始化 IM：获取 Token、连接 WebSocket 并注册
+const tokenRes = await client.api.mtop.im.getLoginToken();
+await client.wsClientIm.connect();
+await client.api.im.auth.register({ token: tokenRes.data.accessToken });
+
+// 监听格式化后的消息
+client.api.im.message.onFormattedMessage((msg) => {
+  console.log("收到 IM 消息:", msg);
+});
 ```
 
 ## 📖 学习资源

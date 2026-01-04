@@ -58,6 +58,8 @@ const client = new Goofish({
 
 ### 3. 进行 API 调用
 
+#### 搜索商品
+
 ```typescript
 // 搜索商品
 const searchResult = await client.api.mtop.search.search({
@@ -69,11 +71,41 @@ const searchResult = await client.api.mtop.search.search({
 console.log("搜索结果:", searchResult.data.resultList);
 ```
 
+#### 使用 IM 功能（可选）
+
+```typescript
+// 1. 获取 IM Token
+const tokenRes = await client.api.mtop.im.getLoginToken();
+
+// 2. 连接 WebSocket
+await client.wsClientIm.connect();
+
+// 3. 注册 IM 服务
+await client.api.im.auth.register({
+  token: tokenRes.data.accessToken,
+});
+
+// 4. 监听消息
+client.api.im.message.onFormattedMessage((msg) => {
+  console.log("收到消息:", msg);
+});
+
+// 5. 获取会话列表
+const conversations = await client.api.im.conversation.listNewestPagination({
+  startTimeStamp: Date.now(),
+  limitNum: 20,
+});
+
+console.log("会话数量:", conversations.body.userConvs.length);
+```
+
 ## 完整使用流程
+
+### 示例 1：搜索商品流程
 
 下面是一个完整的端到端示例，从二维码登录开始到成功搜索商品：
 
-### 代码示例
+#### 代码示例
 
 ```typescript
 import { Goofish, QRCodeStatus, LogLevel } from "goofish-client";
@@ -214,33 +246,174 @@ async function quickStart() {
 quickStart();
 ```
 
-### 流程说明
+#### 流程说明
 
-这个完整示例包含四个主要步骤：
+这个完整示例包含以下主要步骤：
 
-#### 🔐 第一步：二维码登录
+##### 🔐 第一步：二维码登录
 
 - 创建未认证的客户端
 - 生成二维码并显示
 - 轮询检查扫码状态
 - 自动获取并设置 Cookie
 
-#### ✅ 第二步：验证登录状态
+##### ✅ 第二步：验证登录状态
 
 - 调用用户接口验证登录
 - 获取用户基本信息
 - 确认认证状态正常
 
-#### 🔍 第三步：搜索商品
+##### 🔍 第三步：搜索商品
 
 - 使用认证后的客户端搜索
 - 展示搜索结果详情
 - 验证 API 调用成功
 
-#### 📊 第四步：扩展使用
+##### 📊 第四步：扩展使用
 
 - 演示其他 API 接口调用
 - 展示完整的功能流程
+
+### 示例 2：IM 即时通讯流程
+
+下面是一个完整的 IM 使用示例，展示如何初始化 IM、获取会话列表和监听消息：
+
+#### 代码示例
+
+```typescript
+import { Goofish, LogLevel } from "goofish-client";
+
+/**
+ * IM 即时通讯完整示例
+ * 演示 IM 初始化、会话管理和消息监听
+ */
+async function imQuickStart() {
+  try {
+    // ========== 第一步：初始化客户端（开启 IM 能力）==========
+    const client = new Goofish({
+      cookie: "cookie2=xxxx", // 你的登录凭证
+      level: LogLevel.INFO,
+      im: {
+        // 可选：自定义 IM 配置
+        autoReconnect: true, // 自动重连
+        heartbeatInterval: 10000, // 心跳间隔 10 秒
+      },
+    });
+
+    console.log("🚀 IM 快速开始示例\n");
+
+    // ========== 第二步：获取 IM 登录 Token ==========
+    console.log("🔑 正在获取 IM Token...");
+    const tokenRes = await client.api.mtop.im.getLoginToken();
+    console.log("✅ Token 获取成功\n");
+
+    // ========== 第三步：连接 WebSocket ==========
+    console.log("🔌 正在连接 WebSocket...");
+    await client.wsClientIm.connect();
+    console.log("✅ WebSocket 连接成功\n");
+
+    // ========== 第四步：注册 IM 服务 ==========
+    console.log("📝 正在注册 IM 服务...");
+    await client.api.im.auth.register({
+      token: tokenRes.data.accessToken,
+    });
+    console.log("✅ IM 服务注册成功\n");
+
+    // ========== 第五步：获取会话列表 ==========
+    console.log("📋 正在获取会话列表...");
+    const conversations =
+      await client.api.im.conversation.listNewestPagination({
+        startTimeStamp: Date.now(),
+        limitNum: 10,
+      });
+
+    console.log(`✅ 获取到 ${conversations.body.userConvs.length} 个会话\n`);
+
+    // 显示会话信息
+    conversations.body.userConvs.forEach((conv, index) => {
+      const conversationId =
+        conv.singleChatUserConversation?.singleChatConversation.cid;
+      const lastMsg = conv.lastMessage;
+      console.log(`${index + 1}. 会话 ID: ${conversationId}`);
+      console.log(`   最后消息: ${lastMsg?.content?.text || "无"}\n`);
+    });
+
+    // ========== 第六步：监听格式化消息（推荐）==========
+    console.log("👂 开始监听消息...\n");
+
+    client.api.im.message.onFormattedMessage((msg) => {
+      console.log("📨 收到新消息:", msg);
+    });
+
+    // ========== 第七步：监听 WebSocket 事件 ==========
+    client.wsClientIm.on("close", () => {
+      console.log("❌ WebSocket 连接已断开");
+    });
+
+    client.wsClientIm.on("reconnect", (attempt) => {
+      console.log(`🔄 WebSocket 重连成功，第 ${attempt} 次`);
+    });
+
+    client.wsClientIm.on("error", (error) => {
+      console.error("❌ WebSocket 错误:", error.message);
+    });
+
+    console.log("✅ IM 初始化完成，开始监听消息...");
+    console.log("💡 提示：发送消息到你的闲鱼账号以测试消息接收\n");
+
+    // 保持程序运行（实际应用中根据需要处理）
+    return client;
+  } catch (error) {
+    console.error("\n❌ 发生错误:", error.message);
+    throw error;
+  }
+}
+
+imQuickStart();
+```
+
+#### 流程说明
+
+这个完整的 IM 示例包含以下主要步骤：
+
+##### 🔧 第一步：配置 IM 客户端
+
+- 创建带 IM 配置的客户端实例
+- 设置自动重连和心跳间隔
+- 配置日志级别
+
+##### 🔑 第二步：获取 IM Token
+
+- 调用 Mtop 接口获取 IM 登录凭证
+- Token 用于 WebSocket 认证
+
+##### 🔌 第三步：建立 WebSocket 连接
+
+- 连接到 IM WebSocket 服务器
+- 自动处理连接状态
+
+##### 📝 第四步：注册 IM 服务
+
+- 使用 Token 完成 IM 注册
+- 自动完成同步初始化
+
+##### 📋 第五步：获取会话列表
+
+- 获取最新的会话列表
+- 支持分页加载
+- 显示会话详情
+
+##### 👂 第六步：监听消息
+
+- 监听格式化后的消息（推荐）
+- 实时接收新消息推送
+- 自动解析消息内容
+
+##### 🔄 第七步：处理连接事件
+
+- 监听连接状态变化
+- 处理断线重连
+- 错误处理和日志记录
 
 ## 配置选项
 
@@ -322,9 +495,14 @@ TypeScript 类型定义主要覆盖成功响应的数据结构。对于错误场
 
 ### API 使用
 
+- [首页接口](../api/home.md) - 查看首页 Feed API 文档
 - [搜索接口](../api/search.md) - 查看搜索 API 文档
+- [商品接口](../api/item.md) - 查看商品详情 API 文档
 - [用户接口](../api/user.md) - 查看用户 API 文档
-- [使用示例](../examples/search.md) - 查看详细的使用示例
+- [收藏接口](../api/favor.md) - 查看收藏管理 API 文档
+- [订单接口](../api/order.md) - 查看订单管理 API 文档
+- [IM 接口](../api/im.md) - 查看 IM 即时通讯 API 文档
+- [使用示例](../examples/home.md) - 查看详细的使用示例
 
 ### 扩展开发
 
@@ -367,10 +545,10 @@ if (userNav.ret[0] === "SUCCESS::调用成功" && userNav.data?.login) {
 
 Client 支持以下环境：
 
-- Node.js 服务端应用
-- 浏览器环境（需要处理跨域）
-- Electron 应用
-- React Native 应用
+- Node.js 服务端应用（Node.js >= 14.0.0）
+- Electron 桌面应用
+- Next.js 服务端渲染
+- Nuxt.js 服务端渲染
 
 ### 3. 如何启用调试模式？
 

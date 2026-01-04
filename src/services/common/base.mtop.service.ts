@@ -23,9 +23,17 @@ export abstract class BaseMtopService extends BaseService {
 
   /**
    * 构建请求参数
+   * @param api API 接口名称
+   * @param data 请求数据
+   * @param version API 版本号，如果不传则使用配置中的默认版本
    */
-  protected buildParams(api: string, data: string): BuildParamsOutput {
+  protected buildParams(
+    api: string,
+    data: string,
+    version?: string
+  ): BuildParamsOutput {
     const t = Date.now();
+    const apiVersion = version || this.config.mtop.v;
 
     const params = {
       appKey: this.config.mtop.appKey,
@@ -34,7 +42,7 @@ export abstract class BaseMtopService extends BaseService {
       type: this.config.mtop.type,
       sessionOption: this.config.mtop.sessionOption,
       t,
-      v: this.config.mtop.v,
+      v: apiVersion,
       accountSite: this.config.mtop.accountSite,
       timeout: this.config.mtop.timeout,
       api,
@@ -85,12 +93,12 @@ export abstract class BaseMtopService extends BaseService {
   protected async request<TResponse, TData = unknown>(
     options: RequestOptions<TData>
   ): Promise<GoofishMtopResponse<TResponse>> {
-    const url = this.buildUrl(options.api);
+    const url = this.buildUrl(options.api, options.version);
     const data = JSON.stringify(options.data || {});
     const method = options.method || 'POST';
 
     // 构建请求参数
-    const params = this.buildParams(options.api, data);
+    const params = this.buildParams(options.api, data, options.version);
     const requestConfig = this.buildRequestConfig(
       url,
       method,
@@ -109,7 +117,11 @@ export abstract class BaseMtopService extends BaseService {
 
       if (TokenManager.updateFromHeaders(response.headers)) {
         // 使用新 token 重新构建参数并重试
-        const retryParams = this.buildParams(options.api, data);
+        const retryParams = this.buildParams(
+          options.api,
+          data,
+          options.version
+        );
         const retryConfig = this.buildRequestConfig(
           url,
           method,
@@ -136,8 +148,11 @@ export abstract class BaseMtopService extends BaseService {
 
   /**
    * 构建完整的 API URL
+   * @param api API 接口名称
+   * @param version API 版本号，如果不传则使用配置中的默认版本
    */
-  protected buildUrl(api: string): string {
-    return `${this.config.mtop.baseURL}/${this.config.mtop.apiPrefix}/${api}/${this.config.mtop.v}/`;
+  protected buildUrl(api: string, version?: string): string {
+    const apiVersion = version || this.config.mtop.v;
+    return `${this.config.mtop.baseURL}/${this.config.mtop.apiPrefix}/${api}/${apiVersion}/`;
   }
 }

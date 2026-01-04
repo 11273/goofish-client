@@ -122,104 +122,54 @@ main();
 
 ```typescript
 import {
-  generateSign,
+  BaseMtopService,
   Goofish,
   logger,
   LogLevel,
-  TokenManager,
 } from "goofish-client";
+import type { GoofishMtopResponse, HomeFeedResponse } from "goofish-client";
 
-class ExtendedGoofish extends Goofish {
+/**
+ * 方式1：继承 BaseMtopService（推荐）
+ * 这种方式可以直接使用 request 方法，自动处理签名、token 管理等
+ */
+class CustomMtopService extends BaseMtopService {
   /**
-   * 访问底层 Mtop HTTP 客户端
+   * 自定义接口：获取首页猜你喜欢
    */
-  get mtopHttp() {
-    return this.httpClientMtop;
-  }
-
-  /**
-   * 访问底层 Passport HTTP 客户端
-   */
-  get passportHttp() {
-    return this.httpClientPassport;
-  }
-
-  /**
-   * 获取 Mtop 配置
-   */
-  get mtopConfig() {
-    return this.config.mtop;
-  }
-
-  /**
-   * 自定义 Mtop 接口示例：获取首页猜你喜欢
-   */
-  async getHomeFeed() {
-    const api = "mtop.taobao.idlehome.home.webpc.feed";
-    const version = "1.0";
-    const timestamp = Date.now().toString();
-
-    const data: Record<string, number | string> = {
-      itemId: "",
-      pageSize: 30,
-      pageNumber: 1,
-      machId: "",
-    };
-    const sign = generateSign({
-      appKey: this.mtopConfig.appKey,
-      t: timestamp,
-      data: JSON.stringify(data),
-      token: TokenManager.getToken(),
-    });
-    const params = {
-      jsv: this.mtopConfig.jsv,
-      appKey: this.mtopConfig.appKey,
-      t: timestamp,
-      sign,
-      v: version,
-      type: this.mtopConfig.type,
-      dataType: this.mtopConfig.dataType,
-      timeout: this.mtopConfig.timeout,
-      sessionOption: this.mtopConfig.sessionOption,
-      accountSite: this.mtopConfig.accountSite,
-      spm_cnt: this.mtopConfig.spmCnt,
-      spm_pre: this.mtopConfig.spmPre,
-      log_id: this.mtopConfig.logId,
-      api,
-    };
-
-    const response = await this.mtopHttp.request({
-      method: "POST",
-      url: `/h5/${api}/${version}/`,
-      params,
-      data: { data: JSON.stringify(data) },
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+  async getHomeFeed(): Promise<GoofishMtopResponse<HomeFeedResponse>> {
+    return this.request<HomeFeedResponse>({
+      api: "mtop.taobao.idlehome.home.webpc.feed",
+      version: "1.0",
+      data: {
+        itemId: "",
+        pageSize: 30,
+        pageNumber: 1,
+        machId: "",
       },
     });
-
-    // 自行管理令牌，一般只需要加这一行即可
-    TokenManager.updateFromHeaders(response.headers);
-
-    return response.data;
   }
 }
 
 async function main() {
-  // 使用扩展客户端
-  const client = new ExtendedGoofish({
+  // 创建 Goofish 客户端
+  const client = new Goofish({
+    cookie: "cookie2=xxxx",
     level: LogLevel.DEBUG,
   });
 
+  // 创建自定义服务实例
+  const customService = new CustomMtopService(
+    client.httpClientMtop,
+    client.config
+  );
+
   // 调用自定义接口
   try {
-    // 首次会获取令牌，第二个接口才能正常请求
-    await client.getHomeFeed();
-    // 真实接口
-    const homeFeed = await client.getHomeFeed();
+    const homeFeed = await customService.getHomeFeed();
     logger.info("首页猜你喜欢:", homeFeed);
   } catch (error) {
-    logger.error("获取首页猜你喜欢失败:", error.response.status);
+    logger.error("获取首页猜你喜欢失败:", error);
   }
 }
 
@@ -229,35 +179,46 @@ main();
 ### 扩展 Passport 接口
 
 ```typescript
-import { Goofish } from "goofish-client";
+import {
+  BasePassportService,
+  Goofish,
+} from "goofish-client";
+import type { GoofishPassportResponse, QrGenerateResponse } from "goofish-client";
 
-class ExtendedPassportClient extends Goofish {
+/**
+ * 方式1：继承 BasePassportService（推荐）
+ * 这种方式可以直接使用 request 方法
+ */
+class CustomPassportService extends BasePassportService {
   /**
-   * 自定义 Passport 接口示例：生成二维码
+   * 自定义接口：生成二维码
    */
-  async generateQrcode() {
-    const response = await this.httpClientPassport.request({
-      method: "POST",
-      url: "/newlogin/qrcode/generate.do",
+  async generateQrcode(): Promise<GoofishPassportResponse<QrGenerateResponse>> {
+    return this.request<QrGenerateResponse>({
+      api: "/newlogin/qrcode/generate.do",
+      method: "GET",
       data: {
         appName: this.config.passport.appName,
         fromSite: this.config.passport.fromSite,
       },
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
     });
-
-    return response.data;
   }
 }
 
 async function main() {
-  const client = new ExtendedPassportClient({
+  // 创建 Goofish 客户端
+  const client = new Goofish({
     cookie: "cookie2=xxxx",
   });
 
-  const response = await client.generateQrcode();
+  // 创建自定义服务实例
+  const customService = new CustomPassportService(
+    client.httpClientPassport,
+    client.config
+  );
+
+  // 调用自定义接口
+  const response = await customService.generateQrcode();
   console.log(response);
 }
 

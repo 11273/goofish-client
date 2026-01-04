@@ -43,9 +43,9 @@ export interface PriceInfo {
 }
 
 /**
- * 用户信息
+ * 首页用户信息
  */
-export interface UserInfo {
+export interface HomeUserInfo {
   /** 用户头像 */
   avatar: string;
   /** 跟踪参数 */
@@ -213,7 +213,7 @@ export interface ItemCardData {
   /** 跟踪参数 */
   trackParams: Record<string, unknown>;
   /** 用户信息 */
-  user: UserInfo;
+  user: HomeUserInfo;
 }
 
 /**
