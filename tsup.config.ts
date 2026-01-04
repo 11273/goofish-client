@@ -24,7 +24,7 @@ export default defineConfig({
 
   // 🎯 目标环境 - 与 tsconfig 保持一致
   target: 'es2018',
-  platform: 'neutral', // 同时支持 Node.js 和浏览器
+  platform: 'node', // 仅支持 Node.js 环境
 
   // 📝 TypeScript 声明文件
   dts: {

@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     // 🎯 目标环境 - ES2018 是最佳平衡点
-    "target": "ES2018", // Node 10+ 和现代浏览器都支持
+    "target": "ES2018", // Node 10+ 支持
     "module": "ESNext", // 保持最新模块语法，让 tsup 处理
-    "lib": ["ES2018", "DOM"], // 按需添加新特性，DOM 支持 console
+    "lib": ["ES2018"], // Node.js 环境
 
     // 📦 模块解析
     "moduleResolution": "node", // Node.js 风格解析
