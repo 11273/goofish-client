@@ -6,6 +6,17 @@
 
 
 
+## [1.3.0](https://github.com/11273/goofish-client/compare/v1.2.0...v1.3.0) (2026-01-04)
+
+### ✨ Features | 新功能
+
+* 添加即时通讯（IM）功能，包含消息发送、接收及会话管理，更新文档和示例代码 ([1389b68](https://github.com/11273/goofish-client/commit/1389b68e921d72588f981656be1f0752a4b2660e))
+
+### 🎫 Chores | 其他更新
+
+* add ESLint configuration for TypeScript and update tsconfig and tsup settings for Node.js environment ([7769875](https://github.com/11273/goofish-client/commit/7769875b5e6777b5306dcde25963d94d31ccdbc0))
+* add VSCode settings for automatic formatting on save ([5f27795](https://github.com/11273/goofish-client/commit/5f27795544ca09660b25ff14cc540a728c047bf2))
+
 ## [1.2.0](https://github.com/11273/goofish-client/compare/v1.1.3...v1.2.0) (2025-10-13)
 
 ### ✨ Features | 新功能
