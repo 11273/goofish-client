@@ -67,8 +67,14 @@ interface ItemDO {
   desc: string;
   /** 已售价格 */
   soldPrice: string;
+  /** 卖出数量 */
+  soldCnt: number;
   /** 原价 */
-  originalPrice: string;
+  originalPrice?: string;
+  /** 最小价格 */
+  minPrice?: string;
+  /** 最大价格 */
+  maxPrice?: string;
   /** 运费 */
   transportFee: string;
   /** 商品状态 */
@@ -83,9 +89,36 @@ interface ItemDO {
   imageInfos: ItemImageInfo[];
   /** 商品标签扩展列表 */
   itemLabelExtList: ItemLabelExt[];
+  /** SKU 列表（多规格商品） */
+  skuList?: SkuDO[];
+  /** 验货宝信息 */
+  appraiseInfo?: AppraiseInfo;
   /** 创建时间 */
   gmtCreate: number;
   // ... 其他字段
+}
+
+interface AppraiseInfo {
+  /** 验货宝版本 */
+  yhbVersion: string;
+  /** 服务详情标题 (如: "验货宝") */
+  serviceDetailTitle: string;
+  /** 服务描述 */
+  serviceDescription: string;
+  /** 服务承诺项 */
+  servicePromiseItems: string[];
+  // ... 其他字段
+}
+
+interface SkuDO {
+  /** SKU ID */
+  skuId: number;
+  /** 价格（分） */
+  priceInCent: number;
+  /** 属性列表（如：颜色、尺寸） */
+  propertyList: SkuProperty[];
+  /** 数量 */
+  quantity: number;
 }
 
 interface SellerDO {

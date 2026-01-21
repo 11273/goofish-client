@@ -37,7 +37,7 @@ export interface ItemImageInfo {
   /** 图片URL */
   url: string;
   /** 额外信息 */
-  extraInfo: {
+  extraInfo?: {
     raw: string;
     isT: string;
     isH: string;
@@ -115,7 +115,7 @@ export interface ItemCatDTO {
   /** 分类ID */
   catId: number;
   /** 叶子ID */
-  leafId: number;
+  leafId?: number;
   /** 根渠道分类ID */
   rootChannelCatId: number;
   /** 是否建议显示 */
@@ -144,6 +144,38 @@ export interface CpvLabel {
   valueName: string;
   /** 属性ID */
   propertyId: number;
+  /** 目标URL */
+  url?: string;
+}
+
+/**
+ * 验货宝信息
+ */
+export interface AppraiseInfo {
+  /** 验货宝版本 */
+  yhbVersion: string;
+  /** 买家是否承担验货费 */
+  buyerAssumeInspectionFee: boolean;
+  /** C2S2C场景 */
+  c2s2cScene: string;
+  /** 服务详情副标题 */
+  serviceDetailSubTitle: string;
+  /** 服务详情标题 */
+  serviceDetailTitle: string;
+  /** 附加描述 */
+  additionalDescription: string;
+  /** 验货宝服务利益点描述 */
+  yhbServiceBenefitDesc: string;
+  /** 服务URL */
+  serviceUrl: string;
+  /** 服务描述 */
+  serviceDescription: string;
+  /** 服务承诺项 */
+  servicePromiseItems: string[];
+  /** 类别 */
+  category: string;
+  /** 附加映射 */
+  additionMap: Record<string, string>;
 }
 
 /**
@@ -201,15 +233,132 @@ export interface ShareData {
 }
 
 /**
+ * 标签信息
+ */
+export interface TagInfo {
+  /** 边框颜色 */
+  borderColor: string;
+  /** 背景颜色 */
+  bgColor: string;
+  /** 文本 */
+  text: string;
+  /** 附加映射 */
+  additionMap: Record<string, unknown>;
+  /** 文本颜色 */
+  textColor: string;
+  /** 排序 */
+  order: number;
+  /** 跟踪参数 */
+  trackParams?: Record<string, string>;
+}
+
+/**
+ * UI商品服务
+ */
+export interface UiItemServiceDO {
+  /** 保障配置ID */
+  guaranteeConfigId: string;
+  /** 保障命名空间 */
+  guaranteeNameSpace: string;
+}
+
+/**
+ * CPV话题
+ */
+export interface CpvTopic {
+  /** 跟踪参数 */
+  trackParams: Record<string, string>;
+  /** PV列表 */
+  pvList: Array<{
+    valueId: number;
+    propertyId: number;
+  }>;
+  /** 名称 */
+  name: string;
+  /** ID */
+  id: number;
+  /** 目标URL */
+  targetUrl: string;
+}
+
+/**
+ * SKU属性
+ */
+export interface SkuProperty {
+  /** 实际值文本 */
+  actualValueText: string;
+  /** 是否启用 */
+  enabled: boolean;
+  /** 属性ID */
+  propertyId: number;
+  /** 属性排序 */
+  propertySortOrder: number;
+  /** 属性文本 */
+  propertyText: string;
+  /** 状态 */
+  status: number;
+  /** 字符串 */
+  string: string;
+  /** 值ID */
+  valueId: number;
+  /** 值排序 */
+  valueSortOrder: number;
+  /** 值文本 */
+  valueText: string;
+}
+
+/**
+ * SKU特征
+ */
+export interface SkuFeatures {
+  /** SKU排序号 */
+  sku_order_num: string;
+  /** 商品维度 */
+  item_dim: string;
+  /** 闲置PV对 */
+  idlePvPairs: string;
+  /** 闲置原始数量 */
+  idleOriginalQuantity: string;
+}
+
+/**
+ * SKU信息
+ */
+export interface SkuDO {
+  /** 特征 */
+  features: SkuFeatures;
+  /** 库存ID */
+  inventoryId: number;
+  /** 商品ID */
+  itemId: number;
+  /** 价格 */
+  price: number;
+  /** 以分为单位的价格 */
+  priceInCent: number;
+  /** 属性列表 */
+  propertyList: SkuProperty[];
+  /** 数量 */
+  quantity: number;
+  /** 卖家ID */
+  sellerId: number;
+  /** SKU ID */
+  skuId: number;
+}
+
+/**
  * 商品详情信息
  */
 export interface ItemDO {
   /** 是否无图商品 */
   noPicItem: boolean;
+  /** 卖出数量 */
+  soldCnt: number;
   /** 分享数据 */
   shareData: ShareData;
   /** 模板ID */
   templateId: number;
+  /** 验货宝信息 */
+  appraiseInfo?: AppraiseInfo;
   /** 是否值得购买相似推荐 */
   worthBuySimilarFeeds: boolean;
   /** 跟踪参数 */
@@ -223,13 +372,13 @@ export interface ItemDO {
   /** 商品标签扩展列表 */
   itemLabelExtList: ItemLabelExt[];
   /** 质量URL */
-  qualityUrl: string;
+  qualityUrl?: string;
   /** 交易横幅 */
   tradeBanners: unknown[];
   /** 浏览次数 */
   browseCnt: number;
   /** 价格相关标签 */
-  priceRelativeTags: unknown[];
+  priceRelativeTags: TagInfo[];
   /** 价格单位 */
   priceUnit: string;
   /** 图片信息列表 */
@@ -251,11 +400,15 @@ export interface ItemDO {
   /** 是否慈善商品 */
   charitableItem: boolean;
   /** UI商品服务列表 */
-  uiItemServiceDOList: unknown[];
+  uiItemServiceDOList: UiItemServiceDO[];
+  /** 最小价格 */
+  minPrice?: string;
+  /** 最大价格 */
+  maxPrice?: string;
   /** PC支持交易 */
   pcSupportTrade: boolean;
   /** 通用标签 */
-  commonTags: unknown[];
+  commonTags: TagInfo[];
   /** 描述 */
   desc: string;
   /** 描述标签颜色 */
@@ -264,8 +417,10 @@ export interface ItemDO {
   itemType: string;
   /** 简单商品 */
   simpleItem: boolean;
+  /** SKU列表 */
+  skuList?: SkuDO[];
   /** 原价 */
-  originalPrice: string;
+  originalPrice?: string;
   /** 运费 */
   transportFee: string;
   /** 商品状态字符串 */
@@ -273,7 +428,7 @@ export interface ItemDO {
   /** CPV标签列表 */
   cpvLabels: CpvLabel[];
   /** 富文本描述 */
-  richTextDesc: string;
+  richTextDesc?: string;
   /** 想要数量单位 */
   wantCntUnit: string;
   /** 标题 */
@@ -300,6 +455,8 @@ export interface ItemDO {
   quantity: number;
   /** 价格文本标签 */
   priceTextTags: unknown[];
+  /** 交易开始时间 */
+  tradeBeginTime?: number;
   /** 是否议价 */
   bargained: boolean;
   /** 收藏数 */
@@ -309,7 +466,7 @@ export interface ItemDO {
   /** 举报URL */
   reportUrl: string;
   /** CPV话题 */
-  cpvTopics: unknown[];
+  cpvTopics: CpvTopic[];
   /** 创建时间 */
   gmtCreate: number;
   /** 交易访问类型 */
@@ -318,6 +475,8 @@ export interface ItemDO {
   wantCnt: number;
   /** 是否默认图片 */
   defaultPicture: boolean;
+  /** 闲置商品SKU列表 */
+  idleItemSkuList?: SkuDO[];
   /** 安全指南 */
   secuGuide: SecuGuide;
   /** 商品分类信息 */
@@ -553,7 +712,7 @@ export interface B2cItemDO {
  * UI倒计时信息
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface UiCountDownInfoDO {}
+export interface UiCountDownInfoDO { }
 
 /**
  * B2C UI闲置详情配置
@@ -615,37 +774,37 @@ export interface B2cUiIdleDetailConfigDO {
  * 商业信息
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface CommerceDO {}
+export interface CommerceDO { }
 
 /**
  * UI模板信息
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface UiTemplateDO {}
+export interface UiTemplateDO { }
 
 /**
  * 业务标志信息
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface BizFlagDO {}
+export interface BizFlagDO { }
 
 /**
  * 经纪人信息
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface BrokerDO {}
+export interface BrokerDO { }
 
 /**
  * UI发布信息
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface UiPostDO {}
+export interface UiPostDO { }
 
 /**
  * 互动信息
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface InteractDO {}
+export interface InteractDO { }
 
 /**
  * 详细跟踪参数
@@ -731,7 +890,7 @@ export interface ConfigInfo {
  * 灵活工作信息
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface FlexibleJobInfoDO {}
+export interface FlexibleJobInfoDO { }
 
 /**
  * 买家信息
