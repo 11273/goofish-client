@@ -5,7 +5,7 @@ async function passwordLogin() {
     // 创建 Client 实例
     const client = new Goofish({
       // 过滑块验证码的cookie，cookie具有时效性，需要定期更新
-      cookie: 'x5sec=',
+      // cookie: 'x5sec=',
       level: LogLevel.INFO,
     });
 

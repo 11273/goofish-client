@@ -6,7 +6,7 @@ const { Goofish } = require('goofish-client');
 async function homeFeedExample() {
   // 创建客户端实例
   const client = new Goofish({
-    cookie: 'cookie2=xxx', // 设置你的cookie
+    // cookie: 'cookie2=xxx', // 设置你的cookie
   });
 
   try {

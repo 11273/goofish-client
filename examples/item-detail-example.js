@@ -2,7 +2,7 @@ const { Goofish } = require('goofish-client');
 
 async function getItemDetail() {
   const client = new Goofish({
-    cookie: 'cookie2=xxx',
+    // cookie: 'cookie2=xxx',
   });
 
   try {

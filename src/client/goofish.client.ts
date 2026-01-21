@@ -25,7 +25,7 @@ import type { GoofishConfig } from '../types';
 import { QrService } from '../services/passport/qr.service';
 import { LoginService } from '../services/passport/login.service';
 import { HomeService } from '../services/mtop';
-import { generateUUID } from '../utils';
+import { generateUUID, generateSecureRandomString } from '../utils';
 import { AuthService } from '../services/im';
 
 export class Goofish {
@@ -87,7 +87,7 @@ export class Goofish {
 
     this.config = {
       level: config.level || LogLevel.INFO,
-      cookie: config.cookie || '',
+      cookie: config.cookie || `cna=${generateSecureRandomString(24)}`,
 
       // Mtop 配置
       mtop: {
