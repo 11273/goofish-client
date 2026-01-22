@@ -92,3 +92,15 @@ export function generateUUID(): string {
 
   return uuid.join('');
 }
+/**
+ * 生成指定长度的随机字符串
+ */
+export function generateSecureRandomString(length: number): string {
+  const chars =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}

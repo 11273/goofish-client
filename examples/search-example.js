@@ -4,7 +4,7 @@ async function searchItems() {
   try {
     // 创建 Client 实例
     const client = new Goofish({
-      cookie: 'cookie2=xxxx',
+      // cookie: 'cookie2=xxxx',
       level: LogLevel.INFO,
     });
 

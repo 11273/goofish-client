@@ -6,7 +6,7 @@ const { Goofish } = require('goofish-client');
 
 // 初始化客户端（需要有效的cookie）
 const client = new Goofish({
-  cookie: 'cookie2=xxx',
+  // cookie: 'cookie2=xxx',
 });
 
 async function favorExamples() {

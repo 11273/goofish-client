@@ -7,7 +7,7 @@ const { Goofish, LogLevel } = require('goofish-client');
 async function imSimpleExample() {
   try {
     const client = new Goofish({
-      cookie: 'xxx', // 请替换为实际的 cookie
+      // cookie: 'xxx', // 请替换为实际的 cookie
       level: LogLevel.WARN,
     });
 

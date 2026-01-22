@@ -3,7 +3,7 @@ const { Goofish } = require('goofish-client');
 async function getUserDetail() {
   // 创建Client实例
   const client = new Goofish({
-    cookie: 'cookie2=xxx',
+    // cookie: 'cookie2=xxx',
   });
 
   try {
