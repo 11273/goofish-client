@@ -6,6 +6,17 @@
 
 
 
+## [1.3.2](https://github.com/11273/goofish-client/compare/v1.3.1...v1.3.2) (2026-01-22)
+
+### ✨ Features | 新功能
+
+* **goofish:** auto-generate cna if cookie is missing to fix search API error ([c7073e5](https://github.com/11273/goofish-client/commit/c7073e5e2388e84040080a50e7d4061aed8daa37))
+* **item:** update item type definitions ([c7c7dd8](https://github.com/11273/goofish-client/commit/c7c7dd843961a91fbb3e1f9c278f59e2d0a30dd7))
+
+### 📝 Documentation | 文档
+
+* **item:** update documentation for item types ([7f59a3b](https://github.com/11273/goofish-client/commit/7f59a3b030b42481d87d7fb63b29673be6157bc9))
+
 ## [1.3.1](https://github.com/11273/goofish-client/compare/v1.3.0...v1.3.1) (2026-01-04)
 
 ## [1.3.0](https://github.com/11273/goofish-client/compare/v1.2.0...v1.3.0) (2026-01-04)
