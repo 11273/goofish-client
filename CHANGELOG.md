@@ -6,6 +6,12 @@
 
 
 
+## [1.4.0](https://github.com/11273/goofish-client/compare/v1.3.2...v1.4.0) (2026-04-17)
+
+### ✨ Features | 新功能
+
+* **im:** add createSingleConversation / createItemConversation ([#15](https://github.com/11273/goofish-client/issues/15)) ([0fffc6c](https://github.com/11273/goofish-client/commit/0fffc6ca9377f315fbeea57f19eb2f19dcc53a74))
+
 ## [1.3.2](https://github.com/11273/goofish-client/compare/v1.3.1...v1.3.2) (2026-01-22)
 
 ### ✨ Features | 新功能
