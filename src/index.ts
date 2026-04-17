@@ -128,6 +128,15 @@ export type {
   ConversationListNewestPaginationResponse,
   ConversationDetailRequest,
   ConversationDetailResponse,
+  CreateSingleConversationRequest,
+  CreateSingleConversationResponse,
+  CreateSingleConversationExtension,
+  CreateSingleConversationContext,
+  CreateItemConversationRequest,
+  SingleChatUserConversation,
+  SingleChatConversation,
+  SingleChatExtension,
+  // 以下为兼容别名，保留用于过渡
   CreateConversationRequest,
   CreateConversationResponse,
   // IM 发送消息相关

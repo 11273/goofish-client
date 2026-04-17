@@ -88,6 +88,63 @@ console.log(`第一页: ${firstPage.body.userConvs.length} 个会话`);
 console.log(`第二页: ${secondPage.body.userConvs.length} 个会话`);
 ```
 
+## 主动创建会话（聊一聊）
+
+### 基于商品创建与卖家的单聊会话（推荐）
+
+闲鱼 Web 在商品详情页点击「聊一聊」按钮，会调用 `/r/SingleChatConversation/create` 创建（或复用）一条单聊会话。SDK 直接暴露了对应的便捷方法：
+
+```typescript
+// 1. 获取自己 userId
+const head = await client.api.mtop.user.getUserHead({ self: true });
+const selfUserId = head.data.baseInfo.kcUserId;
+
+// 2. 基于商品创建会话
+const resp = await client.api.im.conversation.createItemConversation({
+  selfUserId,
+  peerUserId: "221xxxxxxx03", // 卖家 userId
+  itemId: "1008xxxxx7995",    // 商品 id
+  // 可选：
+  // orderId: "xxx",
+  // source: "itemDetail",
+  // bizType: "1",
+});
+
+const conv = resp.body.singleChatConversation;
+console.log("✅ 会话创建成功", conv.cid);
+
+// 3. 立刻发送首条消息
+await client.api.im.message.sendTextMessage({
+  text: "你好，请问还在吗？",
+  conversationId: conv.cid,
+  conversationType: 1,
+  receivers: [conv.pairFirst, conv.pairSecond],
+});
+```
+
+> 注意事项
+>
+> 1. 必须先完成 `client.api.im.auth.register()`，否则服务端会拒绝请求
+> 2. 当与该卖家的会话已存在时，服务端返回的仍是现有会话（幂等）
+> 3. `selfUserId` 与 `peerUserId` 必须是数字字符串（纯 Goofish/淘系 userId）
+
+### 使用底层接口
+
+如果你已自行构造好 `pairFirst` / `pairSecond`（形如 `<userId>@goofish`，并按 userId 数字升序排列），可直接使用 `createSingleConversation`：
+
+```typescript
+const resp = await client.api.im.conversation.createSingleConversation({
+  pairFirst: "1234@goofish",
+  pairSecond: "5678@goofish",
+  bizType: "1",
+  extension: {
+    itemId: "1008xxxxx7995",
+    orderId: "",
+    source: "",
+  },
+});
+```
+
 ## 消息发送
 
 ### 发送文本消息（推荐）

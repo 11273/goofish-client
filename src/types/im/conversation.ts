@@ -287,23 +287,88 @@ export interface ConversationDetailResponse {
 }
 
 /**
- * 创建会话请求
+ * 创建单聊会话扩展字段
+ * 对应闲鱼前端点击「聊一聊」后调用 /r/SingleChatConversation/create 时
+ * 携带的 extension 字段
  */
-export interface CreateConversationRequest {
-  /** 会话类型 */
-  type: ConversationType | string;
-  /** 成员 ID 列表 */
-  memberIds: string[];
-  /** 会话名称（可选） */
-  name?: string;
+export interface CreateSingleConversationExtension {
+  /** 商品 ID（字符串形式） */
+  itemId?: string;
+  /** 订单 ID（字符串形式），无订单场景传空字符串 */
+  orderId?: string;
+  /** 来源标识（可选，空字符串即可） */
+  source?: string;
+  /** 其他业务扩展字段 */
+  [key: string]: string | undefined;
 }
 
 /**
- * 创建会话响应
+ * 创建单聊会话上下文
  */
-export interface CreateConversationResponse {
-  /** 会话 ID */
-  conversationId: string;
-  /** 其他字段 */
-  [key: string]: unknown;
+export interface CreateSingleConversationContext {
+  /** 应用版本号，默认 "1.0" */
+  appVersion?: string;
+  /** 平台标识，默认 "web" */
+  platform?: string;
 }
+
+/**
+ * 创建单聊会话请求（底层参数）
+ *
+ * pairFirst / pairSecond 必须是 `<userId>@<domain>` 格式，
+ * 并且按照 userId 的数字大小升序排列。
+ */
+export interface CreateSingleConversationRequest {
+  /** 会话参与方之一（userId 较小的一方），格式：`<userId>@<domain>` */
+  pairFirst: string;
+  /** 会话参与方之二（userId 较大的一方），格式：`<userId>@<domain>` */
+  pairSecond: string;
+  /** 业务类型，默认 "1" */
+  bizType?: string;
+  /** 业务扩展信息 */
+  extension?: CreateSingleConversationExtension;
+  /** 调用上下文 */
+  ctx?: CreateSingleConversationContext;
+}
+
+/**
+ * 创建单聊会话响应
+ *
+ * 结构与 `listNewestPagination` 返回的 `userConvs[].singleChatUserConversation`
+ * 一致，便于与现有会话列表数据互通。
+ */
+export interface CreateSingleConversationResponse
+  extends Partial<SingleChatUserConversation> {
+  /** 单聊会话核心信息（创建成功时必然存在） */
+  singleChatConversation: SingleChatConversation;
+}
+
+/**
+ * 创建基于商品的单聊会话（便捷方法）的请求参数
+ */
+export interface CreateItemConversationRequest {
+  /** 当前登录用户的 userId（数字字符串） */
+  selfUserId: string | number;
+  /** 对方用户 ID，例如商品卖家 ID */
+  peerUserId: string | number;
+  /** 商品 ID */
+  itemId: string | number;
+  /** 订单 ID（可选） */
+  orderId?: string | number;
+  /** 来源标识（可选） */
+  source?: string;
+  /** 业务类型，默认 "1" */
+  bizType?: string;
+  /** 调用上下文（可选） */
+  ctx?: CreateSingleConversationContext;
+}
+
+/**
+ * @deprecated 使用 {@link CreateSingleConversationRequest} 替代
+ */
+export type CreateConversationRequest = CreateSingleConversationRequest;
+
+/**
+ * @deprecated 使用 {@link CreateSingleConversationResponse} 替代
+ */
+export type CreateConversationResponse = CreateSingleConversationResponse;

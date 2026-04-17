@@ -32,6 +32,18 @@ export const IM_CONFIG = {
 
   // 同步
   SYNC: '0,0;0;0;',
+
+  // IM 域名（用于 cid/pairFirst/pairSecond 的 userId 后缀：<userId>@<domain>）
+  DOMAIN: 'goofish',
+
+  // 创建单聊会话默认 bizType
+  DEFAULT_BIZ_TYPE: '1',
+
+  // 创建单聊会话默认 ctx.appVersion
+  DEFAULT_APP_VERSION: '1.0',
+
+  // 创建单聊会话默认 ctx.platform
+  DEFAULT_PLATFORM: 'web',
 } as const;
 
 // IM API 端点（WebSocket 路径）
@@ -51,6 +63,8 @@ export const IM_ENDPOINTS = {
   CONVERSATION: {
     // 获取会话列表
     LIST_NEWEST_PAGINATION: '/r/Conversation/listNewestPagination',
+    // 创建单聊会话
+    CREATE_SINGLE: '/r/SingleChatConversation/create',
   },
   // 消息相关
   MESSAGE: {
